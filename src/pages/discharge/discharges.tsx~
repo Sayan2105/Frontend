@@ -1,0 +1,7 @@
+export const Discharges = () => {
+    return (
+        <div>Discharges</div>
+    )
+}
+
+export default Discharges
