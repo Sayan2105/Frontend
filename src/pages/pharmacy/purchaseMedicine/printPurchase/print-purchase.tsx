@@ -42,7 +42,7 @@ const PrintMedicinePurchase = ({ afterPrint, Info }: Props) => {
 
                 <div className="max-w-4xl mx-auto p-6 bg-white flex flex-col gap-y-5 dark:bg-[#1e1e1e] border-b-2 border-dashed dark:border-gray-500" ref={contentRef}>
 
-                    <PdfHeader title="Invoice" id={Info.id} date={Info.purchase_date} />
+                    <PdfHeader title="Invoice" id={Info.id} date={Info.date} />
 
                     <div className="grid grid-cols-2 gap-8">
                         <Supplier name={Info.supplier_name} />

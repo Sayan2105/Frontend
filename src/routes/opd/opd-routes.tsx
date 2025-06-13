@@ -1,42 +1,125 @@
-import ProtectRoutes from "@/guard/protectRoutes"
-import CahrgesList from "@/pages/OPD/details/charges/chargesList"
-import OpdLabInvestigations from "@/pages/OPD/details/lab-investigation/lab-investigations"
-import Medication from "@/pages/OPD/details/medication/medication"
-import OpdDetailsLayout from "@/pages/OPD/details/opdDetailsLayout"
-import OperationList from "@/pages/OPD/details/operation/operationList"
-import VisitDetails from "@/pages/OPD/details/overview/visitDetails"
-import PaymentsList from "@/pages/OPD/details/payments/paymentsList"
-import Timeline from "@/pages/OPD/details/timeline/timelineList"
-import TreatmentsList from "@/pages/OPD/details/treatmentHistory/treatmentsList"
-import Vital from "@/pages/OPD/details/vital/vital"
-import AdminOPDlayout from "@/pages/OPD/opd-layout"
-import OPDLIST from "@/pages/OPD/opdList"
-import { Route } from "react-router-dom"
+import LoaderModel from "@/components/loader";
+import ProtectRoutes from "@/guard/protectRoutes";
+import { lazy, Suspense } from "react";
+import { Route } from "react-router-dom";
 
-
+// Lazy-loaded components
+const AdminOPDlayout = lazy(() => import("@/pages/OPD/opd-layout"));
+const OPDLIST = lazy(() => import("@/pages/OPD/opdList"));
+const OpdDetailsLayout = lazy(() => import("@/pages/OPD/details/opdDetailsLayout"));
+const VisitDetails = lazy(() => import("@/pages/OPD/details/overview/visitDetails"));
+const Medication = lazy(() => import("@/pages/OPD/details/medication/medication"));
+const Vital = lazy(() => import("@/pages/OPD/details/vital/vital"));
+const OperationList = lazy(() => import("@/pages/OPD/details/operation/operationList"));
+const Timeline = lazy(() => import("@/pages/OPD/details/timeline/timelineList"));
+const CahrgesList = lazy(() => import("@/pages/OPD/details/charges/chargesList"));
+const TreatmentsList = lazy(() => import("@/pages/OPD/details/treatmentHistory/treatmentsList"));
+const PaymentsList = lazy(() => import("@/pages/OPD/details/payments/paymentsList"));
+const OpdLabInvestigations = lazy(() => import("@/pages/OPD/details/lab-investigation/lab-investigations"));
 
 const OpdRoutes = () => {
     return (
-        <Route element={<ProtectRoutes action='view' module='Opd' />}>
-            <Route path="opd" element={<AdminOPDlayout />}>
-                <Route path="" element={<OPDLIST />} />
-                <Route path=":opdId" element={<OpdDetailsLayout />}>
-                    <Route path="" element={<VisitDetails />} />
-                    <Route path="medication" element={<Medication />} />
-                    <Route path="vital" element={<Vital />} />
-                    <Route path="operation" element={<OperationList />} />
-                    <Route path="timeline" element={<Timeline />} />
-                    <Route path="charges" element={<CahrgesList />} />
-                    <Route path="treatmenthistory" element={<TreatmentsList />} />
-                    <Route path="payment" element={<PaymentsList />} />
-                    <Route path="lab" element={<OpdLabInvestigations />} />
+        <Route element={<ProtectRoutes action="view" module="Opd" />}>
+            <Route
+                path="opd"
+                element={
+                    <Suspense fallback={<LoaderModel />}>
+                        <AdminOPDlayout />
+                    </Suspense>
+                }
+            >
+                <Route
+                    path=""
+                    element={
+                        <Suspense fallback={<LoaderModel />}>
+                            <OPDLIST />
+                        </Suspense>
+                    }
+                />
+                <Route
+                    path=":opdId"
+                    element={
+                        <Suspense fallback={<LoaderModel />}>
+                            <OpdDetailsLayout />
+                        </Suspense>
+                    }
+                >
+                    <Route
+                        path=""
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <VisitDetails />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="medication"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <Medication />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="vital"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <Vital />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="operation"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <OperationList />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="timeline"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <Timeline />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="charges"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <CahrgesList />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="treatmenthistory"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <TreatmentsList />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="payment"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <PaymentsList />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="lab"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <OpdLabInvestigations />
+                            </Suspense>
+                        }
+                    />
                 </Route>
             </Route>
         </Route>
-    )
-}
+    );
+};
 
-
-
-
-export default OpdRoutes
+export default OpdRoutes;

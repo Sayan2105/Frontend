@@ -22,7 +22,7 @@ const Document = ({ opds, afterPrint }: DocumentProps) => {
             afterPrint(false)
         },
     })
-    const headers = ['OPD No.', 'Patient Name', 'Appointment Date', 'Consultant', 'Reference', 'Symptom Type', 'Previous Isuue']
+    const headers = ['OPD No.', 'Patient Name', 'Appointment Date', 'Consultant', 'Reference', 'Previous Isuue']
 
 
     useEffect(() => {
@@ -51,7 +51,6 @@ const Document = ({ opds, afterPrint }: DocumentProps) => {
                                     <TableCell className="py-3">{opd.appointment.appointment_date}</TableCell>
                                     <TableCell className="py-3">{opd.doctor.name}</TableCell>
                                     <TableCell className="py-3">{opd.appointment.reference}</TableCell>
-                                    <TableCell className="py-3">{opd.appointment.symptom_type}</TableCell>
                                     <TableCell className="py-3">{opd.appointment.previous_medical_issue}</TableCell>
                                 </TableRow>
                             })}

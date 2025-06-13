@@ -17,7 +17,6 @@ import { useEffect } from "react"
 import { z } from "zod"
 import { newsFormFields } from "./form-fields"
 import useLatestNews from "./handlers"
-import IconMenu from "@/components/icon-menu"
 
 
 export const newsSchems = z.object({

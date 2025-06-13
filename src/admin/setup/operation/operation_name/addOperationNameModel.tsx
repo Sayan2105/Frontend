@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { operationCategoryType, operationNameType } from '@/types/setupTypes/setupOpeartion'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader } from 'lucide-react'
-import React, { HTMLAttributes, useEffect, useState } from 'react'
+import { HTMLAttributes, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'

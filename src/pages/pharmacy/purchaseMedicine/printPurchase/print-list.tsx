@@ -51,7 +51,7 @@ const Documents = ({ purchases, afterPrint }: DocumentsProps) => {
                             {purchases.map((p) => {
                                 return <TableRow key={p.id}>
                                     <TableCell className="font-semibold">{p.id}</TableCell>
-                                    <TableCell className="py-3">{p.purchase_date}</TableCell>
+                                    <TableCell className="py-3">{p.date}</TableCell>
                                     <TableCell className="py-3">{p.medicine.name}</TableCell>
                                     <TableCell className="py-3">{p.expiry_date}</TableCell>
                                     <TableCell className="py-3">{p.supplier_name}</TableCell>

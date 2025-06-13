@@ -6,8 +6,6 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { authSelector } from "@/features/auth/authSlice"
-import { useAppSelector } from "@/hooks"
 import { AppointmentReportType, ExpenseReportType, Expenses, PatientDashTotalCount } from "@/types/dashboard/patientDashboard"
 import { Ambulance, CalendarClock, Component, Droplets, HandCoins, HeartPulse, ListFilter, Pill, Radiation, Search, Stethoscope, TestTube } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -25,9 +23,6 @@ type SearchParams = {
 
 const PatientDashboard = () => {
 
-    // session
-    const { user } = useAppSelector(authSelector)
-
     // api states
     const [totalCount, setTotalCount] = useState<PatientDashTotalCount | null>(null)
     const [expReport, setExpenseReport] = useState<ExpenseReportType[]>([])
@@ -44,7 +39,7 @@ const PatientDashboard = () => {
                 getPatientDashTotalCount(),
                 getPatientExpenseReport(),
                 getApppointmentStatusCount(),
-                getPatientTotalExpenses(user?.id!),
+                getPatientTotalExpenses(),
             ])
 
 

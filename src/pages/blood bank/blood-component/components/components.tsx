@@ -1,20 +1,19 @@
+import AlertModel from '@/components/alertModel'
+import CustomPagination from '@/components/customPagination'
+import EmptyList from '@/components/emptyList'
 import PermissionProtectedAction from '@/components/permission-protected-actions'
 import ProtectedTable from '@/components/protected-table'
+import TableActions from '@/components/table-actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { page_limit } from '@/globalData'
-import { currencySymbol } from '@/helpers/currencySymbol'
 import { Plus } from 'lucide-react'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import { useEffect } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 import BloodComponentForm from './form'
 import useBloodComponent from './handlers'
-import TableActions from '@/components/table-actions'
-import EmptyList from '@/components/emptyList'
-import CustomPagination from '@/components/customPagination'
-import AlertModel from '@/components/alertModel'
 
 
 
@@ -30,7 +29,7 @@ const BloodComponents = () => {
     setPage(1) // always should execute
   }, 400)
 
-  const { bloodComponents, getBloodComponents, handleSubmit, onDelete, confirmationProps, isPending, form, setForm } = useBloodComponent({ page, limit: page_limit, search })
+  const { bloodComponents, getBloodComponents, handleSubmit, onDelete, confirmationProps, form, setForm } = useBloodComponent({ page, limit: page_limit, search })
 
 
   useEffect(() => {

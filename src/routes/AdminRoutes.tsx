@@ -1,9 +1,9 @@
-import AdminLayout from "@/admin/AdminLayout"
-import AdminDashboard from "@/admin/dashboard/dashboard"
 import ProtectRoutes from "@/guard/protectRoutes"
+import { lazy } from "react";
 import { Route } from "react-router-dom"
 
-
+const AdminLayout = lazy(() => import("@/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("@/admin/dashboard/dashboard"));
 
 
 

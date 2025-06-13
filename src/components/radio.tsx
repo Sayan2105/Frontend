@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import React, { HTMLAttributes } from 'react'
+import { HTMLAttributes } from 'react'
 
 interface RadioProps extends HTMLAttributes<HTMLDivElement> {
     className?: string,

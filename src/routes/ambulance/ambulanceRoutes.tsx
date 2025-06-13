@@ -1,24 +1,57 @@
-import ProtectRoutes from "@/guard/protectRoutes"
-import Ambulances from "@/pages/ambulance/ambulances/ambulances"
-import AssignedAmbulances from "@/pages/ambulance/assign-ambulance/assigned-ambulances"
-import AmbulanceLayout from "@/pages/ambulance/layout"
-import { Route } from "react-router-dom"
+import LoaderModel from '@/components/loader';
+import { lazy, Suspense } from 'react';
+import { Route } from 'react-router-dom';
 
-
+// Lazy load all ambulance components
+const ProtectRoutes = lazy(() => import('@/guard/protectRoutes'));
+const AmbulanceLayout = lazy(() => import('@/pages/ambulance/layout'));
+const AssignedAmbulances = lazy(() => import('@/pages/ambulance/assign-ambulance/assigned-ambulances'));
+const Ambulances = lazy(() => import('@/pages/ambulance/ambulances/ambulances'));
 
 const AmbulanceRoutes = () => {
     return (
-        <Route element={<ProtectRoutes action="view" module="Assign Ambulance" />}>
-            <Route path="ambulance" element={<AmbulanceLayout />}>
-                <Route path="" element={<AssignedAmbulances />} />
-                <Route element={<ProtectRoutes restrictedTo='patient' />}>
-                    <Route path="create" element={<Ambulances />} />
+        <Route
+            element={
+                <Suspense fallback={<LoaderModel />}>
+                    <ProtectRoutes action="view" module="Assign Ambulance" />
+                </Suspense>
+            }
+        >
+            <Route
+                path="ambulance"
+                element={
+                    <Suspense fallback={<LoaderModel />}>
+                        <AmbulanceLayout />
+                    </Suspense>
+                }
+            >
+                <Route
+                    path=""
+                    element={
+                        <Suspense fallback={<LoaderModel />}>
+                            <AssignedAmbulances />
+                        </Suspense>
+                    }
+                />
+                <Route
+                    element={
+                        <Suspense fallback={<LoaderModel />}>
+                            <ProtectRoutes restrictedTo="patient" />
+                        </Suspense>
+                    }
+                >
+                    <Route
+                        path="create"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <Ambulances />
+                            </Suspense>
+                        }
+                    />
                 </Route>
             </Route>
         </Route>
-    )
-}
+    );
+};
 
-
-
-export default AmbulanceRoutes
+export default AmbulanceRoutes;

@@ -1,3 +1,5 @@
+import consulationAnimation from '@/assets/animation/consultation.json'
+import heroAnimation from '@/assets/animation/hero.json'
 import CustomTooltip from '@/components/customTooltip'
 import EmptyList from '@/components/emptyList'
 import IconMenu from '@/components/icon-menu'
@@ -8,14 +10,12 @@ import { Separator } from '@/components/ui/separator'
 import { features, services } from '@/helpers/homepage'
 import pulicApi from '@/services/public-apis'
 import { paginatedNews } from '@/types/setupTypes/homepage'
+import { Player } from '@lottiefiles/react-lottie-player'
 import Autoplay from "embla-carousel-autoplay"
-import Lottie from 'lottie-react'
 import { FileText, Globe, Heart, Newspaper, NotepadText, Stethoscope } from 'lucide-react'
 import { motion } from 'motion/react'
 import { CSSProperties, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import heroAnimation from '@/assets/animation/hero.json'
-import consulationAnimation from '@/assets/animation/consultation.json'
 import { Link } from 'react-router-dom'
 
 
@@ -119,7 +119,7 @@ const HomePage = () => {
                     {/* Hero Animation */}
                     <div className="lg:col-span-2 mx-auto flex flex-col justify-center" >
                         <div className='w-80 sm:w-[500px] lg:w-[500px]'>
-                            <Lottie animationData={heroAnimation} loop={true} className='w-full h-full object-cover' />
+                            <Player autoplay src={heroAnimation} loop={true} className='w-full h-full object-cover' />
                         </div>
                     </div>
                 </div>
@@ -289,7 +289,7 @@ const HomePage = () => {
                         </div>
                     </div>
                     <div>
-                        <Lottie animationData={consulationAnimation} loop={true} className='w-full h-full object-cover' />
+                        <Player autoplay src={consulationAnimation} loop={true} className='w-full h-full object-cover' />
                     </div>
                 </MaxWidthWrapper>
             </div>
