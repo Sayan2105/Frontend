@@ -1,12 +1,11 @@
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { dashboardPermissions, Module, setupPermissions } from "@/lib/modules"
 import { cn } from "@/lib/utils"
-import { Activity, Edit3, Eye, Layers, Plus, Shield, Trash2, Users } from "lucide-react"
-import { parseAsInteger, useQueryState } from "nuqs"
-import { ReactNode, useEffect, useState } from "react"
+import { Activity, ChartCandlestick, Edit3, Eye, Layers, Lock, LockOpen, Plus, Shield, Trash2, Users, Wrench } from "lucide-react"
+import { parseAsInteger, parseAsString, useQueryState } from "nuqs"
+import { ElementType, Fragment, ReactNode, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import AuthzApi from "../../services/authorization"
 import { ROLE } from "../role/role"
@@ -18,10 +17,9 @@ const action = ['view', 'create', 'update', 'delete']
 
 const Permission = () => {
 
-    type actionType = 'view' | 'create' | 'update' | 'delete'
-
     const [permissions, setPermissions] = useState(new Map())
     const [roleId, setRoleId] = useQueryState('roleId', parseAsInteger)
+    const [navigate, setNavigate] = useQueryState('navigate', parseAsString.withDefault('core'))
 
     const [roles, setRoles] = useState<ROLE[]>([])
 
@@ -76,7 +74,7 @@ const Permission = () => {
 
     return (
         <>
-            <section className="flex flex-col pb-16 gap-y-12 pt-10 bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-500/10 dark:to-green-500/10 rounded-t-3xl">
+            <section className="flex flex-col min-h-[calc(100vh-64px)] pb-16 gap-y-12 pt-10 bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-500/10 dark:to-green-500/10 rounded-t-3xl">
                 <div className="flex space-x-2 items-center justify-center">
                     <div className="p-3 dark:bg-white/20 rounded-full bg-blue-100 text-blue-500 backdrop-blur-sm shadow-xl">
                         <Shield className="h-8 w-8" />
@@ -118,162 +116,101 @@ const Permission = () => {
                 )}
 
 
-                <PermissionComponent
-                    module={Module}
-                    permissions={permissions}
-                    renderActions={(mod) => (
-                        <div className="grid grid-cols-4 pb-2">
-                            {action.map((action, i) => {
-                                const perm = `${action}:${mod.name}`;
-                                const PID = permissions?.get(perm)?.id
-                                return <>
-                                    <ActionButton
-                                        key={i}
-                                        hasPermission={permissions.has(`${action}:${mod.name}`)}
-                                        action={action as ActionType}
-                                        disabled={mod[action as ActionType]}
-                                        click={(isAllow) => handleCheckBox(isAllow, perm, PID)}
-                                    />
-                                </>
-                            })}
-                        </div>
-                    )}
-                />
+                {roleId && <>
 
+                    {/* Navigation Buttons */}
 
-            </section>
+                    <div className="max-w-full overflow-hidden p-2 border dark:border-white/10 rounded-lg shadow-md sm:mx-auto mx-2.5">
+                        <ScrollArea className="w-full whitespace-nowrap">
+                            <div className="flex w-max gap-4 px-2">
+                                <Button
+                                    onClick={() => setNavigate('core')}
+                                    variant={navigate === 'core' ? 'default' : 'ghost'}
+                                    className="flex items-center gap-2"
+                                >
+                                    <Layers /> Core Module
+                                </Button>
 
-            <section className="flex flex-col pb-16 gap-y-5 pt-5">
-                <div className="flex justify-between">
-                    <h1 className="text-lg font-semibold">Permission</h1>
-                </div>
+                                <Button
+                                    onClick={() => setNavigate('configuration')}
+                                    variant={navigate === 'configuration' ? 'default' : 'ghost'}
+                                    className="flex items-center gap-2"
+                                >
+                                    <Wrench /> Configuration
+                                </Button>
 
-                <Separator />
-
-                {/* ROLE */}
-                <div className="w-[200px] sm:w-[300px] space-y-2">
-                    <p className="text-gray-400">Roles</p>
-                    <Select defaultValue={String(roleId)} onValueChange={(val) => { setRoleId(+val) }}>
-                        <SelectTrigger>
-                            <SelectValue placeholder='Select Role' />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {roles.map((role) => (
-                                <SelectItem key={role.id} value={String(role.id)}>{role.name}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead >Module</TableHead>
-                            <TableHead >View</TableHead>
-                            <TableHead >Create</TableHead>
-                            <TableHead >Update</TableHead>
-                            <TableHead >Delete</TableHead>
-                            {/* <TableHead >Action</TableHead> */}
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {Module.map((mod, i) => {
-                            return <TableRow key={i}>
-                                <TableCell>{mod.name}</TableCell>
-                                {['view', 'create', 'update', 'delete'].map((action) => {
-                                    const perm = `${action}:${mod.name}`;
-                                    const permID = permissions.get(perm)
-                                    return <TableCell key={action}>
-                                        {/* checking if any role has permission the checked */}
-                                        <Checkbox
-                                            disabled={!mod[action as actionType]} // cause true will disable it
-                                            checked={permissions.has(perm)}
-                                            onCheckedChange={(value) => {
-                                                handleCheckBox(Boolean(value),
-                                                    perm, permID?.id)
-                                            }}
-                                        />
-                                    </TableCell>
-                                })}
-                            </TableRow>
-                        })}
-                    </TableBody>
-                </Table>
-
-
-                {/* dashboard permissions */}
-
-                <div className="mt-10">
-
-                    <h1 className="font-medium mb-4">Dashboard Permission</h1>
-
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead >Module</TableHead>
-                                {dashboardPermissions.map((action, i) => (
-                                    <TableHead key={i}>{action}</TableHead>
-                                ))}
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell>Dashboard</TableCell>
-                                {dashboardPermissions.map((action) => {
-                                    const perm = `${action}:dashboard`;
-                                    const permID = permissions.get(perm)
-                                    return <TableCell key={action}>
-                                        {/* checking if any role has permission the checked */}
-                                        <Checkbox checked={permissions.has(perm)} onCheckedChange={(value) => { handleCheckBox(Boolean(value), perm, permID?.id) }} />
-                                    </TableCell>
-                                })}
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </div>
+                                <Button
+                                    onClick={() => setNavigate('dashboard')}
+                                    variant={navigate === 'dashboard' ? 'default' : 'ghost'}
+                                    className="flex items-center gap-2"
+                                >
+                                    <ChartCandlestick /> Dashboard
+                                </Button>
+                            </div>
+                            <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+                    </div>
 
 
 
-                {/* Setup permissions */}
 
-                <div className="mt-10">
-
-                    <h1 className="font-medium mb-4">Setup Permission</h1>
-
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead >Module</TableHead>
-                                <TableHead >View</TableHead>
-                                <TableHead >Create</TableHead>
-                                <TableHead >Update</TableHead>
-                                <TableHead >Delete</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {setupPermissions.map((mod) => {
-                                return <TableRow key={mod.name}>
-                                    <TableCell>{mod.name}</TableCell>
-                                    {['view', 'create', 'update', 'delete'].map((action) => {
+                    {navigate === 'core' && (
+                        <PermissionComponent
+                            title="Core Modules"
+                            Icon={Layers}
+                            module={Module}
+                            HeaderIcon={Activity}
+                            permissions={permissions}
+                            renderActions={(mod) => (
+                                <div className="grid grid-cols-4 pb-2">
+                                    {action.map((action, i) => {
                                         const perm = `${action}:${mod.name}`;
-                                        const permID = permissions.get(perm)
-                                        return <TableCell key={action}>
-                                            <Checkbox
-                                                disabled={!mod[action as actionType]}
-                                                checked={permissions.has(perm)}
-                                                onCheckedChange={(value) => {
-                                                    handleCheckBox(Boolean(value),
-                                                        perm, permID?.id)
-                                                }}
+                                        const PID = permissions?.get(perm)?.id
+                                        return <Fragment key={i}>
+                                            <ActionButton
+                                                key={i}
+                                                hasPermission={permissions.has(`${action}:${mod.name}`)}
+                                                action={action as ActionType}
+                                                disabled={mod[action as ActionType]}
+                                                click={(isAllow) => handleCheckBox(isAllow, perm, PID)}
                                             />
-                                        </TableCell>
+                                        </Fragment>
                                     })}
-                                </TableRow>
-                            })}
-                        </TableBody>
-                    </Table>
-                </div>
+                                </div>
+                            )}
+                        />
+                    )}
+
+                    {navigate === 'configuration' && (
+                        <PermissionComponent
+                            title="Configuration"
+                            Icon={Wrench}
+                            module={setupPermissions}
+                            HeaderIcon={Shield}
+                            permissions={permissions}
+                            renderActions={(mod) => (
+                                <div className="grid grid-cols-4 pb-2">
+                                    {action.map((action, i) => {
+                                        const perm = `${action}:${mod.name}`;
+                                        const PID = permissions?.get(perm)?.id
+                                        return <Fragment key={i}>
+                                            <ActionButton
+                                                key={i}
+                                                hasPermission={permissions.has(`${action}:${mod.name}`)}
+                                                action={action as ActionType}
+                                                disabled={mod[action as ActionType]}
+                                                click={(isAllow) => handleCheckBox(isAllow, perm, PID)}
+                                            />
+                                        </Fragment>
+                                    })}
+                                </div>
+                            )}
+                        />
+                    )}
+                </>}
+
+
+                {navigate === 'dashboard' && <DashboardPermissions module={dashboardPermissions} permissions={permissions} click={handleCheckBox} />}
 
             </section>
         </>
@@ -285,16 +222,16 @@ export default Permission
 
 
 
-const PermissionComponent = ({ module, permissions, renderActions }: { module: typeof Module, permissions: Map<string, any>, renderActions: (module: typeof Module[0]) => ReactNode }) => {
+const PermissionComponent = ({ Icon, HeaderIcon, title, module, permissions, renderActions }: { Icon: ElementType, HeaderIcon: ElementType, title: string, module: typeof Module, permissions: Map<string, any>, renderActions: (module: typeof Module[0]) => ReactNode }) => {
 
     return (
         <div className="flex flex-col p-5 border gap-5 dark:border-white/10 rounded-xl mx-2 md:mx-10">
             {/* Header */}
             <div className="flex gap-3 items-center">
                 <div className="p-3 dark:bg-white/20 rounded-full bg-blue-100 text-blue-500 backdrop-blur-sm shadow-xl">
-                    <Layers />
+                    <Icon />
                 </div>
-                <h1 className="font-bold text-xl text-gray-800 dark:text-gray-100">Core Modules</h1>
+                <h1 className="font-bold text-xl text-gray-800 dark:text-gray-100">{title}</h1>
             </div>
 
             {module.map((mod, i) => {
@@ -302,11 +239,11 @@ const PermissionComponent = ({ module, permissions, renderActions }: { module: t
                 const enabled = action.filter(a => mod[a as ActionType]).length
                 const granted = action.filter(a => permissions.has(`${a}:${mod.name}`)).length
 
-                return <div key={i} className="p-2 rounded-xl space-y-4 border dark:border-white/10">
+                return <div key={i + mod.name} className="p-2 rounded-xl space-y-4 border dark:border-white/10">
                     {/* header */}
                     <div className="flex gap-3 items-center">
                         <div className="p-3 bg-gradient-to-br from-blue-400 to-green-400 dark:from-blue-700 dark:to-green-700 rounded-md text-white backdrop-blur-sm shadow-xl">
-                            <Activity />
+                            <HeaderIcon />
                         </div>
                         <div className="space-y-0.5">
                             <h1 className="font-semibold text-lg text-gray-800 dark:text-gray-100">{mod.name}</h1>
@@ -322,8 +259,6 @@ const PermissionComponent = ({ module, permissions, renderActions }: { module: t
 }
 
 
-
-
 const ActionButton = ({ action, hasPermission, disabled, click }: { action: ActionType, hasPermission: boolean, disabled: boolean, click: (action: boolean) => void }) => {
 
     const [activeButtons, setActiveButtons] = useState({
@@ -335,6 +270,7 @@ const ActionButton = ({ action, hasPermission, disabled, click }: { action: Acti
 
     const handleClick = (action: ActionType) => {
         setActiveButtons({ ...activeButtons, [action]: !activeButtons[action] })
+        hasPermission ? click(false) : click(true)
     }
 
     const btnConfig = {
@@ -371,6 +307,20 @@ const ActionButton = ({ action, hasPermission, disabled, click }: { action: Acti
 
     const Icon = btnConfig[action].icon
 
+    useEffect(() => {
+        if (!hasPermission) {
+            setActiveButtons(prev => ({
+                ...prev,
+                [action]: false, // clear it if permission was removed
+            }));
+        } else {
+            setActiveButtons(prev => ({
+                ...prev,
+                [action]: true, // if permission is given again, mark active
+            }));
+        }
+    }, [hasPermission]);
+
     return (
         <div className="mx-auto flex space-y-1 flex-col items-center">
             <button className={cn(`p-3 transition-all duration-200 outline outline-offset-2 rounded-lg shadow-none ${btnConfig[action].inactive} `,
@@ -378,11 +328,53 @@ const ActionButton = ({ action, hasPermission, disabled, click }: { action: Acti
                 { [btnConfig[action].disabled]: !disabled }
             )}
                 disabled={!disabled}
-                onClick={() => { handleClick(action); hasPermission ? click(false) : click(true) }}
+                onClick={() => { handleClick(action) }}
             >
                 <Icon className="h-5 w-5" />
             </button>
             <span className="text-xs font-medium text-gray-500 dark:text-gray-500">{btnConfig[action].label}</span>
+        </div>
+    )
+}
+
+
+const DashboardPermissions = ({ module, permissions, click }: { module: typeof dashboardPermissions, permissions: Map<string, any>, click: (isAllowed: boolean, permission: string, PID: number) => void }) => {
+
+    const [isClicked, setIsClicked] = useState<{ [key: number]: boolean }>({})
+
+    const handleClick = (i: number) => {
+        setIsClicked(prev => ({ ...prev, [i]: !prev[i] }))
+    }
+
+
+    return (
+        <div className="flex flex-col p-5 border gap-5 dark:border-white/10 rounded-xl mx-2 md:mx-10">
+            {/* Header */}
+            <div className="flex gap-3 items-center">
+                <div className="p-3 dark:bg-white/20 rounded-full bg-blue-100 text-blue-500 backdrop-blur-sm shadow-xl">
+                    <ChartCandlestick />
+                </div>
+                <h1 className="font-bold text-xl text-gray-800 dark:text-gray-100">Dashboard Analytics</h1>
+            </div>
+
+            {module.map((action, i) => {
+                const isGranted = permissions.has(`${action}:dashboard`)
+                const perm = `${action}:dashboard`
+                const permId = permissions.get(perm)?.id
+                isClicked[i] = isGranted
+
+                return <div
+                    onClick={() => { handleClick(i); click && click(!isGranted, perm, permId) }} // if true then create else delete
+                    className={cn("flex justify-between items-center cursor-pointer p-5 rounded-xl space-y-4 outline outline-green-500/10 bg-green-50 dark:bg-green-500/5 transition-all duration-300", { 'border-none outline-offset-2 outline-green-500': isClicked[i] })} key={i}>
+                    <div className="flex gap-2 items-center">
+                        <ChartCandlestick className="w-5 h-5 text-gray-400" />
+                        <p className="text-gray-800 dark:text-neutral-100 font-semibold">{action}</p>
+                    </div>
+                    <div className="p-2 rounded-full bg-white/10 shadow-xl">
+                        {isClicked[i] ? <LockOpen className="text-green-500 w-5 h-5" /> : <Lock className="text-gray-400 w-5 h-5" />}
+                    </div>
+                </div>
+            })}
         </div>
     )
 }
