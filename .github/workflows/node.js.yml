@@ -1,4 +1,4 @@
-name: Deploy Fullstack App to VPS
+name: Deploy Frontend to VPS
 
 on:
   push:
@@ -20,23 +20,16 @@ jobs:
         chmod 600 ~/.ssh/id_ed25519
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Deploy Backend & Frontend to VPS
+    - name: Deploy Frontend
       run: |
-        ssh -o StrictHostKeyChecking=no -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no \
+            -o HostKeyAlgorithms=+ssh-rsa \
+            -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+            ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} << 'EOF'
           set -e
-
-          echo "Deploying BACKEND..."
-          cd /var/www/myapp/client/HospitalManagementBackend
-          echo "${{ secrets.BACKEND_ENV }}" > .env
-          git pull origin main
-          npm install
-          pm2 restart backend || pm2 start index.js --name backend
-
           echo "Deploying FRONTEND..."
           cd /var/www/myapp/client/HospitalManagementFrontend
           git pull origin main
           npm install
           npm run build
-
-          echo "Deployment complete!"
         EOF
