@@ -75,8 +75,9 @@ export const footerSocilalMedia = [
 export const footerLinks = [
     { name: 'Home', path: '/' },
     { name: 'Annual Calendar', path: '/home/annual-calendar' },
-    { name: 'Appointment', path: '/' },
-    { name: 'Events', path: '/' },
-    { name: 'About Us', path: '/' },
-    { name: 'Gallery', path: '/' }
+    { name: 'Appointment', path: '/home/book-appointment' },
+    { name: 'Find A Doctor', path: '/home/doctors' },
+    { name: 'Contact', path: '/home/contact' },
+    { name: 'Events', path: '/home/event' },
+    { name: 'About Us', path: '/home/about' },
 ]
