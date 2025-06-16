@@ -28,6 +28,7 @@ const Navbar = () => {
         setUserModel(false)
     }
 
+    const Routes = (session.user?.role === 'patient') ? session.user?.role : 'admin'
 
     return (
         <>
@@ -38,7 +39,7 @@ const Navbar = () => {
                         <div className="flex items-center gap-x-1">
                             <img src="/logo.png" alt="logo" className="w-12 h-12 rounded-full object-cover" />
                             <div>
-                                <Link to={{ pathname: '/' }} className="tracking-tight cursor-pointer z-[100] select-none">
+                                <Link to={{ pathname: `/${Routes}/dashboard` }} className="tracking-tight cursor-pointer z-[100] select-none">
                                     Vertica Healthcare
                                 </Link>
                             </div>
@@ -97,7 +98,7 @@ const Navbar = () => {
                     }}
 
                     onDashboard={() => {
-                        const Routes = (session.user?.role === 'patient') ? session.user?.role : 'admin'
+
                         router(`/${Routes}/dashboard`), setUserModel(false)
                     }}
                 />

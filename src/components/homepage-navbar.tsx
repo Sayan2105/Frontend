@@ -33,9 +33,10 @@ const HomepageNavbar = () => {
             {/* Header */}
             <div className="sticky top-0 z-40 px-2.5 lg:px-10 border-b border-border h-16 flex items-center justify-between backdrop-blur-lg overflow-none">
 
-                <div className="flex items-center gap-x-1 z-50">
+                <div className="relative flex items-center gap-x-1 z-50">
                     <img src="/logo.png" alt="logo" className="w-12 h-12 rounded-full object-cover" />
                     <p className="font-semibold text-gray-900 dark:text-neutral-100">Vertica Healthcare</p>
+                    <Link to={{ pathname: '/' }} className="absolute inset-0" />
                 </div>
 
 
