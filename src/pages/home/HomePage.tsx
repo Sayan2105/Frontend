@@ -76,14 +76,14 @@ const HomePage = () => {
                                     Welcome to Vertica Healthcare
                                 </motion.h1>
 
-                                <motion.p
+                                {/* <motion.p
                                     initial={{ opacity: 0, y: 40 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 1, delay: 0.5 }}
                                     className="text-gray-600 dark:text-neutral-200 text-2xl md:text-4xl tracking-tight leading-tight"
                                 >
                                     Efficiency in Care, Excellence in Service
-                                </motion.p>
+                                </motion.p> */}
 
                                 <motion.p
                                     initial={{ opacity: 0, y: 40 }}
