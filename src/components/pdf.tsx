@@ -11,8 +11,8 @@ export const PdfHeader = ({ id, title, date }: headerProps) => {
     return (
         <div className="flex justify-between gap-5 mb-4 items-center border-b-2 border-dashed dark:border-gray-500 pb-2">
             <div >
-                <div className="flex items-center">
-                    <img src="/logo.png" alt="Logo" className="w-20 h-20 object-cover" />
+                <div className="flex items-center gap-2">
+                    <img src="/logo.png" alt="Logo" className="w-16 h-16 object-cover" />
                     <div>
                         <h1 className="text-xl font-bold text-gray-800 dark:text-white">{hospital_name}</h1>
                         <p className="text-xs text-gray-600 dark:text-gray-300">{hospital_website}</p>
