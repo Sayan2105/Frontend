@@ -8,7 +8,7 @@ const PermissionLayout = () => {
 
   return (
     <>
-      <div className='space-y-4 pt-4 pb-10 px-2.5'>
+      <div className='space-y-4 pt-4 pb-10 px-2.5 '>
         <div className="w-full h-12 ring-1 ring-zinc-200 dark:ring-zinc-800 rounded px-2">
           <ScrollArea className='h-full w-full'>
             <div className="flex h-12 gap-x-3 items-center">

@@ -8,30 +8,36 @@ import TableActions from '@/components/table-actions'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import UserImage from '@/components/user-image'
 import { appointmentFormSchema } from '@/formSchemas/AppointmentFormSchema'
 import { page_limit } from '@/globalData'
 import { currencySymbol } from '@/helpers/currencySymbol'
 import { useConfirmation } from '@/hooks/useConfirmation'
 import { cn, currencyFormat } from '@/lib/utils'
 import { AppointmentApi } from '@/services/appointment-api'
-import { Appointment, AppointmentData, AppointmentDetails } from '@/types/appointment/appointment'
+import { Appointment, AppointmentData } from '@/types/appointment/appointment'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Ban, ListMinus, Plus } from 'lucide-react'
 import { parseAsInteger, useQueryState } from 'nuqs'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
-import AddAppointment from './create-appointment'
 import AppointmentDetailsModel from './appointment-info'
+import AddAppointment from './create-appointment'
 import AppointmentListPDF from './print/AppointmnetListPDF'
 import PrintAppointment from './print/print-appointment'
-import UserImage from '@/components/user-image'
+import InlineLoader from '@/components/inline-loader'
+import ErrorFallback from '@/components/errorFallback'
+import { AxiosError } from 'axios'
 
 
 
 
 const AdminAppointment = () => {
+
+    const queryClient = useQueryClient()
 
     // custom hooks
     const { confirm, confirmationProps } = useConfirmation()
@@ -40,95 +46,92 @@ const AdminAppointment = () => {
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
     const [search, setSearch] = useQueryState('search')
 
-    // Pending states
-    const [isPending, setPending] = useState<boolean>(false)
-
     // Model States
     const [form, setForm] = useState(false)
+    const [AID, setAID] = useState<string | null>(null)
 
-
-    // API States
-    const [Appointments, setAppointments] = useState<Appointment>({ data: [], total_pages: 0 })
-    const [AppointmentDetails, setAppointmentDetails] = useState<AppointmentDetails | undefined>(undefined)
     const [current, setCurrent] = useState<AppointmentData | null>(null)
 
-    //fetching appointments list
-    const getAppointments = async () => {
-        try {
-            const data = await AppointmentApi.getAppointments({
-                page,
-                limit: page_limit,
-                search: search!
+
+    const { data: Appointments, isError, isLoading, error } = useQuery<Appointment>({
+        queryKey: ['appointments', page, search],
+        queryFn: () => AppointmentApi.getAppointments({ page, limit: page_limit, search: search! }),
+    })
+
+    const { mutate: deleteAppointment } = useMutation({
+        mutationFn: (id: string) => AppointmentApi.deleteAppointment(id),
+        onSuccess: ({ id, message }: { id: string, message: string }) => {
+            queryClient.setQueryData(['appointments', page, search], (oldData: Appointment) => {
+                return { ...oldData, data: oldData.data.filter((appointment) => appointment.id !== id) }
             })
-            setAppointments(data)
-        } catch ({ message }: any) {
+            toast.success(message)
+        }, onError: ({ message }: { message: string }) => {
             toast.error(message)
         }
-    }
+    })
 
+    const { data: AppointmentDetails, isLoading: LoadingAppointmentDetails } = useQuery({
+        queryKey: ['appointment', AID],
+        queryFn: () => AppointmentApi.getAppointmentById(AID!),
+        enabled: !!AID,
+    })
 
-    // fetching appointment details
+    const { mutate: createAppointment, isPending: isPendingCreateAppointment } = useMutation({
+        mutationFn: (formData: z.infer<typeof appointmentFormSchema>) => AppointmentApi.createAppointment(formData),
+        onSuccess: ({ appointment, message }: { appointment: Appointment['data'][0], message: string }) => {
+            queryClient.setQueryData(['appointments', page, search], (oldData: Appointment) => {
+                return { ...oldData, data: [appointment, ...oldData.data] }
+            })
+            toast.success(message)
+            setForm(false)
+        }, onError: (err: AxiosError<{ message: string }>) => {
+            toast.error(err.response?.data.message!)
+        }
+    })
 
-    const getAppointmentById = async (id: string) => {
-        try {
-            setPending(true)
-            const data = await AppointmentApi.getAppointmentById(id)
-            setAppointmentDetails(data)
-        } catch ({ message }: any) {
-            toast.error(message)
-        } finally { setPending(false) }
-    }
-
-
+    const { mutate: updateAppointment } = useMutation({
+        mutationFn: (formData: z.infer<typeof appointmentFormSchema>) => AppointmentApi.updateAppointment(AID!, formData),
+        onSuccess: ({ appointment, message }: { appointment: Appointment['data'][0], message: string }) => {
+            queryClient.setQueryData(['appointments', page, search], (oldData: Appointment) => {
+                const oldDataMap = new Map(
+                    oldData.data.map(item => [item.id, item])
+                )
+                oldDataMap.set(AID!, appointment)
+                return { ...oldData, data: [...oldDataMap.values()] }
+            });
+            toast.success(message)
+            setForm(false)
+            setAID(null)
+        }, onError: (err: AxiosError<{ message: string }>) => {
+            toast.error(err.response?.data.message!)
+        }
+    })
 
     const onSearch = useDebouncedCallback(async (value: string) => {
         value ? (setSearch(value)) : (setSearch(null))
-        setPage(1) // always should execute
+        setPage(1)
     }, 400)
 
 
     const onDelete = async (id: string) => {
-        try {
-            const isConfirm = await confirm()
-            if (!isConfirm) return null
-            const data = await AppointmentApi.deleteAppointment(id)
-            toast.success(data.message)
-            getAppointments()
-        } catch ({ message }: any) {
-            toast.error(message)
-        }
+        const isConfirm = await confirm()
+        if (!isConfirm) return null
+        deleteAppointment(id)
     }
 
 
     // performing only insert
     const handleSubmit = async (formData: z.infer<typeof appointmentFormSchema>) => {
-        try {
-            let data; setPending(true)
-            AppointmentDetails ? (
-                data = await AppointmentApi.updateAppointment(AppointmentDetails.id, formData),
-                setAppointmentDetails(undefined)
-            )
-                : (data = await AppointmentApi.createAppointment(formData))
-            toast.success(data.message)
-            getAppointments()
-            setForm(false)
-        } catch ({ message }: any) {
-            toast.error(message)
-        } finally {
-            setPending(false)
-        }
+        AID ? updateAppointment(formData) : createAppointment(formData)
     }
 
 
-    useEffect(() => {
-        getAppointments();
-    }, [page, search])
-
+    if (LoadingAppointmentDetails) return <LoaderModel />
 
     return (
 
         <>
-            <div className='my-2 flex flex-col px-2.5'>
+            <div className='flex flex-col px-2.5 gap-2 h-full w-full flex-1'>
 
                 {/* top bar */}
                 <div className='flex py-3 flex-col md:flex-row gap-y-2 md:items-center md:justify-between border-b border-gray-200 dark:border-gray-800'>
@@ -169,113 +172,116 @@ const AdminAppointment = () => {
 
                     <div className='flex gap-x-2'>
                         {/* printing appointments list */}
-                        <AppointmentListPDF appointments={Appointments['data']} />
+                        <AppointmentListPDF appointments={Appointments?.['data']!} />
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-y-5 min-h-[75vh] mb-16 mt-5">
-                    <div className="flex-1">
-                        <ProtectedTable module='Appointment' renderTable={(show, canUpdate, canDelete) => (
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Appointment No</TableHead>
-                                        <TableHead>Patient Name</TableHead>
-                                        <TableHead>Appointment Date</TableHead>
-                                        <TableHead>Shift</TableHead>
-                                        <TableHead>Phone</TableHead>
-                                        <TableHead>Gender</TableHead>
-                                        <TableHead>Doctor</TableHead>
-                                        <TableHead>Fees {currencySymbol()}</TableHead>
-                                        <TableHead>Discount%</TableHead>
-                                        <TableHead>Net Amount {currencySymbol()}</TableHead>
-                                        <TableHead>Action</TableHead>
-                                        <TableHead>Status</TableHead>
-                                    </TableRow>
-                                </TableHeader>
+                {isLoading ?
+                    <><InlineLoader /></>
+                    :
+                    isError ?
+                        <ErrorFallback error={error!} />
+                        :
+                        <div className="flex flex-col gap-y-5 min-h-[75vh] mb-16 mt-5">
+                            <div className="flex-1">
+                                <ProtectedTable module='Appointment' renderTable={(show, canUpdate, canDelete) => (
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Appointment No</TableHead>
+                                                <TableHead>Patient Name</TableHead>
+                                                <TableHead>Appointment Date</TableHead>
+                                                <TableHead>Shift</TableHead>
+                                                <TableHead>Phone</TableHead>
+                                                <TableHead>Gender</TableHead>
+                                                <TableHead>Doctor</TableHead>
+                                                <TableHead>Fees {currencySymbol()}</TableHead>
+                                                <TableHead>Discount%</TableHead>
+                                                <TableHead>Net Amount {currencySymbol()}</TableHead>
+                                                <TableHead>Action</TableHead>
+                                                <TableHead>Status</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
 
 
-                                <TableBody>
-                                    {Appointments.data.map((appointment) => {
-                                        return <TableRow key={appointment.id}>
-                                            <TableCell className="font-semibold cursor-pointer text-blue-500 hover:text-blue-400" onClick={async () => {
-                                                await getAppointmentById(appointment.id)
-                                            }}>
-                                                {appointment.id}
-                                            </TableCell>
-                                            <TableCell>
-                                                <UserImage url={appointment.patient.image} name={appointment.patient.name} gender={appointment.patient.gender} />
-                                            </TableCell>
-                                            <TableCell>{appointment.appointment_date}</TableCell>
-                                            <TableCell>{appointment.shift}</TableCell>
-                                            <TableCell>{appointment.patient.phone}</TableCell>
-                                            <TableCell>{appointment.patient.gender}</TableCell>
-                                            <TableCell>
-                                                <UserImage url={appointment.doctor.image} name={appointment.doctor.name} gender={appointment.doctor.gender} />
-                                            </TableCell>
-                                            <TableCell>{currencyFormat(+appointment.fees)}</TableCell>
-                                            <TableCell>{appointment.discount}%</TableCell>
-                                            <TableCell>{currencyFormat(appointment.net_amount)}</TableCell>
-                                            <TableActions
-                                                show={show}
-                                                canUpdate={canUpdate}
-                                                canDelete={canDelete}
-                                                onDelete={() => onDelete(appointment.id)}
-                                                onEdit={async () => {
-                                                    await getAppointmentById(appointment.id),
-                                                        setForm(true)
-                                                }}
-                                                incluePrint={{
-                                                    include: true,
-                                                    print: () => setCurrent(appointment)
-                                                }}
-                                            />
-                                            <TableCell>
-                                                <span className={cn('text-white py-1 px-3 block rounded-md group-hover:hidden', appointment.status === 'Approved' ? 'bg-green-500' : appointment.status === 'Pending' ? 'bg-yellow-500' : 'bg-red-500')}>{appointment.status}</span>
-                                            </TableCell>
-                                        </TableRow>
-                                    })}
-                                </TableBody>
-                            </Table>
-                        )} />
+                                        <TableBody>
+                                            {Appointments?.data?.map((appointment) => {
+                                                return <TableRow key={appointment.id}>
+                                                    <TableCell className="font-semibold cursor-pointer text-blue-500 hover:text-blue-400" onClick={async () => {
+                                                        setAID(appointment.id)
+                                                    }}>
+                                                        {appointment.id}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <UserImage url={appointment.patient.image} name={appointment.patient.name} gender={appointment.patient.gender} />
+                                                    </TableCell>
+                                                    <TableCell>{appointment.appointment_date}</TableCell>
+                                                    <TableCell>{appointment.shift}</TableCell>
+                                                    <TableCell>{appointment.patient.phone}</TableCell>
+                                                    <TableCell>{appointment.patient.gender}</TableCell>
+                                                    <TableCell>
+                                                        <UserImage url={appointment.doctor.image} name={appointment.doctor.name} gender={appointment.doctor.gender} />
+                                                    </TableCell>
+                                                    <TableCell>{currencyFormat(+appointment.fees)}</TableCell>
+                                                    <TableCell>{appointment.discount}%</TableCell>
+                                                    <TableCell>{currencyFormat(appointment.net_amount)}</TableCell>
+                                                    <TableActions
+                                                        show={show}
+                                                        canUpdate={canUpdate}
+                                                        canDelete={canDelete}
+                                                        onDelete={() => onDelete(appointment.id)}
+                                                        onEdit={async () => { setAID(appointment.id), setForm(true) }}
+                                                        incluePrint={{
+                                                            include: true,
+                                                            print: () => setCurrent(appointment)
+                                                        }}
+                                                    />
+                                                    <TableCell>
+                                                        <span className={cn('text-white py-1 px-3 block rounded-md group-hover:hidden', appointment.status === 'Approved' ? 'bg-green-500' : appointment.status === 'Pending' ? 'bg-yellow-500' : 'bg-red-500')}>{appointment.status}</span>
+                                                    </TableCell>
+                                                </TableRow>
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                )} />
 
-                        {/* if no data will be recive */}
-                        <EmptyList length={Appointments.data.length} message='No data found' />
-                    </div>
+                                {/* if no data will be recive */}
+                                <EmptyList length={Appointments?.data?.length!} message='No data found' />
+                            </div>
 
-                    {/* Pagination */}
+                            {/* Pagination */}
 
-                    <CustomPagination
-                        total_pages={Appointments?.total_pages}
-                        currentPage={+page}
-                        previous={(p) => setPage(p)}
-                        goTo={(p) => setPage(p)}
-                        next={(p) => setPage(p)}
-                    />
-                </div>
+                            <CustomPagination
+                                total_pages={Appointments?.total_pages!}
+                                currentPage={+page}
+                                previous={(p) => setPage(p)}
+                                goTo={(p) => setPage(p)}
+                                next={(p) => setPage(p)}
+                            />
+                        </div>
 
-
+                }
             </div>
 
 
 
-            {/* appointment form model */}
 
+            {/* appointment form model */}
             {
                 form && <AddAppointment
                     Submit={handleSubmit}
-                    isPending={isPending}
+                    isPending={isPendingCreateAppointment}
                     defaultValues={AppointmentDetails!}
-                    onClick={() => { setForm(false), setAppointmentDetails(undefined) }}
+                    onClick={() => { setAID(null), setForm(false) }}
                 />
             }
 
 
             {/* Appointment details model */}
 
-            {(AppointmentDetails && !form) && <AppointmentDetailsModel
+            {(AID && !form) && <AppointmentDetailsModel
                 appointmentDetails={AppointmentDetails!}
-                onClick={() => setAppointmentDetails(undefined)}
+                onClick={() => setAID(null)}
             />}
 
 
@@ -284,9 +290,6 @@ const AdminAppointment = () => {
                 cancel={() => confirmationProps.onCancel()}
                 continue={() => confirmationProps.onConfirm()}
             />}
-
-            {/* Loader model */}
-            {isPending && (<LoaderModel />)}
 
             {/* Print Appointment */}
             {current && <PrintAppointment Info={current!} afterPrint={() => setCurrent(null)} />}
@@ -297,3 +300,6 @@ const AdminAppointment = () => {
 }
 
 export default AdminAppointment
+
+
+// NOTE : DATA IS REFRESHED AFTER 5 SECONDS MEANS CACHE IS CLEARED
