@@ -25,7 +25,7 @@ export const AnnualCalendarSchema = z.object({
     description: z.string().min(1, "Description is required").max(175, "Description is too long"),
     date: z.string().nonempty("Date is required"),
     to: z.string().optional(),
-    type: z.string().nonempty("Type is required"),
+    type: z.string().nonempty("Type is required").default(''),
 })
 
 
@@ -58,6 +58,7 @@ const AnnualCalendarForm = ({ editDetails, Submit, isPending, ...props }: Props)
                                     </SelectContent>
                                 </Select>
                             )} />
+                            {errors?.type && <p className='text-sm text-red-500'>{errors?.type.message}</p>}
                         </div>
 
                         {/* Description */}

@@ -42,6 +42,8 @@ const LatestNews = () => {
         setPage(1)
     }
 
+    console.log('news', current)
+
 
     useEffect(() => {
         getAllNews()
@@ -160,12 +162,12 @@ const LatestNews = () => {
             {form &&
                 <FormModal
                     height="h-[45vh]"
-                    title={current ? "Update News" : "Add News"}
+                    title={"Latest News"}
                     schema={newsSchems}
                     fields={newsFormFields}
                     Submit={handleSubmit}
                     isPending={isPending}
-                    defaultValues={{ ...current, pdf: undefined }}
+                    defaultValues={current ? { ...current, pdf: undefined } : undefined}
                     onClick={() => { setForm(false); setCurrent(null) }}
                 />
             }

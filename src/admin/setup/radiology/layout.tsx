@@ -1,7 +1,6 @@
 import PermissionProtectedAction from "@/components/permission-protected-actions"
 import { buttonVariants } from "@/components/ui/button"
-import { ScrollBar } from "@/components/ui/scroll-area"
-import { ScrollArea } from "@radix-ui/react-scroll-area"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { ChartBarStacked, ReceiptText, Ruler, FlaskConical } from "lucide-react"
 import { Link, Outlet } from "react-router-dom"
 

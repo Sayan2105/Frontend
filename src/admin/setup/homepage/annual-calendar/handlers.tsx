@@ -17,6 +17,8 @@ const useAnnualCalendar = () => {
 
     async function handleSubmit(formData: z.infer<typeof AnnualCalendarSchema>) {
         try {
+            console.log('hello');
+
             let data; setIsPending(true)
             if (current) {
                 data = await homapeageApi.updateAnnualCalendar(current.id, formData)
