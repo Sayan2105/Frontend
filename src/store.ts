@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage';
 import authReducer from './features/auth/authSlice'
+import { encryptTransform } from './lib/utils';
 
 
 const persitConfig = {
     key: 'root',
     version: 1,
-    storage
+    storage,
+    transforms: [encryptTransform]
     // dont have to use white list
 }
 

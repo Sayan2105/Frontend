@@ -85,7 +85,7 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
                     <SelectContent className='z-[200]'>
                       <Input placeholder='Search Staff' className='h-8' onChange={(e) => onSearch(e.target.value)} defaultValue={search!} />
                       {staffs?.data.map((staff) => {
-                        return <SelectItem key={staff.id} value={staff.id.toString()}>{`${staff.name} (${staff.role.name})`}</SelectItem>
+                        return <SelectItem key={staff.id} value={staff.id.toString()}>{`${staff.name} (${staff.role})`}</SelectItem>
                       })}
                     </SelectContent>
                   </Select>

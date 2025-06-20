@@ -342,23 +342,23 @@ const CreateStaff = () => {
         {/* role */}
 
         <div className="w-full flex flex-col gap-y-2">
-          <Controller control={control} name='roleId' render={({ field }) => {
+          <Controller control={control} name='role' render={({ field }) => {
             return <>
               <RequiredLabel label='Role' />
-              <Select value={field.value ? String(field.value) : undefined} onValueChange={(value) => { field.onChange(Number(value)) }}>
+              <Select value={field.value} onValueChange={(value) => { field.onChange(value) }}>
                 <SelectTrigger >
                   <SelectValue placeholder="Select" />
                 </SelectTrigger>
 
                 <SelectContent className='z-[200]'>
                   {roles?.filter(R => R.name !== 'patient').map((role, index) => {
-                    return <SelectItem key={index} value={String(role.id)}>{role.name}</SelectItem>
+                    return <SelectItem key={index} value={String(role.name)}>{role.name}</SelectItem>
                   })}
                 </SelectContent>
               </Select>
             </>
           }} />
-          {errors.roleId && <p className='text-sm text-red-500'>{errors.roleId.message}</p>}
+          {errors.role && <p className='text-sm text-red-500'>{errors.role.message}</p>}
         </div>
 
 

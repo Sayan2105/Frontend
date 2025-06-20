@@ -7,7 +7,7 @@ interface SidebarProviderProps {
     children: React.ReactNode
 }
 
-const hideFor = ['/signin', '/']
+const hideFor = ['/signin', '/' , '/create-admin']
 
 const LayoutWrapper = ({ children }: SidebarProviderProps) => {
     const path = useLocation().pathname

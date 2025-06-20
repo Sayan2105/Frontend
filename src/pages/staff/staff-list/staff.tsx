@@ -143,7 +143,7 @@ const Staff = () => {
                       <p className='font-semibold'>{staff.name}</p>
                       <p className='text-sm'>{staff.id}</p>
                       <p className='text-sm'>{staff.phone}</p>
-                      <p className='bg-gray-200 dark:bg-gray-700 w-fit rounded-sm px-1 text-sm'>{staff.role.name}</p>
+                      <p className='bg-gray-200 dark:bg-gray-700 w-fit rounded-sm px-1 text-sm'>{staff.role}</p>
                     </span>
 
                   </Link>

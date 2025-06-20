@@ -203,7 +203,7 @@ const Staffprofile = () => {
                         iconBg='bg-red-100 dark:bg-red-600/10'
                         icon={< UserCog className='text-red-600' />}
                         title='Role'
-                        value={profile?.role?.name!}
+                        value={profile?.role!}
                     />
                     <IconMenu
                         iconBg='bg-yellow-100 dark:bg-yellow-600/10'

@@ -2,7 +2,7 @@
 export interface staffsData {
     name: string,
     id: number,
-    role: { id: number, name: string },
+    role: string,
     phone: string,
     image: string,
     gender: string,
@@ -23,8 +23,7 @@ export interface staffs {
 export interface StaffProfile {
     id: number;
     name: string;
-    roleId: number,
-    role: { name: string };
+    role: string
     designation: string;
     department: string;
     specialist: Array<{
