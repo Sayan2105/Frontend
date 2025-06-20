@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
+import pulicApi from "@/services/public-apis"
 import StaffApi from "@/services/staff-api"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SelectValue } from "@radix-ui/react-select"
@@ -43,7 +44,7 @@ const CreateAdmin = () => {
 
         try {
             setPending(true)
-            const data = await StaffApi.createStaff(formData)
+            const data = await pulicApi.createAdmin(formData)
             toast.success(data.message)
             router('/signin')
         } catch ({ message }: any) {

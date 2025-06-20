@@ -76,6 +76,16 @@ const pulicApi = {
             throw new Error(err)
         }
     },
+
+    async createAdmin<T extends z.ZodTypeAny>(formData: z.infer<T>) {
+        try {
+            const res = await AxiosClient.post('/api/public/create-admin', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+            return res.data
+        } catch (error: any) {
+            const err = error.response?.data.message || 'Connection error'
+            throw new Error(err)
+        }
+    },
 }
 
 
