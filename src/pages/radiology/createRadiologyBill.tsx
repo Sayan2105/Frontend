@@ -175,7 +175,7 @@ const CreateRadiologyBill = ({ Submit, isPending, editDetails, ...props }: Creat
           {/* grid for fields */}
 
 
-          <ScrollArea className='h-[60vh] sm:h-[55vh]'>
+          <ScrollArea className='h-[50vh] sm:h-[55vh]'>
 
             <div className="grid lg:grid-cols-4 md:grid-cols-3 gap-5 mb-8 px-2.5">
 

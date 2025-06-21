@@ -32,7 +32,7 @@ const VitalFormModel = ({ vitalOptions, Submit, isPending, ...props }: VitalForm
 
         <Dialog pageTitle='Add Payment' {...props} className='sm:w-[400px] mx-auto'>
             <form onSubmit={handleSubmit(Submit)}>
-                <ScrollArea className={'relative h-[50vh] w-full'}>
+                <ScrollArea className={'relative h-[35vh] w-full'}>
                     <div className="grid gap-5 mt-5 px-3 pb-5 ">
 
                         {/* Date */}

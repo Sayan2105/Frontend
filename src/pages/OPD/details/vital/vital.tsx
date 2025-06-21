@@ -83,7 +83,7 @@ const Vital = () => {
                                     const detail = vital.measure.find((item) => item.vital.name === measure.name);
 
                                     return (
-                                        <TableCell key={measure.name}>
+                                        <TableCell key={measure.name} className="text-nowrap">
                                             {detail ? (
                                                 <div className="flex space-x-1 group">
                                                     <span>{detail.vital.name} {detail.value}</span>

@@ -90,7 +90,7 @@ const PurchaseMedicineForm = ({ Submit, isPending, purchaseDetails, ...props }: 
         <Dialog pageTitle='Purchase Medicine' {...props}>
             <form onSubmit={handleSubmit(Submit)}>
 
-                <ScrollArea className='h-[70vh] sm:h-[62vh]'>
+                <ScrollArea className='h-[50vh] sm:h-[62vh]'>
                     {/* Main grid */}
                     <section className='p-3 grid sm:grid-cols-2 lg:grid-cols-3 rounded-lg gap-4' >
 

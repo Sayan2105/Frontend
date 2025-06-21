@@ -16,8 +16,8 @@ interface IssueBloodComponentInfoModalProps extends HTMLAttributes<HTMLDivElemen
 const IssueBloodComponentModal = ({ info, ...props }: IssueBloodComponentInfoModalProps) => {
 
     return (
-        <Dialog pageTitle="Issued Blood" {...props}>
-            <ScrollArea className={'relative h-[75vh] sm:h-[60vh] w-full'}>
+        <Dialog pageTitle="Issued Component" {...props}>
+            <ScrollArea className={'relative h-[65vh] sm:h-[60vh] w-full'}>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 px-2.5 pb-14">
 

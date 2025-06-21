@@ -37,7 +37,7 @@ const RegisterPatient = ({ editDetails, isPending, Submit, ...props }: Props) =>
             <Form {...patientRegistrationform}>
                 <form onSubmit={patientRegistrationform.handleSubmit(Submit)}>
 
-                    <ScrollArea className='min-h-[40vh] h-[60vh]'>
+                    <ScrollArea className='h-[50vh] lg:h-[60vh]'>
                         <div className='grid lg:grid-cols-3 sm:grid-cols-2 p-5 gap-5 rounded-lg pb-10'>
                             {/* Patient Name */}
 

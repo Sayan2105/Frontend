@@ -176,7 +176,7 @@ function IssueBloodComponent({ Submit, isPending, defaultValues, ...props }: Iss
                     {/* grid for fields */}
 
 
-                    <ScrollArea className='h-[60vh] sm:h-[55vh]'>
+                    <ScrollArea className='h-[50vh] sm:h-[55vh]'>
 
                         <div className="grid md:grid-cols-3 gap-5 px-2.5 pb-10">
 

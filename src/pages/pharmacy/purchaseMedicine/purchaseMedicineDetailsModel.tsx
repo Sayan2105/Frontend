@@ -18,7 +18,7 @@ const PurchaseMedicineDetailsModel = ({ purchaseDetails, ...props }: PurchaseMed
 
     return (
         <Dialog pageTitle='Purchase Details' {...props}>
-            <ScrollArea className='relative h-[75vh] sm:h-[60vh] w-full'>
+            <ScrollArea className='relative h-[60vh] sm:h-[60vh] w-full'>
 
                 <div className="grid lg:grid-cols-4 gap-y-3 px-2.5 pb-14">
 

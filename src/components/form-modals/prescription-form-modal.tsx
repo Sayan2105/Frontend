@@ -175,7 +175,7 @@ const PrescriptionFormModal = ({ prescDetails: details, isPending, Submit, ...pr
     return (
         <Dialog pageTitle="Add Prescription" {...props}>
             <form onSubmit={handleSubmit(Submit)}>
-                <ScrollArea className={'relative h-[60vh] sm:h-[65vh] w-full'}>
+                <ScrollArea className={'relative h-[50vh] sm:h-[65vh] w-full'}>
                     <div className="grid lg:grid-cols-4 sm:grid-cols-3 gap-4 mt-1 px-3 pb-5 ">
 
                         {/* Header Note */}

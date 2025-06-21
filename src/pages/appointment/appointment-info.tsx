@@ -17,7 +17,7 @@ const AppointmentDetailsModel = ({ appointmentDetails, ...props }: AppointmentDe
 
     return (
         <Dialog pageTitle='Appointment Details' {...props}>
-            <ScrollArea className='relative pt-3 h-[75vh] sm:h-[60vh] w-full'>
+            <ScrollArea className='relative pt-3 h-[50vh] sm:h-[60vh] w-full'>
 
                 <div className="grid lg:grid-cols-2 gap-x-4 gap-y-8 px-2.5 pb-14">
 

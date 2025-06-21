@@ -71,9 +71,9 @@ const BloodComponentForm = ({ Submit, isPending, ...props }: BloodComponentFormP
 
             <form onSubmit={handleSubmit(Submit)}>
 
-                <ScrollArea className='h-[60vh] sm:h-[55vh]'>
+                <ScrollArea className='h-[50vh] sm:h-[55vh]'>
 
-                    <div className="grid lg:grid-cols-4 md:grid-cols-3 gap-5 px-2.5" onSubmit={handleSubmit(Submit)}>
+                    <div className="grid lg:grid-cols-4 md:grid-cols-3 gap-5 px-2.5 mb-10" onSubmit={handleSubmit(Submit)}>
 
                         {/* Blood Group */}
                         <div className="w-full flex flex-col gap-y-2">

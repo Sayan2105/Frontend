@@ -45,7 +45,7 @@ const PathologyBillDetailsModal = ({ ID, ...props }: PharmacyDetailsProps) => {
     return (
         <>
             <Dialog pageTitle="Bill Details" {...props}>
-                <ScrollArea className={'relative h-[75vh] sm:h-[60vh] w-full'}>
+                <ScrollArea className={'relative h-[65vh] sm:h-[60vh] w-full'}>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 px-2.5">
 
                         <div className="flex items-center gap-2 sm:col-span-2 mb-4">

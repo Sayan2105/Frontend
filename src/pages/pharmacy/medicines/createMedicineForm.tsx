@@ -84,7 +84,7 @@ const AddMedicineFormModel = ({ Submit, isPending, medicineDetails, ...props }: 
 
                 {/* mainGrid */}
 
-                <ScrollArea className='h-[70vh] sm:h-[50vh]'>
+                <ScrollArea className='h-[50vh] sm:h-[50vh]'>
 
                     <div className="grid md:grid-cols-3 gap-5 mt-5 px-3 pb-5">
 
