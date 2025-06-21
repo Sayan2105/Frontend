@@ -16,7 +16,7 @@ const OperationDetailsModel = ({ operationDetails, ...props }: OperationDetailsM
 
     return (
         <Dialog pageTitle='Opration Details' {...props}>
-            <ScrollArea className={'relative h-[50vh] lg:h-[60vh] w-full'}>
+            <ScrollArea className={'relative h-[60vh] w-full'}>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 px-2.5 pb-14">
 
                     <div className="flex items-center gap-2 sm:col-span-2 mb-4">

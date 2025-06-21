@@ -8,6 +8,7 @@ import { appointmentFormSchema, patientAppointmentSchema } from '@/formSchemas/A
 import { calculateAmount } from '@/helpers/calculateAmount'
 import { currencySymbol } from '@/helpers/currencySymbol'
 import { PaymentOptions } from '@/helpers/formSelectOptions'
+import { searchPatients } from '@/helpers/searchPatients'
 import { useAppSelector } from '@/hooks'
 import { cn } from '@/lib/utils'
 import usePatient from '@/patient/profile/handlers'
@@ -17,10 +18,10 @@ import { OtherApi } from '@/services/other-api'
 import { AppointmentDetails } from '@/types/appointment/appointment'
 import { Doctors, Patients } from '@/types/type'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery } from '@tanstack/react-query'
 import { Loader, UserRound } from 'lucide-react'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
 import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
 import { Button } from '../../components/ui/button'
@@ -41,7 +42,9 @@ interface AddAppointmentProps extends HTMLAttributes<HTMLDivElement> {
 
 function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...props }: AddAppointmentProps) {
 
-    const [patients, setPatients] = useState<Patients[]>([])
+    const [search, setSearch] = useState('')
+
+    // const [patients, setPatients] = useState<>([])
     const [doctors, setDoctors] = useState<Doctors[]>([])
     const { user } = useAppSelector(authSelector)
     const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
@@ -55,11 +58,8 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
 
     const { specializations, getSpecializations } = useSpecialization()
 
-    const onSearch = useDebouncedCallback(async (value: string) => {
-        try {
-            const data = await OtherApi.getPatients(value)
-            setPatients(data)
-        } catch ({ message }: any) { toast.error(message) }
+    const onSearch = useDebouncedCallback((value: string) => {
+        setSearch(value)
     }, 400)
 
 
@@ -76,6 +76,10 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
         }
     }
 
+    const { data: patients } = useQuery<Patients[]>({
+        queryKey: ['patients'],
+        queryFn: () => OtherApi.getPatients(search),
+    })
 
 
     const handleAppnDate_Specialist = async () => {
@@ -110,8 +114,6 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
         getSpecializations()
         if (user?.role === 'patient') {
             setValue('patientId', user?.id)
-        } else if (defaultValues) {
-            onSearch(String(defaultValues.patientId))
         }
     }, [])
 
@@ -125,18 +127,35 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
                         <>
                             <div className='flex  gap-2 px-2.5'>
                                 {/* Patient Section */}
-                                <div>
+                                <div className='w-full lg:w-[300px]'>
                                     <Controller name='patientId' control={control} render={({ field }) => {
-                                        return <Select value={field.value ? String(field.value) : undefined} onValueChange={(value) => { field.onChange(value) }}>
-                                            <SelectTrigger className='sm:w-[300px] w-40'>
+                                        return <Select
+                                            value={field.value ? String(field.value) : undefined}
+                                            onValueChange={(value) => { field.onChange(value) }}
+                                        >
+                                            <SelectTrigger>
                                                 <SelectValue placeholder="Search" />
                                             </SelectTrigger>
 
-                                            <SelectContent className='z-[200]'>
-                                                <Input type='search' className='w-full' placeholder='search patient' onChange={(e) => { onSearch(e.target.value) }} />
-                                                {patients.map((patient, i) => {
-                                                    return <SelectItem key={i} value={String(patient.id)}>{`${patient.name} (${patient.id})`}</SelectItem>
-                                                })}
+                                            <SelectContent className='relative z-[9999]'>
+                                                <div className="p-2">
+                                                    <Input
+                                                        type='search'
+                                                        className='w-full text-base'
+                                                        placeholder='Search patient'
+                                                        autoComplete="off"
+                                                        onChange={(e) => { onSearch(e.target.value) }}
+                                                    />
+                                                </div>
+                                                {searchPatients(search, patients!)?.map((patient) => (
+                                                    <SelectItem
+                                                        key={patient.id}
+                                                        value={String(patient.id)}
+                                                        className="flex items-center"
+                                                    >
+                                                        {`${patient.name} (${patient.id})`}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     }} />

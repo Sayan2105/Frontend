@@ -19,7 +19,7 @@ const DischargeInfoModal = ({ infos, Delete, ...props }: DischargeInfoModal) => 
 
     return (
         <Dialog pageTitle='Discharge Details' {...props}>
-            <ScrollArea className='relative pt-3 h-[75vh] sm:h-[60vh] w-full'>
+            <ScrollArea className='relative pt-3 h-[60vh] w-full'>
                 <div className='gap-2 grid space-y-3 px-3 pb-10 sm:grid-cols-2 lg:grid-cols-4 sm:col-span-full'>
 
                     {/* Discharge details */}

@@ -150,7 +150,7 @@ const CreateRadioTest = ({ editDetails, Submit, isPending, ...props }: AddCharge
     return (
         <Dialog pageTitle='Add Test' {...props}>
             <form onSubmit={handleSubmit(Submit)}>
-                <ScrollArea className='h-[70vh] sm:h-[55vh]'>
+                <ScrollArea className='h-[60vh] sm:h-[55vh]'>
                     <div className="grid sm:grid-cols-3 gap-2 mb-10 px-2.5">
 
                         {/* Test Name */}
