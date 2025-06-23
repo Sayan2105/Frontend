@@ -11,7 +11,7 @@ const PatientApi = {
             const res = await AxiosClient.post('/api/patient', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || 'Network Error'
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -21,7 +21,7 @@ const PatientApi = {
             const res = await AxiosClient.put(`/api/patient/${patinetId}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || 'Network Error'
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },

@@ -12,7 +12,7 @@ const StaffApi = {
             const res = await AxiosClient.post(`/api/staff`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -22,7 +22,7 @@ const StaffApi = {
             const res = await AxiosClient.get(`/api/staff/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -32,7 +32,7 @@ const StaffApi = {
             const response = await AxiosClient.get(`/api/staff`, { params })
             return response.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -42,7 +42,7 @@ const StaffApi = {
             const res = await AxiosClient.put(`/api/staff/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },

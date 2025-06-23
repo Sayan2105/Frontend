@@ -6,10 +6,11 @@ import { checkSession } from "./features/auth/authSlice";
 import { useAppDispatch } from "./hooks";
 import LayoutWrapper from "./layout-wrapper";
 import IndexRoutes from "./routes";
+import ScrollToTop from "./components/scroll-to-to";
 
 
 
- // hi my name i hhh
+// hi my name i hhh
 function App() {
 
   const dispatch = useAppDispatch()
@@ -26,6 +27,7 @@ function App() {
       <Router>
         <Toaster toastOptions={{ duration: 2000 }} />
         <LayoutWrapper>
+          <ScrollToTop />
           <IndexRoutes />
         </LayoutWrapper>
       </Router>

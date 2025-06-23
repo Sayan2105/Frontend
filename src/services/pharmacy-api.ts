@@ -13,7 +13,7 @@ const PharmacyApi = {
             const res = await AxiosClient.post(`/api/pharmacy`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -23,7 +23,7 @@ const PharmacyApi = {
             const res = await AxiosClient.put(`/api/pharmacy/${id}`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -33,7 +33,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -43,7 +43,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/names/${categoryId}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -53,7 +53,7 @@ const PharmacyApi = {
             const res = await AxiosClient.delete(`/api/pharmacy/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -63,7 +63,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -75,7 +75,7 @@ const PharmacyApi = {
             const res = await AxiosClient.post(`/api/pharmacy/purchase`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -87,7 +87,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/purchase`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -97,7 +97,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/purchase/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -107,7 +107,7 @@ const PharmacyApi = {
             const res = await AxiosClient.delete(`/api/pharmacy/purchase/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -118,7 +118,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/batch/${medicineId}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -128,7 +128,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/batch/details/${batchId}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -139,7 +139,7 @@ const PharmacyApi = {
             const res = await AxiosClient.post(`/api/pharmacy/bill`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -149,7 +149,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/bill`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -159,7 +159,7 @@ const PharmacyApi = {
             const res = await AxiosClient.get(`/api/pharmacy/bill/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -169,7 +169,7 @@ const PharmacyApi = {
             const res = await AxiosClient.delete(`/api/pharmacy/bill/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Connection Failed"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     }

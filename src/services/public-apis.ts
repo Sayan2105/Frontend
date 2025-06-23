@@ -8,7 +8,7 @@ const pulicApi = {
             const res = await AxiosClient.get('/api/public/latest-news', { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -17,7 +17,7 @@ const pulicApi = {
             const res = await AxiosClient.get('/api/public/annual-calendar')
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -26,7 +26,7 @@ const pulicApi = {
             const res = await AxiosClient.get('/api/public/events', { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -36,7 +36,7 @@ const pulicApi = {
             const res = await AxiosClient.get('/api/public/doctors', { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -45,7 +45,7 @@ const pulicApi = {
             const res = await AxiosClient.get('/api/public/roster-doctors', { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -54,7 +54,7 @@ const pulicApi = {
             const res = await AxiosClient.get('/api/public/specializations')
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -63,7 +63,7 @@ const pulicApi = {
             const res = await AxiosClient.post('/api/public/create-appointment', formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -72,7 +72,7 @@ const pulicApi = {
             const res = await AxiosClient.get('/api/public/check-availability', { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -82,7 +82,7 @@ const pulicApi = {
             const res = await AxiosClient.post('/api/public/create-admin', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data.message || 'Connection error'
+            const err = error.response?.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },

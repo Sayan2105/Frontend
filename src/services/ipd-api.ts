@@ -12,7 +12,7 @@ const IpdApi = {
             const res = await AxiosClient.post(`/api/ipd`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -22,7 +22,7 @@ const IpdApi = {
             const res = await AxiosClient.put(`/api/ipd/${id}`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -32,7 +32,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/ipd`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -42,7 +42,7 @@ const IpdApi = {
             const res = await AxiosClient.delete(`/api/ipd/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -52,7 +52,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/ipd/overview/${opdId}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -62,7 +62,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/ipd/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -73,7 +73,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/ipd/t/history`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -84,7 +84,7 @@ const IpdApi = {
             const res = await AxiosClient.post(`/api/consultantReg`, formData, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -94,7 +94,7 @@ const IpdApi = {
             const res = await AxiosClient.put(`/api/consultantReg/${id}`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -104,7 +104,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/consultantReg`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -114,7 +114,7 @@ const IpdApi = {
             const res = await AxiosClient.delete(`/api/consultantReg/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -125,7 +125,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/radiologyBill/items/${moduleId}`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -135,7 +135,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/pathologyBill/items/${moduleId}`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -145,7 +145,7 @@ const IpdApi = {
             const res = await AxiosClient.get(`/api/ipd/bill/${ipdId}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Connection Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },

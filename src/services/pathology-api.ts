@@ -12,7 +12,7 @@ const PathologyApi = {
             const res = await AxiosClient.post(`/api/pathologyBill`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -22,7 +22,7 @@ const PathologyApi = {
             const res = await AxiosClient.put(`/api/pathologyBill/${id}`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -32,7 +32,7 @@ const PathologyApi = {
             const res = await AxiosClient.get(`/api/pathologyBill`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -42,7 +42,7 @@ const PathologyApi = {
             const res = await AxiosClient.get(`/api/pathologyBill/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -52,7 +52,7 @@ const PathologyApi = {
             const res = await AxiosClient.delete(`/api/pathologyBill/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -64,7 +64,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -75,7 +75,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -86,7 +86,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -97,7 +97,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -110,7 +110,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -121,7 +121,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -132,7 +132,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -143,7 +143,7 @@ const PathologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response.data.message || "Network Error"
+            const err = error.response.data.message || 'Something went wrong'
             throw new Error(err)
         }
     },

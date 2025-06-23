@@ -11,7 +11,7 @@ const PaymentApi = {
             const res = await AxiosClient.post(`/api/payment`, formData, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -21,7 +21,7 @@ const PaymentApi = {
             const res = await AxiosClient.put(`/api/payment/${id}`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -31,7 +31,7 @@ const PaymentApi = {
             const res = await AxiosClient.get(`/api/payment`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -41,7 +41,7 @@ const PaymentApi = {
             const res = await AxiosClient.delete(`/api/payment/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     }

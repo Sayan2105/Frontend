@@ -12,7 +12,7 @@ const RadiologyApi = {
             const res = await AxiosClient.post(`/api/radiologyBill`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -22,7 +22,7 @@ const RadiologyApi = {
             const res = await AxiosClient.put(`/api/radiologyBill/${id}`, formData)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -32,7 +32,7 @@ const RadiologyApi = {
             const res = await AxiosClient.get(`/api/radiologyBill`, { params })
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -42,7 +42,7 @@ const RadiologyApi = {
             const res = await AxiosClient.get(`/api/radiologyBill/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -52,7 +52,7 @@ const RadiologyApi = {
             const res = await AxiosClient.delete(`/api/radiologyBill/${id}`)
             return res.data
         } catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -64,7 +64,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -75,7 +75,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -86,7 +86,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -97,7 +97,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -109,7 +109,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -120,7 +120,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -131,7 +131,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
@@ -142,7 +142,7 @@ const RadiologyApi = {
             return res.data
         }
         catch (error: any) {
-            const err = error.response?.data?.message || "Network Error"
+            const err = error.response?.data?.message || 'Something went wrong'
             throw new Error(err)
         }
     },
