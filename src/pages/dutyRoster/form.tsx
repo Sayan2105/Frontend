@@ -1,5 +1,6 @@
 import Dialog from '@/components/Dialog'
 import { Button } from '@/components/ui/button'
+import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -10,11 +11,9 @@ import { RosterDataType } from '@/types/dutyRoster/DutyRoster'
 import { staffs } from '@/types/staff/staff'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader } from 'lucide-react'
-import { useQueryState } from 'nuqs'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
 
 
@@ -29,8 +28,6 @@ interface AssignRosterFormProps extends HTMLAttributes<HTMLDivElement> {
 
 const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: AssignRosterFormProps) => {
 
-  // Query params
-  const [search, setSearch] = useQueryState('search')
 
   // API state
   const [staffs, setStaff] = useState<staffs>({ data: [], total_pages: 0 })
@@ -42,11 +39,10 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
   })
 
 
-
   // fetching staffs list
   const fetchStaffs = async () => {
     try {
-      const data = await StaffApi.getStaffs({ search: search! })
+      const data = await StaffApi.getStaffs({})
       setStaff(data)
     } catch ({ message }: any) {
       toast.error(message)
@@ -54,14 +50,10 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
   }
 
 
-  const onSearch = useDebouncedCallback(async (value: string) => {
-    value ? (setSearch(value)) : setSearch(null)
-  }, 500)
-
 
   useEffect(() => {
     fetchStaffs()
-  }, [search])
+  }, [])
 
 
 
@@ -77,18 +69,13 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
               <Controller control={control} name='staffId' render={({ field }) => {
                 return <>
                   <Label>Staff</Label>
-                  <Select value={field.value ? String(field.value) : undefined} onValueChange={(value) => { field.onChange(Number(value)) }}>
-                    <SelectTrigger >
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-
-                    <SelectContent className='z-[200]'>
-                      <Input placeholder='Search Staff' className='h-8' onChange={(e) => onSearch(e.target.value)} defaultValue={search!} />
-                      {staffs?.data.map((staff) => {
-                        return <SelectItem key={staff.id} value={staff.id.toString()}>{`${staff.name} (${staff.role})`}</SelectItem>
-                      })}
-                    </SelectContent>
-                  </Select>
+                  <Combobox
+                    width='w-full'
+                    placeholder='Select Staff'
+                    options={staffs?.data.map((staff) => ({ label: `${staff.name} (${staff.role})`, value: String(staff.id) })) || []}
+                    defaultValue={field.value ? String(field.value) : undefined}
+                    onValueChange={(value) => { field.onChange(Number(value)) }}
+                  />
                 </>
               }} />
               {errors.staffId && <p className='text-sm text-red-500'>{errors.staffId.message}</p>}

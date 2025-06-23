@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import PasswordField from "@/components/ui/password-input"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import pulicApi from "@/services/public-apis"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -91,12 +92,12 @@ const CreateAdmin = () => {
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>Secret</Label>
-                            <Input type="text" placeholder="#xyz-abc" {...register('secretKey')} />
+                            <PasswordField placeholder="#xyz-abc" {...register('secretKey')} />
                             {errors.secretKey && <p className="text-sm text-red-500">{errors.secretKey?.message}</p>}
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label>Password</Label>
-                            <Input type="password" placeholder="Enter Password" {...register('password')} />
+                            <PasswordField placeholder="Enter Password" {...register('password')} />
                             {errors.password && <p className="text-sm text-red-500">{errors.password?.message}</p>}
                         </div>
 

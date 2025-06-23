@@ -3,6 +3,7 @@ import { BedGroupType } from '@/admin/setup/bed/group/bed-group-handlers'
 import bedApi from '@/admin/setup/services/bed'
 import Dialog from '@/components/Dialog'
 import { Button } from '@/components/ui/button'
+import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -19,11 +20,11 @@ import { IpdInfo } from '@/types/IPD/ipd'
 import { staffs } from '@/types/staff/staff'
 import { Patients } from '@/types/type'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Loader, UserRound } from 'lucide-react'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
 
 
@@ -37,8 +38,7 @@ interface CreateIpdModalProps extends HTMLAttributes<HTMLDivElement> {
 function CreateIpdModal({ editDetails, Submit, isPending, ...props }: CreateIpdModalProps) {
 
     const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
-
-    const [patients, setPatients] = useState<Patients[]>([])
+    const queryClient = useQueryClient()
     const [doctors, setDoctors] = useState<staffs['data']>([])
     const [bedGroups, setBedGroups] = useState<BedGroupType[]>([])
     const { beds, getBeds } = useBedHandlers()
@@ -78,24 +78,17 @@ function CreateIpdModal({ editDetails, Submit, isPending, ...props }: CreateIpdM
     }
 
 
-    // searching patients
-    const onSearch = useDebouncedCallback(async (value: string) => {
-        try {
-            const data = await OtherApi.getPatients(value)
-            setPatients(data)
-        } catch (error) {
-            toast.error(errorHandler(error))
-        }
-    }, 400)
+    const { data: patients } = useQuery<Patients[]>({
+        queryKey: ['patients'],
+        queryFn: () => OtherApi.getPatients(''),
+    })
+
 
 
     useEffect(() => {
         getDoctors();
         fetchBedGroups()
-        if (editDetails) {
-            onSearch(String(editDetails.patientId))
-            handleBedGroupChange(editDetails.bedGroupId)
-        }
+        if (editDetails) handleBedGroupChange(editDetails.bedGroupId)
     }, [])
 
 
@@ -103,38 +96,27 @@ function CreateIpdModal({ editDetails, Submit, isPending, ...props }: CreateIpdM
         <>
             <Dialog pageTitle='Create IPD' {...props}>
                 <form onSubmit={handleSubmit(Submit)}>
-                    <div className='flex  gap-2 px-2.5'>
+                    <>
                         {/* Patient Section */}
-                        <div>
-                            <Controller name='patientId' control={control} render={({ field }) => {
-                                return <Select value={field.value ? String(field.value) : undefined}
-                                    onValueChange={(value) => {
-                                        field.onChange(value);
-                                    }}>
-                                    <SelectTrigger className='sm:w-[300px] w-40'>
-                                        <SelectValue placeholder="Search" />
-                                    </SelectTrigger>
-
-                                    <SelectContent className='z-[200]'>
-                                        <Input type='search' className='w-full' placeholder='search patient'
-                                            onChange={(e) => {
-                                                onSearch(e.target.value)
-                                            }} />
-                                        {patients.map((patient, i) => {
-                                            return <SelectItem key={i}
-                                                value={String(patient.id)}>{`${patient.name} (${patient.id})`}</SelectItem>
-                                        })}
-                                    </SelectContent>
-                                </Select>
-                            }} />
-                            {errors.patientId && <p className='text-sm text-red-500'>{errors.patientId.message}</p>}
+                        <div className='flex gap-2 px-2.5'>
+                            <div>
+                                <Controller control={control} name='patientId' render={({ field }) => (
+                                    <Combobox
+                                        width='w-[200px] lg:w-[300px]'
+                                        onValueChange={(value) => { field.onChange(value) }}
+                                        placeholder='Search patient'
+                                        options={patients?.map((p) => ({ label: p.name, value: String(p.id) })) || []}
+                                        defaultValue={field.value ? String(field.value) : undefined}
+                                    />
+                                )} />
+                                {errors.patientId && <p className='text-sm text-red-500'>{errors.patientId.message}</p>}
+                            </div>
+                            <div>
+                                <Button type='button' size='sm' onClick={() => setForm(true)}>New Patient <UserRound /></Button>
+                            </div>
                         </div>
-                        <div>
-                            <Button type='button' size={'sm'} onClick={() => setForm(true)}>New Patient <UserRound /></Button>
-                        </div>
-                    </div>
-
-                    <Separator className='my-4' />
+                        <Separator className='my-3' />
+                    </>
 
                     {/* grid for fields */}
 
@@ -356,7 +338,7 @@ function CreateIpdModal({ editDetails, Submit, isPending, ...props }: CreateIpdM
             {form && (
                 <RegisterPatient
                     isPending={isPatientPending}
-                    Submit={(v) => { handlePatient(v) }}
+                    Submit={(v) => { handlePatient(v, () => { queryClient.invalidateQueries({ queryKey: ['patients'] }) }) }}
                     onClick={() => { setForm(false) }}
                 />
             )}

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import PasswordField from '@/components/ui/password-input'
 import { ResetPasswordForm } from '@/formSchemas/resetPasswordFormSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader } from 'lucide-react'
@@ -33,12 +33,12 @@ const PatientResetPassword = () => {
 
                 <div className='space-y-1'>
                     <Label>Password</Label>
-                    <Input type='password' {...register('password')} placeholder='Password' />
+                    <PasswordField {...register('password')} placeholder='Password' />
                     {errors.password && <p className="text-sm text-red-500">{errors.password?.message}</p>}
                 </div>
                 <div className='space-y-1'>
                     <Label>Confirm Password</Label>
-                    <Input type='password' {...register('confirm_password')} placeholder='Confirm Password' />
+                    <PasswordField {...register('confirm_password')} placeholder='Confirm Password' />
                     {errors.confirm_password && <p className="text-sm text-red-500">{errors.confirm_password?.message}</p>}
                 </div>
 

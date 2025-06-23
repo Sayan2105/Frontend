@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import ImageInput from '@/components/ui/image-input'
 import { Input } from '@/components/ui/input'
+import PasswordField from '@/components/ui/password-input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { patientRegistrationSchema, patientUpdateSchema } from '@/formSchemas/patientRegisterFormSchema'
@@ -208,7 +209,7 @@ const RegisterPatient = ({ editDetails, isPending, Submit, ...props }: Props) =>
                                 return <FormItem className="flex flex-col gap-3">
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input type='password' {...field} />
+                                        <PasswordField type='password' {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

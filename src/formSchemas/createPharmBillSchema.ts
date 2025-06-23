@@ -37,7 +37,7 @@ export const createPharmacyBillSchema = z.object({
     date: z.string()
         .min(1, { message: 'Date is required' }),
 
-    patientId: z.number()
+    patientId: z.coerce.number()
         .min(1, { message: 'Patient is required' })
         .default(0),
 

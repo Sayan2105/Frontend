@@ -1,6 +1,7 @@
 import useSpecialization from '@/admin/setup/staff/specialization/handlers'
 import Dialog from '@/components/Dialog'
 import RequiredLabel from '@/components/required-label'
+import { Combobox } from '@/components/ui/combobox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { authSelector } from '@/features/auth/authSlice'
@@ -8,7 +9,6 @@ import { appointmentFormSchema, patientAppointmentSchema } from '@/formSchemas/A
 import { calculateAmount } from '@/helpers/calculateAmount'
 import { currencySymbol } from '@/helpers/currencySymbol'
 import { PaymentOptions } from '@/helpers/formSelectOptions'
-import { searchPatients } from '@/helpers/searchPatients'
 import { useAppSelector } from '@/hooks'
 import { cn } from '@/lib/utils'
 import usePatient from '@/patient/profile/handlers'
@@ -18,11 +18,10 @@ import { OtherApi } from '@/services/other-api'
 import { AppointmentDetails } from '@/types/appointment/appointment'
 import { Doctors, Patients } from '@/types/type'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Loader, UserRound } from 'lucide-react'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
@@ -42,9 +41,7 @@ interface AddAppointmentProps extends HTMLAttributes<HTMLDivElement> {
 
 function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...props }: AddAppointmentProps) {
 
-    const [search, setSearch] = useState('')
-
-    // const [patients, setPatients] = useState<>([])
+    const queryClient = useQueryClient()
     const [doctors, setDoctors] = useState<Doctors[]>([])
     const { user } = useAppSelector(authSelector)
     const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
@@ -57,10 +54,6 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
     })
 
     const { specializations, getSpecializations } = useSpecialization()
-
-    const onSearch = useDebouncedCallback((value: string) => {
-        setSearch(value)
-    }, 400)
 
 
     const handleFeesANDShift = () => {
@@ -78,7 +71,7 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
 
     const { data: patients } = useQuery<Patients[]>({
         queryKey: ['patients'],
-        queryFn: () => OtherApi.getPatients(search),
+        queryFn: () => OtherApi.getPatients(''),
     })
 
 
@@ -125,48 +118,24 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
                 <form onSubmit={handleSubmit(Submit)}>
                     {user?.role !== 'patient' && (
                         <>
-                            <div className='flex  gap-2 px-2.5'>
-                                {/* Patient Section */}
-                                <div className='w-full lg:w-[300px]'>
-                                    <Controller name='patientId' control={control} render={({ field }) => {
-                                        return <Select
-                                            value={field.value ? String(field.value) : undefined}
+                            {/* Patient Section */}
+                            <div className='flex gap-2 px-2.5'>
+                                <div>
+                                    <Controller control={control} name='patientId' render={({ field }) => (
+                                        <Combobox
+                                            width='w-[200px] lg:w-[300px]'
                                             onValueChange={(value) => { field.onChange(value) }}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Search" />
-                                            </SelectTrigger>
-
-                                            <SelectContent className='relative z-[9999]'>
-                                                <div className="p-2">
-                                                    <Input
-                                                        type='search'
-                                                        className='w-full text-base'
-                                                        placeholder='Search patient'
-                                                        autoComplete="off"
-                                                        onChange={(e) => { onSearch(e.target.value) }}
-                                                    />
-                                                </div>
-                                                {searchPatients(search, patients!)?.map((patient) => (
-                                                    <SelectItem
-                                                        key={patient.id}
-                                                        value={String(patient.id)}
-                                                        className="flex items-center"
-                                                    >
-                                                        {`${patient.name} (${patient.id})`}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    }} />
+                                            placeholder='Search patient'
+                                            options={patients?.map((p) => ({ label: p.name, value: String(p.id) })) || []}
+                                            defaultValue={field.value ? String(field.value) : undefined}
+                                        />
+                                    )} />
                                     {errors.patientId && <p className='text-sm text-red-500'>{errors.patientId.message}</p>}
                                 </div>
                                 <div>
                                     <Button type='button' size='sm' onClick={() => setForm(true)}>New Patient <UserRound /></Button>
                                 </div>
                             </div>
-
-
                             <Separator className='my-3' />
                         </>
                     )}
@@ -388,7 +357,7 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
             {form && (
                 <RegisterPatient
                     isPending={isPatientPending}
-                    Submit={(v) => { handlePatient(v) }}
+                    Submit={(v) => { handlePatient(v, () => { queryClient.invalidateQueries({ queryKey: ['patients'] }) }) }}
                     onClick={() => { setForm(false) }}
                 />
             )}

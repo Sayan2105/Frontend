@@ -25,9 +25,7 @@ const usePatient = () => {
 
     const handlePatient = async (patientData: z.infer<typeof patientRegistrationSchema>, afterSubmit?: (id: number) => void) => {
         try {
-
             const formData = new FormData()
-
             for (const [key, value] of Object.entries(patientData)) {
                 if (!value) continue
                 if (key === 'image') {
@@ -36,8 +34,6 @@ const usePatient = () => {
                     formData.append(key, JSON.stringify(value))
                 }
             }
-
-
             let data; setPending(true)
             current ? (
                 data = await PatientApi.updatePatient(current.id, formData)

@@ -1,15 +1,15 @@
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import PasswordField from '@/components/ui/password-input'
 import { ResetPasswordForm } from '@/formSchemas/resetPasswordFormSchema'
+import StaffApi from '@/services/staff-api'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { useNavigate, useParams } from 'react-router-dom'
-import toast from 'react-hot-toast'
 import { Loader } from 'lucide-react'
 import { useState } from 'react'
-import StaffApi from '@/services/staff-api'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useNavigate, useParams } from 'react-router-dom'
+import { z } from 'zod'
 
 
 
@@ -41,7 +41,7 @@ const ResetPassword = () => {
 
     return (
         <section className='h-[calc(100vh-56px-1px)] flex items-center justify-center'>
-            <form className='flex-1 sm:flex-none sm:w-[400px] flex flex-col p-4 ring-1 ring-gray-200 dark:ring-gray-700 rounded-lg gap-y-3' onSubmit={handleSubmit(onResetPassword)}>
+            <form className='flex-1 sm:flex-none sm:w-[400px] flex flex-col p-4 border border-border rounded-lg gap-y-3' onSubmit={handleSubmit(onResetPassword)}>
 
                 <div className='text-center'>
                     <h1 className='text-lg text-gray-900 dark:text-gray-200 font-bold'>Reset Password</h1>
@@ -50,12 +50,12 @@ const ResetPassword = () => {
 
                 <div className='space-y-1'>
                     <Label>Password</Label>
-                    <Input type='password' {...register('password')} placeholder='Password' />
+                    <PasswordField {...register('password')} placeholder='Password' />
                     {errors.password && <p className="text-sm text-red-500">{errors.password?.message}</p>}
                 </div>
                 <div className='space-y-1'>
                     <Label>Confirm Password</Label>
-                    <Input type='password' {...register('confirm_password')} placeholder='Confirm Password' />
+                    <PasswordField {...register('confirm_password')} placeholder='Confirm Password' />
                     {errors.confirm_password && <p className="text-sm text-red-500">{errors.confirm_password?.message}</p>}
                 </div>
 

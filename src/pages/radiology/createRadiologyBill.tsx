@@ -3,6 +3,7 @@ import CustomTooltip from "@/components/customTooltip"
 import Dialog from "@/components/Dialog"
 import RequiredLabel from "@/components/required-label"
 import { Button } from "@/components/ui/button"
+import { Combobox } from "@/components/ui/combobox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -22,11 +23,11 @@ import { RadiologyTestNameType } from "@/types/setupTypes/radiology"
 import { staffs } from "@/types/staff/staff"
 import { Patients } from "@/types/type"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Loader, Plus, UserRound, X } from "lucide-react"
 import { HTMLAttributes, useEffect, useState } from "react"
 import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form"
 import toast from "react-hot-toast"
-import { useDebouncedCallback } from "use-debounce"
 import { z } from "zod"
 
 
@@ -43,7 +44,7 @@ interface CreatePharmacyBillProps extends HTMLAttributes<HTMLDivElement> {
 const CreateRadiologyBill = ({ Submit, isPending, editDetails, ...props }: CreatePharmacyBillProps) => {
 
   const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
-
+  const queryClient = useQueryClient()
   // form hook
   const { control, register, reset, setValue, watch, handleSubmit, formState: { errors } } = useForm<z.infer<typeof createRadiologyBillSchema>>({
     resolver: zodResolver(createRadiologyBillSchema),
@@ -60,21 +61,14 @@ const CreateRadiologyBill = ({ Submit, isPending, editDetails, ...props }: Creat
 
 
   // API states
-  const [patients, setPatients] = useState<Patients[]>([])
   const [doctors, setDoctors] = useState<staffs['data']>([])
   const [tests, setTests] = useState<RadiologyTestNameType>({ data: [], total_pages: 0 })
 
 
-
-  const onPatientSearch = useDebouncedCallback(async (value: string) => {
-    try {
-      const data = await OtherApi.getPatients(value)
-      setPatients(data)
-    } catch ({ message }: any) {
-      toast.error(message)
-    }
-  }, 400)
-
+  const { data: patients } = useQuery<Patients[]>({
+    queryKey: ['patients'],
+    queryFn: () => OtherApi.getPatients(''),
+  })
 
 
   // fetching and binding tests
@@ -135,7 +129,6 @@ const CreateRadiologyBill = ({ Submit, isPending, editDetails, ...props }: Creat
 
 
   useEffect(() => {
-    if (editDetails) onPatientSearch(String(editDetails.patientId))
     fetchRadiologyTests()
     getDoctors()
   }, [])
@@ -146,31 +139,27 @@ const CreateRadiologyBill = ({ Submit, isPending, editDetails, ...props }: Creat
     <>
       <Dialog pageTitle='Radiology Bill' {...props}>
         <form onSubmit={handleSubmit(Submit)}>
-          <div className='flex  gap-2 px-2.5'>
+          <>
             {/* Patient Section */}
-            <div>
-              <Controller name='patientId' control={control} render={({ field }) => {
-                return <Select value={field.value ? String(field.value) : undefined} onValueChange={(value) => { field.onChange(value) }}>
-                  <SelectTrigger className='sm:w-[300px] w-40'>
-                    <SelectValue placeholder="Search" />
-                  </SelectTrigger>
-
-                  <SelectContent className='z-[200]'>
-                    <Input type='search' className='w-full' placeholder='search patient' onChange={(e) => { onPatientSearch(e.target.value) }} />
-                    {patients.map((patient, i) => {
-                      return <SelectItem key={i} value={String(patient.id)}>{`${patient.name} (${patient.id})`}</SelectItem>
-                    })}
-                  </SelectContent>
-                </Select>
-              }} />
-              {errors.patientId && <p className='text-sm text-red-500'>{errors.patientId.message}</p>}
+            <div className='flex gap-2 px-2.5'>
+              <div>
+                <Controller control={control} name='patientId' render={({ field }) => (
+                  <Combobox
+                    width='w-[200px] lg:w-[300px]'
+                    onValueChange={(value) => { field.onChange(value) }}
+                    placeholder='Search patient'
+                    options={patients?.map((p) => ({ label: p.name, value: String(p.id) })) || []}
+                    defaultValue={field.value ? String(field.value) : undefined}
+                  />
+                )} />
+                {errors.patientId && <p className='text-sm text-red-500'>{errors.patientId.message}</p>}
+              </div>
+              <div>
+                <Button type='button' size='sm' onClick={() => setForm(true)}>New Patient <UserRound /></Button>
+              </div>
             </div>
-            <div>
-              <Button type='button' size={'sm'} onClick={() => setForm(true)}>New Patient <UserRound /></Button>
-            </div>
-          </div>
-
-          <Separator className="my-2" />
+            <Separator className='my-3' />
+          </>
 
           {/* grid for fields */}
 
@@ -391,7 +380,7 @@ const CreateRadiologyBill = ({ Submit, isPending, editDetails, ...props }: Creat
       {form && (
         <RegisterPatient
           isPending={isPatientPending}
-          Submit={(v) => { handlePatient(v) }}
+          Submit={(v) => { handlePatient(v, () => { queryClient.invalidateQueries({ queryKey: ['patients'] }) }) }}
           onClick={() => { setForm(false) }}
         />
       )}

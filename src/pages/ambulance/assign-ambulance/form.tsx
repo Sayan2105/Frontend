@@ -3,6 +3,7 @@ import { categoryType } from '@/admin/setup/hospital-charges/chargesCategory/cat
 import hospitalChargeApi from '@/admin/setup/services/charge'
 import Dialog from '@/components/Dialog'
 import { Button } from '@/components/ui/button'
+import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -19,11 +20,11 @@ import { AssignedAmbulanceInfo } from '@/types/ambulance/ambulance'
 import { chargeNamesType } from '@/types/setupTypes/chargeName'
 import { Patients } from '@/types/type'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader } from 'lucide-react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Loader, UserRound } from 'lucide-react'
 import { HTMLAttributes, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
 import useAmbulances from '../ambulances/handlers'
 
@@ -37,8 +38,7 @@ interface AssignAmbulanceProps extends HTMLAttributes<HTMLDivElement> {
 
 
 function AssignAmbulanceForm({ Submit, isPending, editDetails, ...props }: AssignAmbulanceProps) {
-
-    const [patients, setPatients] = useState<Patients[]>([])
+    const queryClient = useQueryClient()
     const [charge_types, setChargeTypes] = useState<Charge_Type_Interface[]>([])
     const [charge_categories, setChargeCategories] = useState<categoryType[]>([])
     const [charge_names, setChargeNames] = useState<chargeNamesType['data']>([])
@@ -52,12 +52,10 @@ function AssignAmbulanceForm({ Submit, isPending, editDetails, ...props }: Assig
     const { form, setForm, handlePatient, isPending: PatientPending } = usePatient()
 
 
-    const onSearch = useDebouncedCallback(async (value: string) => {
-        try {
-            const data = await OtherApi.getPatients(value)
-            setPatients(data)
-        } catch ({ message }: any) { toast.error(message) }
-    }, 400)
+    const { data: patients } = useQuery<Patients[]>({
+        queryKey: ['patients'],
+        queryFn: () => OtherApi.getPatients(''),
+    })
 
 
     const fetchChargeTypes = async () => {
@@ -98,7 +96,6 @@ function AssignAmbulanceForm({ Submit, isPending, editDetails, ...props }: Assig
             handleChargeCategoryChange(editDetails.chargeCategoryId)
             handleChargeTypeChange(editDetails.chargeTypeId)
             handleChargeNameChange(editDetails.chargeNameId)
-            onSearch(String(editDetails.patientId)) // this will update the patient list
         }
     }, [])
 
@@ -119,31 +116,24 @@ function AssignAmbulanceForm({ Submit, isPending, editDetails, ...props }: Assig
             <Dialog pageTitle='Assign Ambulance' {...props}>
                 <form onSubmit={handleSubmit(Submit)}>
                     <>
-                        <div className='flex  gap-2 px-2.5'>
-                            {/* Patient Section */}
+                        {/* Patient Section */}
+                        <div className='flex gap-2 px-2.5'>
                             <div>
-                                <Controller name='patientId' control={control} render={({ field }) => {
-                                    return <Select value={field.value ? String(field.value) : undefined} onValueChange={(value) => { field.onChange(value) }}>
-                                        <SelectTrigger className='sm:w-[300px] w-40'>
-                                            <SelectValue placeholder="Search" />
-                                        </SelectTrigger>
-
-                                        <SelectContent className='z-[200]'>
-                                            <Input type='search' className='w-full' placeholder='search patient' onChange={(e) => { onSearch(e.target.value) }} />
-                                            {patients.map((patient, i) => {
-                                                return <SelectItem key={i} value={String(patient.id)}>{`${patient.name} (${patient.id})`}</SelectItem>
-                                            })}
-                                        </SelectContent>
-                                    </Select>
-                                }} />
+                                <Controller control={control} name='patientId' render={({ field }) => (
+                                    <Combobox
+                                        width='w-[200px] lg:w-[300px]'
+                                        onValueChange={(value) => { field.onChange(value) }}
+                                        placeholder='Search patient'
+                                        options={patients?.map((p) => ({ label: p.name, value: String(p.id) })) || []}
+                                        defaultValue={field.value ? String(field.value) : undefined}
+                                    />
+                                )} />
                                 {errors.patientId && <p className='text-sm text-red-500'>{errors.patientId.message}</p>}
                             </div>
                             <div>
-                                <Button size='sm' onClick={() => setForm(true)} >New Patient</Button>
+                                <Button type='button' size='sm' onClick={() => setForm(true)}>New Patient <UserRound /></Button>
                             </div>
                         </div>
-
-
                         <Separator className='my-3' />
                     </>
 
@@ -359,7 +349,7 @@ function AssignAmbulanceForm({ Submit, isPending, editDetails, ...props }: Assig
             </Dialog >
 
             {form && <RegisterPatient
-                Submit={(v) => { handlePatient(v) }}
+                Submit={(v) => { handlePatient(v, () => { queryClient.invalidateQueries({ queryKey: ['patients'] }) }) }}
                 isPending={PatientPending}
                 onClick={() => setForm(false)}
             />}

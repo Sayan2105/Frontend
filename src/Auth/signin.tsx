@@ -2,20 +2,21 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useForm } from "react-hook-form"
-import { Loader } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
-import { z } from "zod"
-import { signInformSchema } from '@/formSchemas/signinFormSchema'
-import { zodResolver } from "@hookform/resolvers/zod"
-import toast from 'react-hot-toast'
-import axios from 'axios'
-import { useContext, useEffect, useState } from "react"
-import { useAppDispatch, useAppSelector } from "@/hooks"
-import { authSelector, setUser } from "@/features/auth/authSlice"
+import PasswordField from "@/components/ui/password-input"
 import { PermissionContext } from "@/contexts/permission-provider"
+import { authSelector, setUser } from "@/features/auth/authSlice"
+import { signInformSchema } from '@/formSchemas/signinFormSchema'
+import { useAppDispatch, useAppSelector } from "@/hooks"
 import usePatient from "@/patient/profile/handlers"
 import RegisterPatient from "@/patient/register/patient-signup"
+import { zodResolver } from "@hookform/resolvers/zod"
+import axios from 'axios'
+import { Loader } from "lucide-react"
+import { useContext, useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import toast from 'react-hot-toast'
+import { Link, useNavigate } from "react-router-dom"
+import { z } from "zod"
 
 
 
@@ -93,7 +94,7 @@ const SignIn = () => {
 
             <div className="flex flex-col gap-2">
               <Label>Password</Label>
-              <Input type="password" placeholder="password" {...register('password')} />
+              <PasswordField placeholder="password" {...register('password')} />
               {errors.password && <p className="text-sm text-red-500">{errors.password?.message}</p>}
             </div>
 
