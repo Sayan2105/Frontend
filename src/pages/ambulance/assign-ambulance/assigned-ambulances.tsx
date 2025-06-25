@@ -8,28 +8,25 @@ import TableActions from "@/components/table-actions"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import UserImage from "@/components/user-image"
 import { page_limit } from "@/globalData"
 import { currencySymbol } from "@/helpers/currencySymbol"
 import { currencyFormat } from "@/lib/utils"
 import { Ambulance, Plus } from "lucide-react"
 import { parseAsInteger, useQueryState } from "nuqs"
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { useDebouncedCallback } from "use-debounce"
 import AssignAmbulanceForm from "./form"
 import useAssignAmbulance from "./handlers"
 import AssAmbModal from "./info-modal"
-import PrintAmbulanceInvoice from "./print/print-bill"
-import UserImage from "@/components/user-image"
-
-
 
 
 const AssignedAmbulances = () => {
 
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
     const [search, setSearch] = useQueryState('search')
-    const [print, setPrint] = useState(false)
+    const router = useNavigate()
 
     const { assigned, getAssignedAmbulances, getAssignedAmbulanceInfo, current, setCurrent, handleSubmit, onDelete, form, setForm, isPending, confirmationProps } = useAssignAmbulance({ page, limit: page_limit, search })
 
@@ -141,7 +138,7 @@ const AssignedAmbulances = () => {
                                                 }}
                                                 incluePrint={{
                                                     include: true,
-                                                    print: async () => { await getAssignedAmbulanceInfo(ass.id); setPrint(true) }
+                                                    print: async () => { router(`print/${ass.id}`) }
                                                 }}
                                             />
                                         </TableRow>
@@ -191,10 +188,6 @@ const AssignedAmbulances = () => {
 
             {/* Information Modal */}
             {(current && !form && !print) && <AssAmbModal info={current!} onClick={() => setCurrent(null)} />}
-
-            {/* Print Modal */}
-            {print && <PrintAmbulanceInvoice info={current!} afterPrint={() => { setPrint(false), setCurrent(null) }} />}
-
         </>
     )
 }

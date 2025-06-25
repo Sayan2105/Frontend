@@ -46,7 +46,7 @@ const PrintMedicinePurchase = ({ afterPrint, Info }: Props) => {
 
                     <div className="grid grid-cols-2 gap-8">
                         <Supplier name={Info.supplier_name} />
-                        <From title='To:' />
+                        <From  />
                     </div>
 
                     <Table>

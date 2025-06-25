@@ -277,7 +277,7 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
                                 {errors.previous_medical_issue && <p className='text-sm text-red-500'>{errors.previous_medical_issue.message}</p>}
                             </div>
 
-                            {user?.role !== 'patient' && (
+                            {(user?.role !== 'patient' && !defaultValues) && (
                                 <>
                                     {/* Status */}
 

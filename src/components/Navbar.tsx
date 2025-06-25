@@ -3,7 +3,7 @@ import { authSelector, logout } from "@/features/auth/authSlice"
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import { User } from "lucide-react"
 import { useContext, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import MaxWidthWrapper from "./MaxWidthWrapper"
 import { ModeToggle } from "./mode-toggle"
 import { buttonVariants } from "./ui/button"
@@ -15,6 +15,7 @@ import UserModel from "./userModel"
 const Navbar = () => {
 
     const { toggleSidebar } = useContext(SidebarContext)
+    const path = useLocation().pathname
 
     const router = useNavigate()
 
@@ -39,7 +40,7 @@ const Navbar = () => {
                         <div className="flex items-center gap-x-1">
                             <img src="/logo.png" alt="logo" className="w-12 h-12 rounded-full object-cover" />
                             <div>
-                                <Link to={{ pathname: `/${Routes}/dashboard` }} className="tracking-tight cursor-pointer z-[100] select-none">
+                                <Link to={{ pathname: path !== '/signin' ? `/${Routes}/dashboard` : '/' }} className="tracking-tight cursor-pointer z-[100] select-none">
                                     Vertica Healthcare
                                 </Link>
                             </div>

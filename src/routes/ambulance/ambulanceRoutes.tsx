@@ -1,4 +1,5 @@
 import LoaderModel from '@/components/loader';
+import PrintAmbulanceInvoice from '@/pages/ambulance/assign-ambulance/print/print-bill';
 import { lazy, Suspense } from 'react';
 import { Route } from 'react-router-dom';
 
@@ -45,6 +46,15 @@ const AmbulanceRoutes = () => {
                         element={
                             <Suspense fallback={<LoaderModel />}>
                                 <Ambulances />
+                            </Suspense>
+                        }
+                    />
+
+                    <Route
+                        path="print/:invoiceId"
+                        element={
+                            <Suspense fallback={<LoaderModel />}>
+                                <PrintAmbulanceInvoice />
                             </Suspense>
                         }
                     />

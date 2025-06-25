@@ -62,7 +62,7 @@ const IpdTreatmentHistories = () => {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>OPD ID</TableHead>
+                                <TableHead>IPD ID</TableHead>
                                 <TableHead>Admission Date</TableHead>
                                 <TableHead>Consultant</TableHead>
                                 <TableHead>Bed Group</TableHead>
