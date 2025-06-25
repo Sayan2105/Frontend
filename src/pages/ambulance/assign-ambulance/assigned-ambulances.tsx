@@ -187,7 +187,7 @@ const AssignedAmbulances = () => {
             )}
 
             {/* Information Modal */}
-            {(current && !form && !print) && <AssAmbModal info={current!} onClick={() => setCurrent(null)} />}
+            {(current && !form) && <AssAmbModal info={current!} onClick={() => setCurrent(null)} />}
         </>
     )
 }

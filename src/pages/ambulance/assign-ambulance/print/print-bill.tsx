@@ -18,9 +18,6 @@ export default function PrintAmbulanceInvoice() {
   const handlePrint = useReactToPrint({
     contentRef,
     documentTitle: `Ambulance_Invoice_${invoiceId}`,
-    onAfterPrint: () => {
-      window.history.back();
-    },
   });
 
 
