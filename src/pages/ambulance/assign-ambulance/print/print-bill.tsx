@@ -1,4 +1,4 @@
-import { From, PdfFooter, PdfHeader, To, Totals } from '@/components/pdf';
+import { From, PdfActions, PdfFooter, PdfHeader, To, Totals } from '@/components/pdf';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { currencySymbol } from '@/helpers/currencySymbol';
 import { currencyFormat } from '@/lib/utils';
@@ -20,7 +20,6 @@ export default function PrintAmbulanceInvoice() {
     documentTitle: `Ambulance_Invoice_${invoiceId}`,
   });
 
-
   const ambulanceInfo = useQuery({
     queryKey: ['ambulanceInfo', invoiceId],
     queryFn: () => AmbulanceApi.getAssignedAmbulanceInfo(invoiceId!),
@@ -38,9 +37,8 @@ export default function PrintAmbulanceInvoice() {
 
 
   return (
-    <div className="relative bg-gray-100 dark:bg-gray-900 py-10">
-      <div className="max-w-5xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-
+    <div className="fixed h-full w-full inset-0 z-[99999] bg-gray-100 dark:bg-gray-900 py-10 overflow-y-scroll">
+      <div className="max-w-5xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <div ref={contentRef} className="p-4 lg:4 space-y-8">
 
           <PdfHeader id={invoiceId!} title="Ambulance Invoice" date={new Date().toLocaleDateString()} />
@@ -136,12 +134,10 @@ export default function PrintAmbulanceInvoice() {
         </div>
       </div>
 
-      {/* Print Button */}
-      <div className="fixed bottom-4 right-4">
-        <button onClick={() => handlePrint()} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Print
-        </button>
-      </div>
+      {/* Actions */}
+
+      <PdfActions onClick={() => handlePrint()} />
+
     </div >
   );
 }

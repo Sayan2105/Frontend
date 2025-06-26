@@ -1,5 +1,7 @@
 import { address, hospital_contact, hospital_name, hospital_website } from "@/globalData"
 import { currencyFormat } from "@/lib/utils"
+import { Printer } from "lucide-react"
+import React, { ButtonHTMLAttributes } from "react"
 
 interface headerProps {
     id: string | number
@@ -135,3 +137,27 @@ export const PdfFooter = ({ paymentInfo, notes }: footerProps) => {
         </div>
     )
 }
+
+interface PdfActionsProps extends ButtonHTMLAttributes<HTMLButtonElement> { }
+
+
+export const PdfActions = React.forwardRef<HTMLButtonElement, PdfActionsProps>(({ ...props }, ref) => {
+    return (
+        < div className="fixed bottom-4 right-4" >
+            <div className="flex gap-2">
+                <button
+                    className="flex items-center justify-center gap-2 rounded-lg hover:bg-red-500 border-2 border-red-500 px-4 py-2 text-sm font-medium text-red-600 hover:text-white"
+                    onClick={() => window.history.back()}>
+                    Back
+                </button>
+                <button
+                    className="flex items-center justify-center gap-2 rounded-lg hover:bg-blue-500 border-2 border-blue-500 px-4 py-2 text-sm font-medium text-blue-600 hover:text-white"
+                    ref={ref}
+                    {...props}
+                >
+                    <Printer /> Print
+                </button>
+            </div>
+        </div >
+    )
+})
