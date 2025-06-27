@@ -100,10 +100,10 @@ const AdminDashboard = () => {
 
             <div className='mb-14'>
 
-                <div className="grid lg:grid-cols-3 gap-3 items-center">
+                <div className="grid lg:grid-cols-3 gap-3">
                     {/* Montly Income & expenses Chart */}
                     <PermissionProtectedAction action='Income Expenses' module='dashboard'>
-                        <div className="w-full">
+                        <div className="w-full h-[400px]">
                             <Card  >
                                 <CardHeader>
                                     <div className="flex justify-between items-center mb-2">
@@ -207,7 +207,7 @@ const AdminDashboard = () => {
                                     </ChartContainer>
                                     {MonthlyIncExp.length < 1 && <p className='text-red-600 italic'>No data found</p>}
                                 </CardContent>
-                                <CardFooter className='space-x-2'>
+                                <CardFooter className='space-x-2 pb-5'>
                                     <p className='text-sm text-gray-500'>Income & Expenses For All Modules</p>
                                 </CardFooter>
                             </Card>
@@ -219,7 +219,7 @@ const AdminDashboard = () => {
 
                     <PermissionProtectedAction action='Appointments' module='dashboard'>
                         <div >
-                            <Card className="flex flex-col mx-auto">
+                            <Card className="flex flex-col mx-auto h-[400px]">
                                 <CardHeader>
                                     <div className="flex justify-between items-center mb-2">
                                         <p className='text-gray-500'>Search</p>
@@ -336,7 +336,7 @@ const AdminDashboard = () => {
 
                     <PermissionProtectedAction action='Visitors' module='dashboard'>
                         <div className="lg:col-span-1">
-                            <Card className="flex flex-col">
+                            <Card className="flex flex-col h-[400px]">
                                 <CardHeader>
                                     <div className="flex justify-between items-center mb-2">
                                         <p className='text-gray-500'>Search</p>

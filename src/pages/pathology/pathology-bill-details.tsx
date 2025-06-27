@@ -94,8 +94,6 @@ const PathologyBillDetailsModal = ({ ID, ...props }: PharmacyDetailsProps) => {
                     {/* second grid */}
 
                     <div className="grid pb-10 pt-5 px-2.5 font-medium">
-                        <h1 className="text-lg text-gray-800 dark:text-gray-100">Medicines</h1>
-
                         <Table className="mt-2">
                             <TableHeader>
                                 <TableRow>

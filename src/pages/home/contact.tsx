@@ -32,7 +32,7 @@ const Contact = () => {
                     <p className={`text-sm text-gray-600 dark:text-neutral-300`}>{contact.description}</p>
                   </div>
                 </div>
-                <span className={`text-2xl font-bold ${contact.color}`}> {contact.phone}</span>
+                <a href={`tel:${contact.phone}`} className={`text-2xl font-bold ${contact.color}`}> {contact.phone}</a>
               </div>
             ))}
           </div>
@@ -42,7 +42,7 @@ const Contact = () => {
           `}>
           <p className={`text-lg font-semibold dark:text-red-300 text-red-700
             `}>
-            🚨 For life-threatening emergencies, call 108 immediately or visit our Emergency Department
+            🚨 For life-threatening emergencies, call <a href="tel:108" className="underline">108</a> immediately or visit our Emergency Department
           </p>
         </div>
 

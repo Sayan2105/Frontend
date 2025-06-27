@@ -63,6 +63,18 @@ const useAssignAmbulance = (params: Params) => {
   }
 
 
+  const printInvoice = async (id: string) => {
+    try {
+      const res = await AmbulanceApi.printInvoice(id)
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
+    } catch ({ message }: any) {
+      toast.error(message)
+    }
+  }
+
+
   return {
     assigned,
     getAssignedAmbulances,
@@ -74,7 +86,8 @@ const useAssignAmbulance = (params: Params) => {
     current,
     setCurrent,
     getAssignedAmbulanceInfo,
-    confirmationProps
+    confirmationProps,
+    printInvoice
   }
 }
 

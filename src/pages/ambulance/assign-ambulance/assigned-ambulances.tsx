@@ -15,7 +15,7 @@ import { currencyFormat } from "@/lib/utils"
 import { Ambulance, Plus } from "lucide-react"
 import { parseAsInteger, useQueryState } from "nuqs"
 import { useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useDebouncedCallback } from "use-debounce"
 import AssignAmbulanceForm from "./form"
 import useAssignAmbulance from "./handlers"
@@ -26,7 +26,7 @@ const AssignedAmbulances = () => {
 
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
     const [search, setSearch] = useQueryState('search')
-    const router = useNavigate()
+    // const router = useNavigate()
 
     const { assigned, getAssignedAmbulances, getAssignedAmbulanceInfo, current, setCurrent, handleSubmit, onDelete, form, setForm, isPending, confirmationProps } = useAssignAmbulance({ page, limit: page_limit, search })
 
@@ -136,10 +136,10 @@ const AssignedAmbulances = () => {
                                                     await getAssignedAmbulanceInfo(ass.id)
                                                     setForm(true)
                                                 }}
-                                                incluePrint={{
-                                                    include: true,
-                                                    print: async () => { router(`print/${ass.id}`) }
-                                                }}
+                                                // incluePrint={{
+                                                //     include: true,
+                                                //     print: async () => { printInvoice(ass.id) }
+                                                // }}
                                             />
                                         </TableRow>
                                     })}
@@ -188,6 +188,8 @@ const AssignedAmbulances = () => {
 
             {/* Information Modal */}
             {(current && !form) && <AssAmbModal info={current!} onClick={() => setCurrent(null)} />}
+
+
         </>
     )
 }

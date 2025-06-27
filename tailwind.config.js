@@ -74,7 +74,7 @@ export default {
 				},
 				'marquee-top': {
 					'0%': {
-					  transform: 'translateY(50%)'
+					  transform: 'translateY(100%)'
 					},
 					'100%': {
 						transform: 'translateY(-100%)'

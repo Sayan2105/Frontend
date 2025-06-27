@@ -99,7 +99,7 @@ const SignIn = () => {
             </div>
 
             <div className="my-2">
-              <Button type="submit" size={'sm'} className="w-full active:scale-95 transition-all">{isPending ? <Loader className="animate-spin" /> : 'Sign In'}</Button>
+              <Button type="submit" size={'sm'} className="w-full active:scale-95 transition-all" disabled={isPending}>{isPending ? <Loader className="animate-spin" /> : 'Sign In'}</Button>
             </div>
           </form>
 
@@ -109,7 +109,7 @@ const SignIn = () => {
           <div className="flex text-sm my-1 justify-center items-center">
             <p className="text-gray-500">Not a existing patient?</p>
             <Link to={''} className={buttonVariants({ variant: 'link' })} onClick={() => { setForm(true) }}>
-              Rgister Patient
+              Register Patient
             </Link>
           </div>
 

@@ -25,7 +25,7 @@ function App() {
   return (
     <div className=" dark:bg-background dark:text-white">
       <Router>
-        <Toaster toastOptions={{ duration: 2000 }} />
+        <Toaster toastOptions={{ duration: 2000}} />
         <LayoutWrapper>
           <ScrollToTop />
           <IndexRoutes />

@@ -33,7 +33,7 @@ const Navbar = () => {
 
     return (
         <>
-            <section className="h-16 backdrop-blur w-full z-[100] sticky inset-x-0 top-0 border-b border-border">
+            <section className="h-16 bg-white dark:bg-background w-full z-[100] sticky inset-x-0 top-0 border-b border-border">
                 <MaxWidthWrapper className="lg:px-10">
                     <header className="h-full flex justify-between items-center">
 

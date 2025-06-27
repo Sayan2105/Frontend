@@ -6,8 +6,6 @@ import AmbulanceApi from '@/services/ambulance-api';
 import { useQuery } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { useReactToPrint } from 'react-to-print';
-
 
 
 export default function PrintAmbulanceInvoice() {
@@ -15,10 +13,12 @@ export default function PrintAmbulanceInvoice() {
   const contentRef = useRef<HTMLDivElement>(null);
 
 
-  const handlePrint = useReactToPrint({
-    contentRef,
-    documentTitle: `Ambulance_Invoice_${invoiceId}`,
-  });
+  // const handlePrint = useReactToPrint({
+  //   contentRef,
+  //   documentTitle: `Ambulance_Invoice_${invoiceId}`,
+  // });
+
+
 
   const ambulanceInfo = useQuery({
     queryKey: ['ambulanceInfo', invoiceId],
@@ -134,9 +134,8 @@ export default function PrintAmbulanceInvoice() {
         </div>
       </div>
 
-      {/* Actions */}
-
-      <PdfActions onClick={() => handlePrint()} />
+      {/* Print Button */}
+      <PdfActions  />
 
     </div >
   );

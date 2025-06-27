@@ -103,7 +103,7 @@ const Footer = () => {
         <MaxWidthWrapper>
           <div className="text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              © {new Date().getFullYear()} Vertica Healthcare. All rights reserved. Made with <span className="animate-pulse">❤️</span> for better healthcare.
+              © {new Date().getFullYear()} All rights reserved. Developed by <a href="https://tvssolutions.in/" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-500 hover:text-blue-400 transition-colors duration-200">TVS SOLUTIONS</a>
             </p>
           </div>
         </MaxWidthWrapper>

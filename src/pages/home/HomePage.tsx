@@ -203,7 +203,7 @@ const HomePage = () => {
 
                                                         {item.pdf && (
                                                             <CustomTooltip message='See PDF'>
-                                                                <div className='bg-black/10 dark:bg-white/20 0 flexitems-center w-fit rounded-full p-2 cursor-pointer relative active:scale-95 transition-all duration-300' onClick={() => { window.open(`${import.meta.env.VITE_APP_API_URL}/images/${item.pdf}`) }}>
+                                                                <div className='bg-black/10 dark:bg-white/20 0 flex items-center w-fit rounded-full p-2 cursor-pointer relative active:scale-95 transition-all duration-300' onClick={() => { window.open(`${import.meta.env.VITE_APP_API_URL}/images/${item.pdf}`) }}>
                                                                     <FileText className='text-gray-700 dark:text-white h-4 w-4' />
                                                                 </div>
                                                             </CustomTooltip>
