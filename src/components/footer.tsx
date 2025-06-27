@@ -85,7 +85,7 @@ const Footer = () => {
 
           <div className="space-y-4">
             {footerContacts.map((contact, index) => (
-              <div key={index} className="flex items-start space-x-3 p-3 rounded-xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50">
+              <div key={index} className="flex items-center space-x-3 p-3 rounded-xl bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50">
                 <div className={`p-2 rounded-lg ${contact.bgColor} flex-shrink-0`}>
                   <contact.icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 </div>

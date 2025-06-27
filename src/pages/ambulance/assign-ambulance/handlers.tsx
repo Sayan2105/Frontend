@@ -64,14 +64,7 @@ const useAssignAmbulance = (params: Params) => {
 
 
   const printInvoice = async (id: string) => {
-    try {
-      const res = await AmbulanceApi.printInvoice(id)
-      const blob = await res.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      window.open(blobUrl, '_blank');
-    } catch ({ message }: any) {
-      toast.error(message)
-    }
+    window.open(`${import.meta.env.VITE_APP_API_URL}/api/ambulance/assign/print/${id}`);
   }
 
 

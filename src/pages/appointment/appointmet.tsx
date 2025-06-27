@@ -1,6 +1,8 @@
 import AlertModel from '@/components/alertModel'
 import CustomPagination from '@/components/customPagination'
 import EmptyList from '@/components/emptyList'
+import ErrorFallback from '@/components/errorFallback'
+import InlineLoader from '@/components/inline-loader'
 import LoaderModel from '@/components/loader'
 import PermissionProtectedAction from '@/components/permission-protected-actions'
 import ProtectedTable from '@/components/protected-table'
@@ -15,8 +17,9 @@ import { currencySymbol } from '@/helpers/currencySymbol'
 import { useConfirmation } from '@/hooks/useConfirmation'
 import { cn, currencyFormat } from '@/lib/utils'
 import { AppointmentApi } from '@/services/appointment-api'
-import { Appointment, AppointmentData } from '@/types/appointment/appointment'
+import { Appointment } from '@/types/appointment/appointment'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 import { Ban, ListMinus, Plus } from 'lucide-react'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import { useState } from 'react'
@@ -27,10 +30,6 @@ import { z } from 'zod'
 import AppointmentDetailsModel from './appointment-info'
 import AddAppointment from './create-appointment'
 import AppointmentListPDF from './print/AppointmnetListPDF'
-import PrintAppointment from './print/print-appointment'
-import InlineLoader from '@/components/inline-loader'
-import ErrorFallback from '@/components/errorFallback'
-import { AxiosError } from 'axios'
 
 
 
@@ -49,8 +48,6 @@ const AdminAppointment = () => {
     // Model States
     const [form, setForm] = useState(false)
     const [AID, setAID] = useState<string | null>(null)
-
-    const [current, setCurrent] = useState<AppointmentData | null>(null)
 
 
     const { data: Appointments, isError, isLoading, error } = useQuery<Appointment>({
@@ -120,7 +117,11 @@ const AdminAppointment = () => {
     }
 
 
-    // performing only insert
+    const printAppointment = async (id: string) => {
+        window.open(`${import.meta.env.VITE_APP_API_URL}/api/appointment/print/${id}`);
+    }
+
+
     const handleSubmit = async (formData: z.infer<typeof appointmentFormSchema>) => {
         AID ? updateAppointment(formData) : createAppointment(formData)
     }
@@ -233,7 +234,7 @@ const AdminAppointment = () => {
                                                         onEdit={async () => { setAID(appointment.id), setForm(true) }}
                                                         incluePrint={{
                                                             include: true,
-                                                            print: () => setCurrent(appointment)
+                                                            print: () => printAppointment(appointment.id)
                                                         }}
                                                     />
                                                     <TableCell>
@@ -290,9 +291,6 @@ const AdminAppointment = () => {
                 cancel={() => confirmationProps.onCancel()}
                 continue={() => confirmationProps.onConfirm()}
             />}
-
-            {/* Print Appointment */}
-            {current && <PrintAppointment Info={current!} afterPrint={() => setCurrent(null)} />}
 
         </>
 

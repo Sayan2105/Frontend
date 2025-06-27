@@ -28,7 +28,7 @@ const AssignedAmbulances = () => {
     const [search, setSearch] = useQueryState('search')
     // const router = useNavigate()
 
-    const { assigned, getAssignedAmbulances, getAssignedAmbulanceInfo, current, setCurrent, handleSubmit, onDelete, form, setForm, isPending, confirmationProps } = useAssignAmbulance({ page, limit: page_limit, search })
+    const { assigned, getAssignedAmbulances, getAssignedAmbulanceInfo, printInvoice, current, setCurrent, handleSubmit, onDelete, form, setForm, isPending, confirmationProps } = useAssignAmbulance({ page, limit: page_limit, search })
 
     const onSearch = useDebouncedCallback(async (value: string) => {
         value ? (setSearch(value)) : (setSearch(null))
@@ -136,10 +136,10 @@ const AssignedAmbulances = () => {
                                                     await getAssignedAmbulanceInfo(ass.id)
                                                     setForm(true)
                                                 }}
-                                                // incluePrint={{
-                                                //     include: true,
-                                                //     print: async () => { printInvoice(ass.id) }
-                                                // }}
+                                                incluePrint={{
+                                                    include: true,
+                                                    print: async () => { printInvoice(ass.id) }
+                                                }}
                                             />
                                         </TableRow>
                                     })}

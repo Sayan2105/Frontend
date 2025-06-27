@@ -99,16 +99,6 @@ const AmbulanceApi = {
         }
     },
 
-    printInvoice: async (id: string) => {
-        try {
-            const res = await AxiosClient.get(`/api/ambulance/assign/print/${id}`)
-            return res.data
-        } catch (error: any) {
-            const err = error?.response?.data?.message || 'Error in printing invoice'
-            throw new Error(err)
-        }
-    },
-
 }
 
 

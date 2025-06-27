@@ -5,10 +5,10 @@ export const footerContacts = [
         icon: Mail,
         content: (
             <a
-                href="mailto:contact@hospital.com"
+                href="mailto:info@tvssolutions.in"
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200 hover:underline"
             >
-                contact@hospital.com
+                info@tvssolutions.in
             </a>
         ),
         bgColor: 'bg-blue-50 dark:bg-blue-500/40'
@@ -17,10 +17,10 @@ export const footerContacts = [
         icon: Phone,
         content: (
             <a
-                href="tel:+919876543210"
+                href="tel:+918899117706"
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
             >
-                +91 98765 43210
+                +918899117706
             </a>
         ),
         bgColor: 'bg-green-50 dark:bg-green-500/40'
@@ -28,9 +28,10 @@ export const footerContacts = [
     {
         icon: MapPin,
         content: (
-            <span className="text-gray-700 dark:text-gray-300">
-                Tulsipur, Balrampur<br />
-                Uttar Pradesh, India
+            <span className="text-gray-700 text-sm dark:text-gray-300">
+                Kakori Tiraha, Near Shree Ram Mandir, Mohan Road Lucknow
+                <br />
+                (Uttar Pradesh) 216001
             </span>
         ),
         bgColor: 'bg-red-50 dark:bg-red-500/40'

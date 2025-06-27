@@ -1,3 +1,4 @@
+import AxiosClient from "@/api/apiClient"
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,7 +11,6 @@ import { useAppDispatch, useAppSelector } from "@/hooks"
 import usePatient from "@/patient/profile/handlers"
 import RegisterPatient from "@/patient/register/patient-signup"
 import { zodResolver } from "@hookform/resolvers/zod"
-import axios from 'axios'
 import { Loader } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -42,15 +42,13 @@ const SignIn = () => {
 
       setPending(true)
 
-      const response = (await axios.post(`${import.meta.env.VITE_APP_API_URL}/api/signin`, formData))
+      const response = (await AxiosClient.post(`${import.meta.env.VITE_APP_API_URL}/api/signin`, formData))
 
       const user = response.data.user
 
       toast.success(response.data.message)
 
       dispatch(setUser(user))
-
-      localStorage.setItem('token', JSON.stringify(response.data.token))
 
       const route = user.role === "patient" ? 'patient' : 'admin'
 
