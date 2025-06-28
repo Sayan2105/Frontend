@@ -4,14 +4,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PasswordField from "@/components/ui/password-input"
 import { AuthContext } from "@/contexts/authContext"
-import { authSelector } from "@/features/auth/authSlice"
 import { signInformSchema } from '@/formSchemas/signinFormSchema'
-import { useAppDispatch, useAppSelector } from "@/hooks"
 import usePatient from "@/patient/profile/handlers"
 import RegisterPatient from "@/patient/register/patient-signup"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader } from "lucide-react"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
@@ -20,52 +18,13 @@ import { z } from "zod"
 
 const SignIn = () => {
 
-  const [isPending, setPending] = useState<boolean>(false)
-  const dispatch = useAppDispatch()
   const router = useNavigate()
-  const session = useAppSelector(authSelector)
-
+  const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
+  const { authUser, isLoggingIn, signin } = useContext(AuthContext)
 
   const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof signInformSchema>>({
     resolver: zodResolver(signInformSchema)
   })
-
-
-  const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
-  const { authUser, isLoggingIn, signin } = useContext(AuthContext)
-
-
-  const onSignin = async (formData: z.infer<typeof signInformSchema>) => {
-
-
-
-    // try {
-
-    //   setPending(true)
-
-    //   const response = (await AxiosClient.post(`${import.meta.env.VITE_APP_API_URL}/api/signin`, formData))
-
-    //   const user = response.data.user
-
-    //   toast.success(response.data.message)
-
-    //   dispatch(setUser(user))
-
-    //   const route = user.role === "patient" ? 'patient' : 'admin'
-
-    //   await removePermissions()
-
-    //   router(`/${route}/dashboard`)
-
-    // } catch (error: any) {
-    //   const message = error.response?.data?.message || 'Connection Error'
-    //   toast.error(message)
-    // } finally {
-    //   setPending(false)
-    // }
-
-  }
-
 
   useEffect(() => {
     if (authUser) {

@@ -1,11 +1,10 @@
-import { authSelector, logout } from "@/features/auth/authSlice"
+import { AuthContext } from "@/contexts/authContext"
 import { patientRegistrationSchema } from "@/formSchemas/patientRegisterFormSchema"
 import { ResetPasswordForm } from "@/formSchemas/resetPasswordFormSchema"
-import { useAppDispatch, useAppSelector } from "@/hooks"
 import { useConfirmation } from "@/hooks/useConfirmation"
 import PatientApi from "@/services/patient-api"
 import { PatientDetails } from "@/types/patient/patient"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import { z } from "zod"
@@ -13,13 +12,11 @@ import { z } from "zod"
 
 
 const usePatient = () => {
-
-    const { user } = useAppSelector(authSelector)
+    const { authUser, logout } = useContext(AuthContext)
     const { confirm, confirmationProps } = useConfirmation()
     const [form, setForm] = useState(false)
     const [isPending, setPending] = useState(false)
     const [current, setCurrent] = useState<PatientDetails | null>(null)
-    const dispatch = useAppDispatch()
     const router = useNavigate()
 
 
@@ -69,7 +66,10 @@ const usePatient = () => {
             if (!isConfirm) return null
             const data = await PatientApi.deletePatient(id)
             toast.success(data.message)
-            if (user?.role === 'patient') return dispatch(logout())
+            if (authUser?.role === 'patient') {
+                logout()
+                return
+            }
             router(`/admin/setup/patient`)
         } catch ({ message }: any) {
             toast.error(message)

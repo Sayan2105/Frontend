@@ -4,12 +4,11 @@ import RequiredLabel from '@/components/required-label'
 import { Combobox } from '@/components/ui/combobox'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import { authSelector } from '@/features/auth/authSlice'
+import { AuthContext } from '@/contexts/authContext'
 import { appointmentFormSchema, patientAppointmentSchema } from '@/formSchemas/AppointmentFormSchema'
 import { calculateAmount } from '@/helpers/calculateAmount'
 import { currencySymbol } from '@/helpers/currencySymbol'
 import { PaymentOptions } from '@/helpers/formSelectOptions'
-import { useAppSelector } from '@/hooks'
 import { cn } from '@/lib/utils'
 import usePatient from '@/patient/profile/handlers'
 import RegisterPatient from '@/patient/register/patient-signup'
@@ -20,7 +19,7 @@ import { Doctors, Patients } from '@/types/type'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Loader, UserRound } from 'lucide-react'
-import { HTMLAttributes, useEffect, useState } from 'react'
+import { HTMLAttributes, useContext, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Button } from '../../components/ui/button'
@@ -43,10 +42,10 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
 
     const queryClient = useQueryClient()
     const [doctors, setDoctors] = useState<Doctors[]>([])
-    const { user } = useAppSelector(authSelector)
     const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
+    const { authUser } = useContext(AuthContext)
 
-    const SCHEMA = user?.role === 'patient' ? patientAppointmentSchema : appointmentFormSchema
+    const SCHEMA = authUser?.role === 'patient' ? patientAppointmentSchema : appointmentFormSchema
 
     const { control, register, reset, setValue, watch, handleSubmit, formState: { errors } } = useForm<z.infer<typeof SCHEMA>>({
         resolver: zodResolver(SCHEMA),
@@ -105,8 +104,8 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
 
     useEffect(() => {
         getSpecializations()
-        if (user?.role === 'patient') {
-            setValue('patientId', user?.id)
+        if (authUser?.role === 'patient') {
+            setValue('patientId', authUser?.id)
         }
     }, [])
 
@@ -116,7 +115,7 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
         <>
             <Dialog pageTitle='Add Appointment' {...props}>
                 <form onSubmit={handleSubmit(Submit)}>
-                    {user?.role !== 'patient' && (
+                    {authUser?.role !== 'patient' && (
                         <>
                             {/* Patient Section */}
                             <div className='flex gap-2 px-2.5'>
@@ -277,7 +276,7 @@ function AddAppointment({ Submit, isPending, onNewPatient, defaultValues, ...pro
                                 {errors.previous_medical_issue && <p className='text-sm text-red-500'>{errors.previous_medical_issue.message}</p>}
                             </div>
 
-                            {(user?.role !== 'patient' && !defaultValues) && (
+                            {(authUser?.role !== 'patient' && !defaultValues) && (
                                 <>
                                     {/* Status */}
 

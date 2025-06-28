@@ -1,13 +1,12 @@
 import AlertModel from '@/components/alertModel';
 import IconMenu from '@/components/icon-menu';
 import UserImage from '@/components/user-image';
-import { authSelector } from '@/features/auth/authSlice';
-import { useAppSelector } from '@/hooks';
+import { AuthContext } from '@/contexts/authContext';
 import { cn, currencyFormat } from '@/lib/utils';
 import StaffApi from '@/services/staff-api';
 import { StaffProfile } from '@/types/staff/staff';
 import { Banknote, BriefcaseBusiness, Calendar, Circle, Code, CreditCard, Droplets, Eye, FileText, GraduationCap, Guitar, HandCoins, Hospital, IdCard, Key, Landmark, Link, Mail, MapPin, Merge, NotebookTabs, Pencil, Phone, Pickaxe, Slice, Trash, User, UserCog } from 'lucide-react';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -19,8 +18,8 @@ const Staffprofile = () => {
     const { id } = useParams();
     const router = useNavigate()
     const [alert, setAlert] = useState<boolean>(false)
-    const session = useAppSelector(authSelector)
     const [profile, setProfile] = useState<StaffProfile>()
+    const { authUser } = useContext(AuthContext)
 
 
     const onDelete = async () => {
@@ -75,20 +74,22 @@ const Staffprofile = () => {
                         </div>
 
                         <div className='flex gap-x-4 justify-center sm:justify-start'>
-                            {(session.user?.role === 'admin' || session.user?.id === profile?.id) && (
+                            {(authUser?.role === 'admin' || authUser?.id === profile?.id) && (
                                 <div className="group p-3 bg-white/70 dark:bg-gray-800/50 backdrop-blur-md rounded-full border border-gray-300 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-700 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg dark:hover:shadow-gray-900/50">
                                     <Key className='text-gray-600 dark:text-gray-300 w-5 h-5 cursor-pointer transition-transform duration-200 group-active:scale-90' onClick={() => { router(`./resetpassword`) }} />
                                 </div>
                             )}
 
-                            {session.user?.role === 'admin' && (
+                            {authUser?.role === 'admin' && (
                                 <>
                                     <div className="group p-3 bg-emerald-100/70 dark:bg-emerald-900/40 backdrop-blur-md rounded-full border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg dark:hover:shadow-emerald-900/50">
                                         <Pencil className='text-emerald-600 dark:text-emerald-400 w-5 h-5 cursor-pointer transition-transform duration-200 group-active:scale-90' onClick={() => { router(`./edit`) }} />
                                     </div>
-                                    <div className="group p-3 bg-red-100/70 dark:bg-red-900/40 backdrop-blur-md rounded-full border border-red-300 dark:border-red-700 hover:bg-red-200 dark:hover:bg-red-800 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg dark:hover:shadow-red-900/50">
-                                        <Trash className='text-red-600 dark:text-red-400 w-5 h-5 cursor-pointer transition-transform duration-200 group-active:scale-90' onClick={() => setAlert(true)} />
-                                    </div>
+                                    {authUser?.id !== Number(id) &&
+                                        <div className="group p-3 bg-red-100/70 dark:bg-red-900/40 backdrop-blur-md rounded-full border border-red-300 dark:border-red-700 hover:bg-red-200 dark:hover:bg-red-800 transition-all duration-300 hover:scale-110 shadow-md hover:shadow-lg dark:hover:shadow-red-900/50">
+                                            <Trash className='text-red-600 dark:text-red-400 w-5 h-5 cursor-pointer transition-transform duration-200 group-active:scale-90' onClick={() => setAlert(true)} />
+                                        </div>
+                                    }
                                 </>
                             )}
                         </div>
@@ -252,7 +253,7 @@ const Staffprofile = () => {
                 </InformationCard>
 
                 {/* Identification */}
-                {(session.user?.role === 'admin' || session.user?.id === profile?.id) &&
+                {(authUser?.role === 'admin' || authUser?.id === profile?.id) &&
                     <InformationCard
                         icon={<CreditCard className='text-white' />}
                         title='Identification'
@@ -286,7 +287,7 @@ const Staffprofile = () => {
                 }
 
                 {/* Bank Information */}
-                {(session.user?.role === 'admin' || session.user?.id === profile?.id) &&
+                {(authUser?.role === 'admin' || authUser?.id === profile?.id) &&
                     <InformationCard
                         icon={<Landmark className='text-white' />}
                         title='Bank Information'
@@ -338,7 +339,7 @@ const Staffprofile = () => {
                 }
 
                 {/* Documents */}
-                {(session.user?.role === 'admin' || session.user?.id === profile?.id) &&
+                {(authUser?.role === 'admin' || authUser?.id === profile?.id) &&
                     <InformationCard
                         icon={<FileText className='text-white' />}
                         title='Documents'

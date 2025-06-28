@@ -1,36 +1,35 @@
+import FormModal from "@/components/form-modals/form-modal"
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
+import RequiredLabel from "@/components/required-label"
 import { Button } from "@/components/ui/button"
 import HorizontalDatePicker from "@/components/ui/horizontal-date-picker"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { AuthContext } from "@/contexts/authContext"
 import { patientAppointmentSchema } from "@/formSchemas/AppointmentFormSchema"
+import { homepagePatientRegisterSchema } from "@/formSchemas/patientRegisterFormSchema"
+import { currencySymbol } from "@/helpers/currencySymbol"
+import PatientApi from "@/services/patient-api"
 import pulicApi from "@/services/public-apis"
+import { AppointmentData } from "@/types/appointment/appointment"
 import { Doctors } from "@/types/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BadgeCheck, Calendar1, FileText, Loader2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { useLocation } from "react-router-dom"
 import { z } from "zod"
-import { UnborderedDoctorCard } from "./book-appointment"
-import RequiredLabel from "@/components/required-label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { currencySymbol } from "@/helpers/currencySymbol"
-import { Label } from "@/components/ui/label"
-import { authSelector } from "@/features/auth/authSlice"
-import { useAppSelector } from "@/hooks"
-import { AppointmentData } from "@/types/appointment/appointment"
-import FormModal from "@/components/form-modals/form-modal"
-import { homepagePatientRegisterSchema } from "@/formSchemas/patientRegisterFormSchema"
-import { registerPatientFormFields } from "./form-fields"
-import PatientApi from "@/services/patient-api"
 import PrintAppointment from "../appointment/print/print-appointment"
+import { UnborderedDoctorCard } from "./book-appointment"
+import { registerPatientFormFields } from "./form-fields"
 
 const DoctorAppointment = () => {
+    const { authUser } = useContext(AuthContext)
     const location = useLocation().search
     const doctorId = new URLSearchParams(location).get('doctorId')
     const [rosterInfo, setRosterInfo] = useState<Doctors | null>(null)
-    const { user } = useAppSelector(authSelector)
     const [step, setStep] = useState<'availability' | 'appointment-form' | 'success'>('availability')
     const [loading, setLoading] = useState({ user: false, appointment: false })
     const [userForm, setUserForm] = useState(false)
@@ -68,8 +67,8 @@ const DoctorAppointment = () => {
     const onAppointmentSubmit = async (data: z.infer<typeof patientAppointmentSchema>) => {
         try {
             setLoading({ ...loading, appointment: true })
-            if (user?.role === 'patient') {
-                data.patientId = user?.id
+            if (authUser?.role === 'patient') {
+                data.patientId = authUser?.id
             } else if (!data.patientId) {
                 data.patientId = await isPatientRegistering()
             }

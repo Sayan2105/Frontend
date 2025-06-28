@@ -1,9 +1,9 @@
+import { AuthContext } from '@/contexts/authContext'
 import { SidebarContext } from '@/contexts/sidebar-provider'
-import { authSelector, logout } from '@/features/auth/authSlice'
-import { useAppDispatch, useAppSelector } from '@/hooks'
+import { useConfirmation } from '@/hooks/useConfirmation'
 import { cn } from '@/lib/utils'
-import { Airplay, Ambulance, BriefcaseMedical, CalendarClock, ChevronRight, Droplets, HeartPulse, Radiation, Settings, Stethoscope, TestTube, UserRound, Watch } from 'lucide-react'
-import { useContext, useState } from 'react'
+import { Airplay, Ambulance, BriefcaseMedical, CalendarClock, ChevronRight, Droplets, HeartPulse, Loader, Radiation, Settings, Stethoscope, TestTube, UserRound, Watch } from 'lucide-react'
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import AlertModel from './alertModel'
 import PermissionProtectedAction from './permission-protected-actions'
@@ -16,20 +16,23 @@ import { ScrollArea } from './ui/scroll-area'
 
 const Aside = () => {
 
-    // model
-    const [isAlert, setAlert] = useState<boolean>(false)
     const { isSidebarOpen, toggleSidebar } = useContext(SidebarContext)
-
-    const dispatch = useAppDispatch()
-    const session = useAppSelector(authSelector)
-
+    const { authUser, isLoggingOut, logout } = useContext(AuthContext)
+    const { confirmationProps, confirm } = useConfirmation()
 
     const onNavigate = () => {
         toggleSidebar()
     }
 
+    const onLogout = async () => {
+        const isConfirm = await confirm()
+        if (!isConfirm) return null
+        await logout()
+        toggleSidebar()
+    }
+
     // making routes static
-    const Routes = (session.user?.role === 'patient') ? session.user?.role : 'admin'
+    const Routes = (authUser?.role === 'patient') ? authUser?.role : 'admin'
 
 
     return (
@@ -176,7 +179,7 @@ const Aside = () => {
 
                                     {/* Authorization */}
 
-                                    {session.user?.role === 'admin' && (
+                                    {authUser?.role === 'admin' && (
                                         <AccordionContent className='py-1'>
                                             <div className="pl-5">
                                                 <Link to={{ pathname: '/admin/setup/authorization' }} onClick={onNavigate} className='flex hover:bg-slate-100 dark:hover:text-black  rounded-md py-1 items-center gap-x-1 justify-start text-[13px]'>
@@ -238,7 +241,7 @@ const Aside = () => {
                                     </PermissionProtectedAction>
 
                                     {/* Setup Event */}
-                                    {session.user?.role === 'admin' && (
+                                    {authUser?.role === 'admin' && (
                                         <AccordionContent className='py-1'>
                                             <div className="pl-5">
                                                 <Link to={{ pathname: '/admin/setup/event' }} onClick={onNavigate} className='flex hover:bg-slate-100 dark:hover:text-black rounded-md py-1 items-center gap-x-1 justify-start text-[13px]'>
@@ -321,7 +324,7 @@ const Aside = () => {
                 {/* logout button */}
                 <div className='absolute bottom-2 z-50 sm:flex gap-2 items-center transition-all flex w-44'>
                     <img src="/user.png" alt="" className="w-9 border-2 border-gray-300 rounded-full" />
-                    <Button variant={'destructive'} size='sm' className='flex-1' onClick={() => setAlert(true)}>Logout</Button>
+                    <Button variant={'destructive'} size='sm' className='flex-1' onClick={onLogout}>Logout {isLoggingOut && <Loader className='animate-spin w-5' />}</Button>
                 </div >
 
             </div >
@@ -329,9 +332,10 @@ const Aside = () => {
             {/* Alert model */}
 
             {
-                isAlert && (<AlertModel
-                    continue={() => { dispatch(logout()); setAlert(false) }}
-                    cancel={() => { setAlert(false) }}
+                confirmationProps.isOpen &&
+                (<AlertModel
+                    continue={confirmationProps.onConfirm}
+                    cancel={confirmationProps.onCancel}
                 />)
             }
         </>

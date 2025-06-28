@@ -7,24 +7,23 @@ import HorizontalDatePicker from "@/components/ui/horizontal-date-picker"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { authSelector } from "@/features/auth/authSlice"
+import { AuthContext } from "@/contexts/authContext"
 import { patientAppointmentSchema } from "@/formSchemas/AppointmentFormSchema"
 import { homepagePatientRegisterSchema } from "@/formSchemas/patientRegisterFormSchema"
 import { currencySymbol } from "@/helpers/currencySymbol"
-import { useAppSelector } from "@/hooks"
+import { cn } from "@/lib/utils"
 import PatientApi from "@/services/patient-api"
 import pulicApi from "@/services/public-apis"
 import { AppointmentData } from "@/types/appointment/appointment"
 import { Doctors } from "@/types/type"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Calendar1, FileText, Loader2 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { z } from "zod"
 import PrintAppointment from "../appointment/print/print-appointment"
 import { registerPatientFormFields } from "./form-fields"
-import { cn } from "@/lib/utils"
 
 const BookAppointment = () => {
 
@@ -32,12 +31,12 @@ const BookAppointment = () => {
     const [doctors, setDoctors] = useState<Doctors[]>([])
     const [selectedDoctor, setSelectedDoctor] = useState<Doctors>()
     const [step, setStep] = useState<'doctors' | 'appointment-form' | 'success'>('doctors')
-    const { user } = useAppSelector(authSelector)
     const [loading, setLoading] = useState({ user: false, appointment: false })
     const [userForm, setUserForm] = useState(false)
     const [patientId, setPatientId] = useState<{ resolve: (value: number) => void }>()
     const [appointment, setAppointment] = useState<AppointmentData>()
     const [print, setPrint] = useState(false)
+    const { authUser } = useContext(AuthContext)
 
     const { setValue, handleSubmit, register, watch, control, formState: { errors } } = useForm<z.infer<typeof patientAppointmentSchema>>({
         resolver: zodResolver(patientAppointmentSchema),
@@ -53,8 +52,8 @@ const BookAppointment = () => {
     const onSubmit = async (data: z.infer<typeof patientAppointmentSchema>) => {
         try {
             setLoading({ ...loading, appointment: true })
-            if (user?.role === 'patient') {
-                data.patientId = user?.id
+            if (authUser?.role === 'patient') {
+                data.patientId = authUser?.id
             } else if (!data.patientId) {
                 data.patientId = await isPatientRegistering()
             }

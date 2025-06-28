@@ -1,14 +1,13 @@
 import AlertModel from '@/components/alertModel';
 import IconMenu from '@/components/icon-menu';
 import UserImage from '@/components/user-image';
-import { authSelector } from '@/features/auth/authSlice';
-import { useAppSelector } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { Calendar, Circle, Droplets, Guitar, IdCard, IdCardIcon, Key, Mail, MapPin, NutOff, Pencil, Phone, Trash, User } from 'lucide-react';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import RegisterPatient from '../register/patient-signup';
 import usePatient from './handlers';
+import { AuthContext } from '@/contexts/authContext';
 
 
 
@@ -17,7 +16,7 @@ const PatientProfile = () => {
 
     const { id } = useParams();
     const router = useNavigate()
-    const session = useAppSelector(authSelector)
+    const { authUser } = useContext(AuthContext)
 
     const { isPending, getPatientById, handlePatient, onDelete, current, confirmationProps, form, setForm } = usePatient()
 
@@ -55,7 +54,7 @@ const PatientProfile = () => {
                         </div>
 
                         <div className='flex gap-x-3 justify-center sm:justify-start'>
-                            {(session.user?.role === 'admin' || session.user?.id === current?.id) &&
+                            {(authUser?.role === 'admin' || authUser?.id === current?.id) &&
                                 <>
                                     <div className="group p-3 bg-gray-100/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-full border border-gray-200 dark:border-gray-600 hover:bg-gray-200/80 dark:hover:bg-gray-700/60 transition-all duration-300 hover:scale-110 hover:shadow-lg dark:hover:shadow-gray-900/50">
                                         <Key className='text-gray-600 dark:text-gray-300 w-5 h-5 cursor-pointer transition-transform duration-200 group-active:scale-90'
