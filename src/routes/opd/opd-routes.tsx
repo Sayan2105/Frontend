@@ -1,6 +1,5 @@
-import LoaderModel from "@/components/loader";
 import ProtectRoutes from "@/guard/protectRoutes";
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { Route } from "react-router-dom";
 
 // Lazy-loaded components
@@ -20,102 +19,18 @@ const OpdLabInvestigations = lazy(() => import("@/pages/OPD/details/lab-investig
 const OpdRoutes = () => {
     return (
         <Route element={<ProtectRoutes action="view" module="Opd" />}>
-            <Route
-                path="opd"
-                element={
-                    <Suspense fallback={<LoaderModel />}>
-                        <AdminOPDlayout />
-                    </Suspense>
-                }
-            >
-                <Route
-                    path=""
-                    element={
-                        <Suspense fallback={<LoaderModel />}>
-                            <OPDLIST />
-                        </Suspense>
-                    }
-                />
-                <Route
-                    path=":opdId"
-                    element={
-                        <Suspense fallback={<LoaderModel />}>
-                            <OpdDetailsLayout />
-                        </Suspense>
-                    }
-                >
-                    <Route
-                        path=""
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <VisitDetails />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="medication"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <Medication />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="vital"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <Vital />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="operation"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <OperationList />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="timeline"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <Timeline />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="charges"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <CahrgesList />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="treatmenthistory"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <TreatmentsList />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="payment"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <PaymentsList />
-                            </Suspense>
-                        }
-                    />
-                    <Route
-                        path="lab"
-                        element={
-                            <Suspense fallback={<LoaderModel />}>
-                                <OpdLabInvestigations />
-                            </Suspense>
-                        }
-                    />
+            <Route path="opd" element={<AdminOPDlayout />}>
+                <Route path="" element={<OPDLIST />} />
+                <Route path=":opdId" element={<OpdDetailsLayout />}>
+                    <Route path="" element={<VisitDetails />} />
+                    <Route path="medication" element={<Medication />} />
+                    <Route path="vital" element={<Vital />} />
+                    <Route path="operation" element={<OperationList />} />
+                    <Route path="timeline" element={<Timeline />} />
+                    <Route path="charges" element={<CahrgesList />} />
+                    <Route path="treatmenthistory" element={<TreatmentsList />} />
+                    <Route path="payment" element={<PaymentsList />} />
+                    <Route path="lab" element={<OpdLabInvestigations />} />
                 </Route>
             </Route>
         </Route>

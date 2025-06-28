@@ -1,7 +1,6 @@
 import LoaderModel from "@/components/loader";
+import { AuthContext } from "@/contexts/authContext";
 import { PermissionContext } from "@/contexts/permission-provider";
-import { authSelector } from "@/features/auth/authSlice";
-import { useAppSelector } from "@/hooks";
 import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -12,14 +11,14 @@ interface ProtectRoutesProps {
 }
 
 const ProtectRoutes = ({ restrictedTo, action, module }: ProtectRoutesProps) => {
-    const session = useAppSelector(authSelector);
+    const { authUser } = useContext(AuthContext)
     const { hasPermission, isLoading } = useContext(PermissionContext);
 
     if (isLoading) {
         return <LoaderModel />;
     }
 
-    if (!session.user) {
+    if (!authUser) {
         return <Navigate to="/signin" replace />;
     }
 
@@ -27,7 +26,7 @@ const ProtectRoutes = ({ restrictedTo, action, module }: ProtectRoutesProps) => 
         return <Navigate to="/unauthorized" replace />;
     }
 
-    if (restrictedTo && session.user.role === restrictedTo) {
+    if (restrictedTo && authUser?.role === restrictedTo) {
         return <Navigate to="/unauthorized" replace />;
     }
 

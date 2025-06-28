@@ -1,7 +1,6 @@
-import { lazy, Suspense } from "react";
-import { Route } from "react-router-dom";
 import ProtectRoutes from "@/guard/protectRoutes";
-import LoaderModel from "@/components/loader";
+import { lazy } from "react";
+import { Route } from "react-router-dom";
 
 // Lazy-loaded components
 const BloodComponents = lazy(() => import("@/pages/blood bank/blood-component/components/components"));
@@ -15,47 +14,15 @@ const BloodBankLayout = lazy(() => import("@/pages/blood bank/layout"));
 const BloodBankRoutes = () => {
     return (
         <Route element={<ProtectRoutes action="view" module="Issue Blood" />}>
-            <Route path="blood-bank" element={
-                <Suspense fallback={<LoaderModel />}>
-                    <BloodBankLayout />
-                </Suspense>
-            }>
-                <Route path="issue-blood" element={
-                    <Suspense fallback={<LoaderModel />}>
-                        <BloodIssues />
-                    </Suspense>
-                } />
-                <Route path="doner" element={
-                    <Suspense fallback={<LoaderModel />}>
-                        <DonorLayouts />
-                    </Suspense>
-                }>
-                    <Route path="blood-donations" element={
-                        <Suspense fallback={<LoaderModel />}>
-                            <BloodDonations />
-                        </Suspense>
-                    } />
-                    <Route path="blood-donors" element={
-                        <Suspense fallback={<LoaderModel />}>
-                            <BloodDonors />
-                        </Suspense>
-                    } />
+            <Route path="blood-bank" element={<BloodBankLayout />}>
+                <Route path="issue-blood" element={<BloodIssues />} />
+                <Route path="doner" element={<DonorLayouts />}>
+                    <Route path="blood-donations" element={<BloodDonations />} />
+                    <Route path="blood-donors" element={<BloodDonors />} />
                 </Route>
-                <Route path="components" element={
-                    <Suspense fallback={<LoaderModel />}>
-                        <BloodBankLayout />
-                    </Suspense>
-                }>
-                    <Route path="blood-components" element={
-                        <Suspense fallback={<LoaderModel />}>
-                            <BloodComponents />
-                        </Suspense>
-                    } />
-                    <Route path="issue-components" element={
-                        <Suspense fallback={<LoaderModel />}>
-                            <BloodComponentIssues />
-                        </Suspense>
-                    } />
+                <Route path="components" element={<BloodBankLayout />}>
+                    <Route path="blood-components" element={<BloodComponents />} />
+                    <Route path="issue-components" element={<BloodComponentIssues />} />
                 </Route>
             </Route>
         </Route>

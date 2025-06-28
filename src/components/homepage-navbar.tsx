@@ -1,8 +1,7 @@
-import { authSelector } from "@/features/auth/authSlice"
-import { useAppSelector } from "@/hooks"
+import { AuthContext } from "@/contexts/authContext"
 import { cn } from "@/lib/utils"
 import { Calendar, CalendarCheck2, ChevronDownIcon, Home, Hospital, LinkIcon, Menu, Send, Stethoscope, User } from "lucide-react"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Link } from "react-router-dom"
 import { ModeToggle } from "./mode-toggle"
 import { Button, buttonVariants } from "./ui/button"
@@ -13,10 +12,10 @@ import { Separator } from "./ui/separator"
 
 const HomepageNavbar = () => {
 
-    const { user } = useAppSelector(authSelector)
     const [isOpen, setIsOpen] = useState(false)
+    const { authUser } = useContext(AuthContext)
     // making routes static
-    const Routes = (user?.role === 'patient') ? user?.role : 'admin'
+    const Routes = (authUser?.role === 'patient') ? authUser?.role : 'admin'
 
     const closeMenu = () => setIsOpen(false)
 
@@ -97,7 +96,7 @@ const HomepageNavbar = () => {
                         </DropdownMenu>
                     </div>
 
-                    {user ?
+                    {authUser ?
                         <Link to={{ pathname: `/${Routes}/dashboard` }} onClick={closeMenu} className={buttonVariants({
                             variant: "outline",
                             className: "mt-5 md:mt-0"

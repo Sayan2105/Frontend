@@ -15,29 +15,31 @@ import PatientRoutes from './PatientRoutes'
 import PharmacyRoutes from './pharmacy/pharmacy-routes'
 import RadiologyRoutes from './radiology/radiology-routes'
 import StaffRoutes from './staff/staff'
-
+import { Suspense } from 'react'
 
 
 const IndexRoutes = () => {
     return (
-        <Routes>
-            {AuthRoutes()}
-            {HomepageRoutes()}
-            {IpdRoutes()}
-            {OpdRoutes()}
-            {AppointmentRoutes()}
-            {DutyRosterRoutes()}
-            {StaffRoutes()}
-            {RadiologyRoutes()}
-            {PathologyRoutes()}
-            {PharmacyRoutes()}
-            {AmbulanceRoutes()}
-            {BloodBankRoutes()}
-            {AdminRoutes()}
-            {PatientRoutes()}
-            {SetupIndexRoutes()}
-            {ErrorRoutes()}
-        </Routes>
+        <Suspense>
+            <Routes>
+                {AuthRoutes()}
+                {HomepageRoutes()}
+                {IpdRoutes()}
+                {OpdRoutes()}
+                {AppointmentRoutes()}
+                {DutyRosterRoutes()}
+                {StaffRoutes()}
+                {RadiologyRoutes()}
+                {PathologyRoutes()}
+                {PharmacyRoutes()}
+                {AmbulanceRoutes()}
+                {BloodBankRoutes()}
+                {AdminRoutes()}
+                {PatientRoutes()}
+                {SetupIndexRoutes()}
+                {ErrorRoutes()}
+            </Routes>
+        </Suspense>
     )
 }
 

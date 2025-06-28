@@ -1,11 +1,10 @@
-import AxiosClient from "@/api/apiClient"
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PasswordField from "@/components/ui/password-input"
-import { PermissionContext } from "@/contexts/permission-provider"
-import { authSelector, setUser } from "@/features/auth/authSlice"
+import { AuthContext } from "@/contexts/authContext"
+import { authSelector } from "@/features/auth/authSlice"
 import { signInformSchema } from '@/formSchemas/signinFormSchema'
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import usePatient from "@/patient/profile/handlers"
@@ -14,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader } from "lucide-react"
 import { useContext, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import toast from 'react-hot-toast'
 import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
 
@@ -26,7 +24,7 @@ const SignIn = () => {
   const dispatch = useAppDispatch()
   const router = useNavigate()
   const session = useAppSelector(authSelector)
-  const { removePermissions } = useContext(PermissionContext)
+
 
   const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof signInformSchema>>({
     resolver: zodResolver(signInformSchema)
@@ -34,41 +32,44 @@ const SignIn = () => {
 
 
   const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
+  const { authUser, isLoggingIn, signin } = useContext(AuthContext)
 
 
   const onSignin = async (formData: z.infer<typeof signInformSchema>) => {
 
-    try {
 
-      setPending(true)
 
-      const response = (await AxiosClient.post(`${import.meta.env.VITE_APP_API_URL}/api/signin`, formData))
+    // try {
 
-      const user = response.data.user
+    //   setPending(true)
 
-      toast.success(response.data.message)
+    //   const response = (await AxiosClient.post(`${import.meta.env.VITE_APP_API_URL}/api/signin`, formData))
 
-      dispatch(setUser(user))
+    //   const user = response.data.user
 
-      const route = user.role === "patient" ? 'patient' : 'admin'
+    //   toast.success(response.data.message)
 
-      await removePermissions()
+    //   dispatch(setUser(user))
 
-      router(`/${route}/dashboard`)
+    //   const route = user.role === "patient" ? 'patient' : 'admin'
 
-    } catch (error: any) {
-      const message = error.response?.data?.message || 'Connection Error'
-      toast.error(message)
-    } finally {
-      setPending(false)
-    }
+    //   await removePermissions()
+
+    //   router(`/${route}/dashboard`)
+
+    // } catch (error: any) {
+    //   const message = error.response?.data?.message || 'Connection Error'
+    //   toast.error(message)
+    // } finally {
+    //   setPending(false)
+    // }
 
   }
 
 
   useEffect(() => {
-    if (session.user) {
-      router(`/${session.user?.role}/dashboard`)
+    if (authUser) {
+      router(`/${authUser?.role}/dashboard`)
     }
   }, [])
 
@@ -77,7 +78,7 @@ const SignIn = () => {
     <div className="bg-zinc-50 dark:bg-background">
       <MaxWidthWrapper className="min-h-[calc(100vh-56px-1px)] flex flex-col justify-center items-center">
         <div className="sm:w-[500px] w-full">
-          <form className=" p-4 w-full flex flex-col gap-y-4  dark:ring-border ring-1 ring-gray-200 rounded-lg" onSubmit={handleSubmit(onSignin)}>
+          <form className=" p-4 w-full flex flex-col gap-y-4  dark:ring-border ring-1 ring-gray-200 rounded-lg" onSubmit={handleSubmit(signin)}>
 
             <div className="text-center my-4">
               <h1 className="text-gray-900 dark:text-neutral-100 font-bold text-2xl tracking-tight">Vertica Healthcare</h1>
@@ -97,7 +98,7 @@ const SignIn = () => {
             </div>
 
             <div className="my-2">
-              <Button type="submit" size={'sm'} className="w-full active:scale-95 transition-all" disabled={isPending}>{isPending ? <Loader className="animate-spin" /> : 'Sign In'}</Button>
+              <Button type="submit" size={'sm'} className="w-full active:scale-95 transition-all" disabled={isLoggingIn}>{isLoggingIn ? <Loader className="animate-spin" /> : 'Sign In'}</Button>
             </div>
           </form>
 

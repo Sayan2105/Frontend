@@ -1,9 +1,10 @@
+import { AuthContext } from "@/contexts/authContext"
 import { SidebarContext } from "@/contexts/sidebar-provider"
-import { authSelector, logout } from "@/features/auth/authSlice"
-import { useAppDispatch, useAppSelector } from "@/hooks"
+import { useConfirmation } from "@/hooks/useConfirmation"
 import { User } from "lucide-react"
 import { useContext, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import AlertModel from "./alertModel"
 import MaxWidthWrapper from "./MaxWidthWrapper"
 import { ModeToggle } from "./mode-toggle"
 import { buttonVariants } from "./ui/button"
@@ -15,21 +16,23 @@ import UserModel from "./userModel"
 const Navbar = () => {
 
     const { toggleSidebar } = useContext(SidebarContext)
+    const { authUser, logout } = useContext(AuthContext)
+    const { confirm, confirmationProps } = useConfirmation()
+
     const path = useLocation().pathname
 
     const router = useNavigate()
 
-    const dispatch = useAppDispatch()
-    const session = useAppSelector(authSelector)
     const [isUserModel, setUserModel] = useState<boolean>(false)
 
-
-    const onLogout = () => {
-        dispatch(logout())
+    const onLogout = async () => {
+        const isConfirm = await confirm()
+        if (!isConfirm) return null
+        await logout()
         setUserModel(false)
     }
 
-    const Routes = (session.user?.role === 'patient') ? session.user?.role : 'admin'
+    const Routes = (authUser?.role === 'patient') ? authUser?.role : 'admin'
 
     return (
         <>
@@ -54,10 +57,10 @@ const Navbar = () => {
                             <ModeToggle />
 
                             {/* user */}
-                            {session.user ?
+                            {authUser ?
                                 <>
                                     < div onClick={() => { setUserModel(!isUserModel) }} className="active:scale-90 transition-all cursor-pointer" >
-                                        <UserImage url={session.user?.image!} gender={session.user?.gender!}
+                                        <UserImage url={authUser?.image!} gender={authUser?.gender!}
                                             width='w-fit'
                                             imageClass='w-10 h-10'
                                         />
@@ -92,18 +95,25 @@ const Navbar = () => {
                 isUserModel && <UserModel onClick={() => setUserModel(false)} onLogout={onLogout}
                     onProfile={() => {
 
-                        session.user?.role !== "patient" ? router(`/staff/${session.user?.id}`)
+                        authUser?.role !== "patient" ? router(`/staff/${authUser?.id}`)
                             :
-                            session.user?.role === "patient" ? router(`/patient/profile/${session.user.id}`) : alert('Invalid user')
+                            authUser?.role === "patient" ? router(`/patient/profile/${authUser.id}`) : alert('Invalid user')
                         setUserModel(false)
                     }}
 
                     onDashboard={() => {
-
                         router(`/${Routes}/dashboard`), setUserModel(false)
                     }}
                 />
             }
+
+
+            {/* Alert Modal */}
+
+            {confirmationProps.isOpen && <AlertModel
+                cancel={() => { confirmationProps.onCancel() }}
+                continue={() => confirmationProps.onConfirm()}
+            />}
 
         </>
 

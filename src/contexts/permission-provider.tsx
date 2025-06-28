@@ -1,14 +1,14 @@
 import AuthzApi from "@/admin/setup/services/authorization";
-import { authSelector } from "@/features/auth/authSlice";
-import { useAppSelector } from "@/hooks";
 import {
     createContext,
     ReactNode,
+    useContext,
     useEffect,
     useMemo,
     useState,
 } from "react";
 import toast from "react-hot-toast";
+import { AuthContext } from "./authContext";
 
 export type PermissionContextValue = {
     hasPermission: (action: string, module: string) => boolean;
@@ -23,12 +23,13 @@ export const PermissionContext = createContext<PermissionContextValue>({
 });
 
 export const PermissionProvider = ({ children }: { children: ReactNode }) => {
-    const { user } = useAppSelector(authSelector);
+    // const { user } = useAppSelector(authSelector);
+    const { authUser } = useContext(AuthContext)
     const [permission, setPermission] = useState<string[] | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true); // initially loading thats why not updating while api call
 
     const loadPermissions = async () => {
-        if (!user?.role) {
+        if (!authUser?.role) {
             // If there is no logged‐in user, we consider permissions loaded (nothing to fetch)
             setPermission([]);
             setIsLoading(false);
@@ -43,7 +44,7 @@ export const PermissionProvider = ({ children }: { children: ReactNode }) => {
         }
 
         try {
-            const data = await AuthzApi.getPermissions({ role: user.role });
+            const data = await AuthzApi.getPermissions({ role: authUser.role });
             const names = data.map((p) => p.name);
             sessionStorage.setItem("permissions", JSON.stringify(names));
             setPermission(names);
@@ -59,7 +60,7 @@ export const PermissionProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         setIsLoading(true);
         loadPermissions();
-    }, [user?.role]);
+    }, [authUser?.role]);
 
     const removePermissions = async () => {
         sessionStorage.removeItem("permissions");
@@ -67,8 +68,8 @@ export const PermissionProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const hasPermission = (action: string, module: string) => {
-        // If user is admin, automatically true
-        if (user?.role === "admin") {
+        // If authUser is admin, automatically true
+        if (authUser?.role === "admin") {
             return true;
         }
         if (!permission) {
@@ -80,7 +81,7 @@ export const PermissionProvider = ({ children }: { children: ReactNode }) => {
 
     const value = useMemo(
         () => ({ hasPermission, removePermissions, isLoading }),
-        [permission, user?.role, isLoading]
+        [permission, authUser?.role, isLoading]
     );
 
     return (
