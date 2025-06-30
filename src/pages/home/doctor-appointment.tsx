@@ -21,7 +21,7 @@ import { Controller, useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { useLocation } from "react-router-dom"
 import { z } from "zod"
-import PrintAppointment from "../appointment/print/print-appointment"
+import PrintAppointment from "../appointment/pdf-template/template"
 import { UnborderedDoctorCard } from "./book-appointment"
 import { registerPatientFormFields } from "./form-fields"
 
@@ -353,7 +353,7 @@ const DoctorAppointment = () => {
             />}
 
 
-            {print && <PrintAppointment Info={appointment!} afterPrint={() => { setPrint(false) }} />}
+            {print && <PrintAppointment Info={appointment!} afterGenerate={() => { setPrint(false) }} />}
         </div>
     )
 }

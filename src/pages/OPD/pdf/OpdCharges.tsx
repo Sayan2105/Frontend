@@ -1,35 +1,44 @@
 import Backdrop from '@/components/backdrop';
 import CustomTooltip from '@/components/customTooltip';
 import { From, PdfFooter, PdfHeader, To, Totals } from '@/components/pdf';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { currencySymbol } from '@/helpers/currencySymbol';
 import { currencyFormat } from '@/lib/utils';
 import OpdApi from '@/services/opd-api';
 import { PrintBillDetails } from '@/types/opd_section/opd';
-import { Printer } from 'lucide-react';
+import html2pdf from "html2pdf.js";
+import { Printer, ReceiptIndianRupee } from 'lucide-react';
 import { HTMLAttributes, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useReactToPrint } from 'react-to-print';
-
 
 
 export interface BillPDFProps extends HTMLAttributes<HTMLDivElement> {
     bill: PrintBillDetails
-    afterPrint: () => void
+    afterGenerate: () => void
 }
 
 
 
-
-const Document = ({ bill, afterPrint }: BillPDFProps) => {
+const Template = ({ bill, afterGenerate }: BillPDFProps) => {
 
     const contentRef = useRef(null)
 
-    const Print = useReactToPrint({
-        contentRef,
-        documentTitle: 'Invoice',
-        onAfterPrint() { afterPrint() },
-    })
+    const generate = () => {
+        const options = {
+            filename: `OPD-${bill.id}.pdf`,
+            image: { type: "png", quality: 1 },
+            html2canvas: { scale: 3 },
+            jsPDF: { unit: "in", format: "A4", orientation: "portrait" }
+        };
+        html2pdf()
+            .from(contentRef.current!)
+            .set(options)
+            .outputPdf('blob')
+            .then((pdfBlob: any) => {
+                const url = URL.createObjectURL(pdfBlob);
+                window.open(url);
+                afterGenerate()
+            });
+    }
 
     const headers = ['Charge Name', 'Category', `Total ${currencySymbol()}`]
 
@@ -52,14 +61,14 @@ const Document = ({ bill, afterPrint }: BillPDFProps) => {
 
 
     useEffect(() => {
-        Print()
+        generate()
     }, [])
 
 
     return (
-        <Backdrop onClick={afterPrint}>
+        <Backdrop onClick={afterGenerate}>
             <div className="scale-75 lg:scale-100" onClick={(e) => e.stopPropagation()}>
-                <div className="max-w-4xl mx-auto p-6 bg-white flex flex-col gap-y-5 dark:bg-[#1e1e1e] border-b-2 border-dashed dark:border-gray-500" ref={contentRef}>
+                <div className="max-w-4xl mx-auto p-6 bg-white flex flex-col gap-y-5 border-b-2 border-dashed" ref={contentRef}>
                     {/* Header */}
                     <PdfHeader title="Invoice" id={bill.id} date={new Date().toLocaleDateString()} />
 
@@ -70,25 +79,41 @@ const Document = ({ bill, afterPrint }: BillPDFProps) => {
                     </div>
 
                     {/* Items Table */}
-                    <Table>
-                        <TableHeader className="bg-white">
-                            <TableRow>
-                                {headers.map((item, i) => (
-                                    <TableHead key={i}>{item}</TableHead>
-                                ))}
-                            </TableRow>
-                        </TableHeader>
 
-                        <TableBody>
-                            {bill.charges.map((charge, _i) => (
-                                <TableRow key={_i}>
-                                    <TableCell className="py-3 text-sm">{charge.chargeNames.name}</TableCell>
-                                    <TableCell className="py-3 text-sm">{charge.chargeCategory.category}</TableCell>
-                                    <TableCell className="py-3 text-sm">{currencyFormat(charge.total)}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                    <div className="flex flex-col border border-gray-200 rounded-lg">
+                        <div className="py-3 px-6 flex gap-2 items-center bg-gray-50 border-b border-gray-200">
+                            <ReceiptIndianRupee className="w-5 h-5 text-red-500" />
+                            <h3 className="flex text-lg font-semibold text-gray-900 items-center gap-2">
+                               Charges
+                            </h3>
+                        </div>
+                        <table className="min-w-full text-sm">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    {headers.map((item, i) => (
+                                        <th key={i} className="py-4 px-6 text-left font-semibold text-gray-700 uppercase">{item}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {bill.charges.map((charge, _i) => (
+                                    <tr key={_i} className=" hover:bg-gray-50">
+                                        <td className="p-6 text-gray-700"><span className='text-red-500'>● </span>{charge.chargeNames.name}</td>
+                                        <td className="p-6 font-mono text-gray-900 min-w-[100px]">
+                                            <span className="px-2 inline-block text-red-500 text-sm font-medium bg-red-100 rounded">
+                                                {charge.chargeCategory.category}
+                                            </span>
+                                        </td>
+                                        <td className="p-6 font-mono text-gray-900 min-w-[100px]">
+                                            <span className="px-2 inline-block text-green-500 text-sm font-medium bg-green-100 rounded">
+                                                {currencyFormat(charge.total)}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
 
                     {/* Totals */}
 
@@ -134,7 +159,7 @@ const PrintOpdBill = ({ opdId, onPending }: Props) => {
                 <Printer className='cursor-pointer text-gray-600 dark:text-neutral-300 w-5 h-5 active:scale-95' onClick={handleBill} />
             </CustomTooltip>
 
-            {current && <Document bill={current!} afterPrint={() => setCurrent(null)} />}
+            {current && <Template bill={current!} afterGenerate={() => setCurrent(null)} />}
         </>
     );
 };

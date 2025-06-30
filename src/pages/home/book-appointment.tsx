@@ -22,7 +22,7 @@ import { useContext, useEffect, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { z } from "zod"
-import PrintAppointment from "../appointment/print/print-appointment"
+import PrintAppointment from "../appointment/pdf-template/template"
 import { registerPatientFormFields } from "./form-fields"
 
 const BookAppointment = () => {
@@ -340,7 +340,7 @@ const BookAppointment = () => {
             />}
 
 
-            {print && <PrintAppointment Info={appointment!} afterPrint={() => { setPrint(false) }} />}
+            {print && <PrintAppointment Info={appointment!} afterGenerate={() => { setPrint(false) }} />}
         </>
     )
 }

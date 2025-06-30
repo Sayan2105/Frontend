@@ -16,7 +16,7 @@ import { parseAsInteger, useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
 import { useDebouncedCallback } from 'use-debounce'
 import PaymentFormModel from "../../../../components/form-modals/payment-form-modal"
-import PrintPayment from "../../pdf/payment"
+import GeneratePaymentPdf from "../../pdf/payment"
 import usePaymentHandlers from "./payment-handlers"
 
 
@@ -159,9 +159,9 @@ const PaymentsList = () => {
       )}
 
       {print &&
-        <PrintPayment
+        <GeneratePaymentPdf
           payment={current!}
-          afterPrint={() => { setPrint(false), setCurrent(null) }}
+          afterGenerate={() => { setPrint(false), setCurrent(null) }}
         />
       }
     </section>

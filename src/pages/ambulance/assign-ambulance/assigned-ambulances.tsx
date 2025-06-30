@@ -14,25 +14,27 @@ import { currencySymbol } from "@/helpers/currencySymbol"
 import { currencyFormat } from "@/lib/utils"
 import { Ambulance, Plus } from "lucide-react"
 import { parseAsInteger, useQueryState } from "nuqs"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useDebouncedCallback } from "use-debounce"
 import AssignAmbulanceForm from "./form"
 import useAssignAmbulance from "./handlers"
 import AssAmbModal from "./info-modal"
+import GenerateAmbulanceInvoice from "./pdf-template/invoice"
 
 
 const AssignedAmbulances = () => {
 
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
     const [search, setSearch] = useQueryState('search')
-    // const router = useNavigate()
+    const [genInvoice, setGenInvoice] = useState(false)
 
-    const { assigned, getAssignedAmbulances, getAssignedAmbulanceInfo, printInvoice, current, setCurrent, handleSubmit, onDelete, form, setForm, isPending, confirmationProps } = useAssignAmbulance({ page, limit: page_limit, search })
+
+    const { assigned, getAssignedAmbulances, getAssignedAmbulanceInfo, current, setCurrent, handleSubmit, onDelete, form, setForm, isPending, confirmationProps } = useAssignAmbulance({ page, limit: page_limit, search })
 
     const onSearch = useDebouncedCallback(async (value: string) => {
         value ? (setSearch(value)) : (setSearch(null))
-        setPage(1) // always should execute
+        setPage(1)
     }, 400)
 
 
@@ -70,14 +72,8 @@ const AssignedAmbulances = () => {
                 {/* search bar */}
 
                 <div className='flex py-3 flex-col md:flex-row gap-y-4 md:items-center md:justify-between border-b border-gray-200 dark:border-gray-800'>
-
                     <div className='flex gap-x-2'>
                         <Input type='text' height='10px' placeholder='search' defaultValue={search!} onChange={(e) => { onSearch(e.target.value) }} />
-                    </div>
-
-                    <div className='flex gap-x-2'>
-                        {/* printing appointments list */}
-                        {/* <AppointmentListPDF appointments={Appointments['data']} /> */}
                     </div>
                 </div>
 
@@ -138,7 +134,7 @@ const AssignedAmbulances = () => {
                                                 }}
                                                 incluePrint={{
                                                     include: true,
-                                                    print: async () => { printInvoice(ass.id) }
+                                                    print: async () => { await getAssignedAmbulanceInfo(ass.id); setGenInvoice(true) }
                                                 }}
                                             />
                                         </TableRow>
@@ -187,8 +183,9 @@ const AssignedAmbulances = () => {
             )}
 
             {/* Information Modal */}
-            {(current && !form) && <AssAmbModal info={current!} onClick={() => setCurrent(null)} />}
+            {(current && !form && !genInvoice) && <AssAmbModal info={current!} onClick={() => setCurrent(null)} />}
 
+            {genInvoice && <GenerateAmbulanceInvoice ambulanceInfo={current!} afterGenerate={() => { setGenInvoice(false); setCurrent(null) }} />}
 
         </>
     )

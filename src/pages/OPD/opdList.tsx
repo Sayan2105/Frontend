@@ -21,8 +21,7 @@ import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { useDebouncedCallback } from 'use-debounce'
 import CreatePrescriptionFormModel from '../../components/form-modals/prescription-form-modal'
-import PrintOpdBill from './pdf/bill'
-import OpdsPdf from './pdf/opds'
+import PrintOpdBill from './pdf/OpdCharges'
 import usePrescription from './prescription/prescription-handlers'
 import PrescriptionDetailsModel from './prescription/prescriptionDetailsModel'
 
@@ -117,17 +116,11 @@ const OPDLIST = () => {
             {/* search bar */}
 
             <div className='flex py-3 flex-col md:flex-row gap-y-4 md:items-center md:justify-between'>
-
                 <div className='flex gap-x-2'>
                     <Input type='text' height='10px' placeholder='opdId , patient , doctor' onChange={(e) => {
                         onSerach(e.target.value)
                     }} defaultValue={search!} />
                     {/* use debounce to prevent api call */}
-                </div>
-
-                <div className='flex gap-x-2'>
-                    {/* will print all list */}
-                    <OpdsPdf opds={OPD_list['data']} />
                 </div>
             </div>
 

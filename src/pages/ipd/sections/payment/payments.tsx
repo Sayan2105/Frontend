@@ -11,13 +11,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { page_limit } from "@/globalData"
 import { currencySymbol } from "@/helpers/currencySymbol"
 import { cn, currencyFormat } from "@/lib/utils"
+import usePaymentHandlers from "@/pages/OPD/details/payments/payment-handlers"
+import GeneratePaymentPdf from "@/pages/OPD/pdf/payment"
 import { Plus } from "lucide-react"
 import { parseAsInteger, useQueryState } from "nuqs"
 import { useEffect, useState } from "react"
 import { useDebouncedCallback } from 'use-debounce'
 import PaymentFormModel from "../../../../components/form-modals/payment-form-modal"
-import usePaymentHandlers from "@/pages/OPD/details/payments/payment-handlers"
-import PrintIpdPayment from "../../invoice/payment"
 
 
 
@@ -160,7 +160,8 @@ const IpdPayments = () => {
       )}
 
 
-      {print && <PrintIpdPayment payment={current!} afterPrint={() => { setPrint(false), setCurrent(null) }} />}
+      {print && <GeneratePaymentPdf payment={current!} afterGenerate={() => { setPrint(false), setCurrent(null) }} />}
+
     </section>
   )
 }

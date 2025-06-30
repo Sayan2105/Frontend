@@ -49,7 +49,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         onSuccess: async (newData) => {
             queryClient.setQueryData(['user'], newData)
             toast.success('Logged in successfully')
-            navigate(`/${newData.role}/dashboard`)
+            const statictRoute = newData.role === 'patient' ? '/patient/dashboard' : '/admin/dashboard'
+            navigate(statictRoute)
         },
         onError: (err: AxiosError<{ message: string }>) => {
             toast.error(err.response?.data?.message || 'Connection Error')

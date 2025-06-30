@@ -16,11 +16,11 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
 
 
 
-const GeneratePaymentPdf = ({ payment, afterGenerate }: Props) => {
+const GenerateIpdPaymentPdf = ({ payment, afterGenerate }: Props) => {
 
     const contentRef = useRef(null)
-
     const headers = ['Description', `Amount ${currencySymbol()}`]
+
 
     const generatePdf = () => {
         const options = {
@@ -46,12 +46,14 @@ const GeneratePaymentPdf = ({ payment, afterGenerate }: Props) => {
     }, [])
 
 
+
+
     return (
         <Backdrop onClick={afterGenerate}>
-            <div className=" scale-90 lg:scale-100 dark:text-black" onClick={(e) => e.stopPropagation()}>
-                <div className="max-w-7xl mx-auto p-6 bg-white flex flex-col gap-y-5  border-b-2 border-dashed" ref={contentRef}>
+            <div className="scale-75 lg:scale-100" onClick={(e) => e.stopPropagation()}>
+                <div className="max-w-4xl mx-auto p-6 bg-white flex flex-col gap-y-5  border-b-2 border-dashed" ref={contentRef}>
                     {/* Header */}
-                    <PdfHeader title="OPD Payment" id={payment.id} date={new Date().toLocaleDateString()} />
+                    <PdfHeader title="IPD Payment" id={payment.id} date={new Date().toLocaleDateString()} />
 
                     {/* Items Table */}
                     <div className="flex flex-col border border-gray-200 rounded-lg">
@@ -85,18 +87,19 @@ const GeneratePaymentPdf = ({ payment, afterGenerate }: Props) => {
                     </div>
 
                     {/* Totals */}
+
                     <div className="w-[180px] text-sm ml-auto">
                         <div className='flex justify-between'>
                             <span className="text-gray-600">Total :</span>
-                            <span className="text-gray-900 font-mono">{currencyFormat(payment.amount)}</span>
+                            <span className="text-gray-600 font-mono">{currencyFormat(payment.amount)}</span>
                         </div>
                         <div className='flex justify-between'>
                             <span className="text-gray-600">Paid :</span>
-                            <span className="text-gray-900 font-mono">{currencyFormat(payment.paid_amount)}</span>
+                            <span className="text-gray-600 font-mono">{currencyFormat(payment.paid_amount)}</span>
                         </div>
                         <div className='flex justify-between'>
                             <span className="text-gray-600">Balance :</span>
-                            <span className="text-gray-900 font-mono">{currencyFormat(payment.balance_amount)}</span>
+                            <span className="text-gray-600 font-mono">{currencyFormat(payment.balance_amount)}</span>
                         </div>
                     </div>
 
@@ -106,11 +109,11 @@ const GeneratePaymentPdf = ({ payment, afterGenerate }: Props) => {
 
                 </div>
             </div>
+
         </Backdrop>
     )
 }
 
 
 
-
-export default GeneratePaymentPdf
+export default GenerateIpdPaymentPdf

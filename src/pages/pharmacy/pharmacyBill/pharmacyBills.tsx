@@ -9,10 +9,12 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import UserImage from '@/components/user-image'
 import { createPharmacyBillSchema } from '@/formSchemas/createPharmBillSchema'
 import { page_limit } from '@/globalData'
 import { useConfirmation } from '@/hooks/useConfirmation'
 import { currencyFormat } from '@/lib/utils'
+import PharmacyApi from '@/services/pharmacy-api'
 import { pharmacyBillDetail, pharmacyBills } from '@/types/pharmacy/pharmacy'
 import { ListMinus, Plus } from 'lucide-react'
 import { parseAsInteger, useQueryState } from 'nuqs'
@@ -22,11 +24,8 @@ import { Link } from 'react-router-dom'
 import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
 import CreatePharmacyBill from './createPharmacyBill'
+import GeneratePharmacyBillPdf from './pdf-template/print-pharmacy-invoice'
 import PharmacyBillDetailsModal from './pharmacyBillDetailsModal'
-import PrintPharmacyInvoice from './printBill/print-pharmacy-invoice'
-import PrintPharmacyBills from './printBill/printPharmacyBills'
-import PharmacyApi from '@/services/pharmacy-api'
-import UserImage from '@/components/user-image'
 
 
 
@@ -155,13 +154,8 @@ const Bill = () => {
                 {/* search bar */}
 
                 <div className='flex py-3 flex-col md:flex-row gap-y-4 md:items-center md:justify-between'>
-
                     <div className='flex gap-x-2'>
                         <Input type='text' height='10px' placeholder='Bill No. , Date , Patient' onChange={(e) => { onSearch(e.target.value) }} defaultValue={search!} />
-                    </div>
-
-                    <div className='flex gap-x-2'>
-                        <PrintPharmacyBills list={pharmBills['data']} />
                     </div>
                 </div>
 
@@ -272,7 +266,7 @@ const Bill = () => {
             )}
 
             {/* To print bill */}
-            {print && <PrintPharmacyInvoice Info={current!} afterPrint={() => { setCurrent(null); setPrint(false) }} />}
+            {print && <GeneratePharmacyBillPdf Info={current!} afterGenerate={() => { setCurrent(null); setPrint(false) }} />}
         </>
 
     )

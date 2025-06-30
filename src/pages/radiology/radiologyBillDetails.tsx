@@ -12,8 +12,8 @@ import { currencyFormat } from "@/lib/utils"
 import { CalendarDays, Eye, Plus, Printer, UserRoundPlus } from "lucide-react"
 import { HTMLAttributes, useEffect, useRef, useState } from "react"
 import useRadiology from "./handler"
-import PrintRadiologyInvoice from "./print/print-invoice"
-import PrintRadioTestReport from "./print/print-radio-test-report"
+import GenerateRadiologyInvoice from "./pdf-template/Invoice"
+import GenerateRadiologyTestReport from "./pdf-template/report"
 import RadiologyReportForm from "./radiology-report-form"
 import RadioReportInfo from "./report-info"
 import RadioSampleCollectionInfo from "./sample-collection-info"
@@ -181,7 +181,7 @@ const RadiologyBillDetailsModal = ({ ID, ...props }: Props) => {
                                         <TableCell>{item.tax} %</TableCell>
                                         <TableCell>{currencyFormat(item.amount)}</TableCell>
                                         <TableCell>
-                                            <PrintRadioTestReport details={current!} itemId={item.id} onPending={(v) => setLoading({ ...loading, model: v })} />
+                                            <GenerateRadiologyTestReport details={current!} itemId={item.id} onPending={(v) => setLoading({ ...loading, model: v })} />
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -235,7 +235,7 @@ const RadiologyBillDetailsModal = ({ ID, ...props }: Props) => {
             {isLodaing && <LoaderModel />}
 
             {/* printing invoice */}
-            {print && <PrintRadiologyInvoice Info={current!} afterPrint={() => setPrint(false)} />}
+            {print && <GenerateRadiologyInvoice Info={current!} afterGenerate={() => setPrint(false)} />}
 
             {/* Deleting outside beacuse refresh state */}
             {confirmationProps.isOpen && <AlertModel

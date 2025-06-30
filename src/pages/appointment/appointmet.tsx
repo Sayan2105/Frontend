@@ -17,7 +17,7 @@ import { currencySymbol } from '@/helpers/currencySymbol'
 import { useConfirmation } from '@/hooks/useConfirmation'
 import { cn, currencyFormat } from '@/lib/utils'
 import { AppointmentApi } from '@/services/appointment-api'
-import { Appointment } from '@/types/appointment/appointment'
+import { Appointment, AppointmentData } from '@/types/appointment/appointment'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { Ban, ListMinus, Plus } from 'lucide-react'
@@ -29,7 +29,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
 import AppointmentDetailsModel from './appointment-info'
 import AddAppointment from './create-appointment'
-import AppointmentListPDF from './print/AppointmnetListPDF'
+import GenerateAppointmentPdf from './pdf-template/template'
 
 
 
@@ -40,6 +40,7 @@ const AdminAppointment = () => {
 
     // custom hooks
     const { confirm, confirmationProps } = useConfirmation()
+    const [padfData, setPdfData] = useState<AppointmentData | null>(null)
 
     // params
     const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
@@ -117,11 +118,6 @@ const AdminAppointment = () => {
     }
 
 
-    const printAppointment = async (id: string) => {
-        window.open(`${import.meta.env.VITE_APP_API_URL}/api/appointment/print/${id}`);
-    }
-
-
     const handleSubmit = async (formData: z.infer<typeof appointmentFormSchema>) => {
         AID ? updateAppointment(formData) : createAppointment(formData)
     }
@@ -166,14 +162,8 @@ const AdminAppointment = () => {
                 {/* search bar */}
 
                 <div className='flex py-3 flex-col md:flex-row gap-y-4 md:items-center md:justify-between border-b border-gray-200 dark:border-gray-800'>
-
                     <div className='flex gap-x-2'>
                         <Input type='text' height='10px' placeholder='search' defaultValue={search!} onChange={(e) => { onSearch(e.target.value) }} />
-                    </div>
-
-                    <div className='flex gap-x-2'>
-                        {/* printing appointments list */}
-                        <AppointmentListPDF appointments={Appointments?.['data']!} />
                     </div>
                 </div>
 
@@ -234,7 +224,7 @@ const AdminAppointment = () => {
                                                         onEdit={async () => { setAID(appointment.id), setForm(true) }}
                                                         incluePrint={{
                                                             include: true,
-                                                            print: () => printAppointment(appointment.id)
+                                                            print: () => { setPdfData(appointment) }
                                                         }}
                                                     />
                                                     <TableCell>
@@ -291,6 +281,9 @@ const AdminAppointment = () => {
                 cancel={() => confirmationProps.onCancel()}
                 continue={() => confirmationProps.onConfirm()}
             />}
+
+
+            {padfData && <GenerateAppointmentPdf afterGenerate={() => { setPdfData(null) }} Info={padfData!} />}
 
         </>
 

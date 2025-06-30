@@ -63,10 +63,6 @@ const useAssignAmbulance = (params: Params) => {
   }
 
 
-  const printInvoice = async (id: string) => {
-    window.open(`${import.meta.env.VITE_APP_API_URL}/api/ambulance/assign/print/${id}`);
-  }
-
 
   return {
     assigned,
@@ -80,7 +76,6 @@ const useAssignAmbulance = (params: Params) => {
     setCurrent,
     getAssignedAmbulanceInfo,
     confirmationProps,
-    printInvoice
   }
 }
 

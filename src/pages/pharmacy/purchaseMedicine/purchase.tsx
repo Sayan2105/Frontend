@@ -21,8 +21,8 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDebouncedCallback } from 'use-debounce'
 import { z } from 'zod'
-import PrintMedicinePurchases from './printPurchase/print-list'
-import PrintMedicinePurchase from './printPurchase/print-purchase'
+import GeneratePurchaseMedicineInvoice from './pdf-template/invoice'
+import PrintMedicinePurchases from './pdf-template/print-list'
 import PurchaseMedicineForm from './purchaseMedicine'
 import PurchaseMedicineDetailsModel from './purchaseMedicineDetailsModel'
 
@@ -270,7 +270,7 @@ const Purchase = () => {
 
         {/* print */}
 
-        {print && <PrintMedicinePurchase afterPrint={() => {setPrint(false); setCurrent(null)}} Info={current!} />}
+        {print && <GeneratePurchaseMedicineInvoice afterGenerate={() => { setPrint(false); setCurrent(null) }} Info={current!} />}
 
       </div >
     </>

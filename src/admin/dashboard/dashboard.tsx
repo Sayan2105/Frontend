@@ -1,21 +1,21 @@
 import { chartConfig, incomeExpenseConfig } from '@/chartConfig/chartConfig'
+import CustomTooltip from '@/components/customTooltip'
 import PermissionProtectedAction from '@/components/permission-protected-actions'
 import RectCard from '@/components/rectCard'
 import StaffCalendar from '@/components/staffCalendar'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AdminDash_MM_IncExp, AdminDashAppmtReport, AdminDashTotalCount, AdminDashVisitors } from '@/types/dashboard/adminDashboard'
+import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
 import { Activity, Ambulance, CalendarClock, ClipboardPlus, DollarSign, Droplets, HandCoins, HeartPulse, ListFilter, Package, Pill, Radiation, Search, ShoppingCart, Stethoscope, TestTube2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { Area, AreaChart, CartesianGrid, Label, Pie, PieChart, XAxis } from 'recharts'
 import { getAdminDash_MM_IncExp, getAdminDashAppointmentReport, getAdminDashIncExp, getAdminDashVisitors } from './apiHandler'
 import { Default_MM_Inc_Exp_Data } from './defaultChartdata'
-import { DropdownMenu } from '@radix-ui/react-dropdown-menu'
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import CustomTooltip from '@/components/customTooltip'
-import { Input } from '@/components/ui/input'
 
 
 type SearchParams = {
@@ -103,231 +103,224 @@ const AdminDashboard = () => {
                 <div className="grid lg:grid-cols-3 gap-3">
                     {/* Montly Income & expenses Chart */}
                     <PermissionProtectedAction action='Income Expenses' module='dashboard'>
-                        <div className="w-full h-[400px]">
-                            <Card  >
-                                <CardHeader>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <p className='text-gray-500'>Search</p>
-                                        <div className="flex w-56 gap-2">
-                                            {/* dropdown menu */}
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger>
-                                                    <CustomTooltip message="Search by">
-                                                        <div className='p-2 bg-rose-100 dark:bg-rose-500/10 rounded-full'>
-                                                            <ListFilter className='w-5 h-5 text-rose-600' />
-                                                        </div>
-                                                    </CustomTooltip>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align='end'>
-                                                    <DropdownMenuItem onSelect={() => setSearchIEby('date')}>Date</DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => setSearchIEby('year')}>Year</DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => setSearchIEby('month')}>Month</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                        <Card className="w-full h-[400px] lg:h-[450px]">
+                            <CardHeader>
+                                <div className="flex justify-between items-center mb-2">
+                                    <p className='text-gray-500'>Search</p>
+                                    <div className="flex w-56 gap-2">
+                                        {/* dropdown menu */}
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger>
+                                                <CustomTooltip message="Search by">
+                                                    <div className='p-2 bg-rose-100 dark:bg-rose-500/10 rounded-full'>
+                                                        <ListFilter className='w-5 h-5 text-rose-600' />
+                                                    </div>
+                                                </CustomTooltip>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align='end'>
+                                                <DropdownMenuItem onSelect={() => setSearchIEby('date')}>Date</DropdownMenuItem>
+                                                <DropdownMenuItem onSelect={() => setSearchIEby('year')}>Year</DropdownMenuItem>
+                                                <DropdownMenuItem onSelect={() => setSearchIEby('month')}>Month</DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
 
-                                            {/* search types input */}
-                                            {searchIEby === 'year' &&
-                                                <Select onValueChange={(v) => onIESearch({ month: v })}>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select Year" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value={String(new Date().getFullYear())}>{new Date().getFullYear()}</SelectItem>
-                                                        <SelectItem value={String(new Date().getFullYear() - 1)}>{new Date().getFullYear() - 1}</SelectItem>
-                                                        <SelectItem value={String(new Date().getFullYear() - 2)}>{new Date().getFullYear() - 2}</SelectItem>
-                                                        <SelectItem value={String(new Date().getFullYear() - 3)}>{new Date().getFullYear() - 3}</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            }
+                                        {/* search types input */}
+                                        {searchIEby === 'year' &&
+                                            <Select onValueChange={(v) => onIESearch({ month: v })}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select Year" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value={String(new Date().getFullYear())}>{new Date().getFullYear()}</SelectItem>
+                                                    <SelectItem value={String(new Date().getFullYear() - 1)}>{new Date().getFullYear() - 1}</SelectItem>
+                                                    <SelectItem value={String(new Date().getFullYear() - 2)}>{new Date().getFullYear() - 2}</SelectItem>
+                                                    <SelectItem value={String(new Date().getFullYear() - 3)}>{new Date().getFullYear() - 3}</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        }
 
-                                            {searchIEby === 'month' &&
-                                                <Input
-                                                    type='month'
-                                                    onChange={(e) => onIESearch({ month: e.target.value })}
-                                                />
-                                            }
+                                        {searchIEby === 'month' &&
+                                            <Input
+                                                type='month'
+                                                onChange={(e) => onIESearch({ month: e.target.value })}
+                                            />
+                                        }
 
-                                            {searchIEby === 'date' &&
-                                                <Input
-                                                    type='date'
-                                                    onChange={(e) => onIESearch({ date: e.target.value })}
-                                                />
-                                            }
+                                        {searchIEby === 'date' &&
+                                            <Input
+                                                type='date'
+                                                onChange={(e) => onIESearch({ date: e.target.value })}
+                                            />
+                                        }
 
-                                        </div>
                                     </div>
+                                </div>
 
-                                    <CardTitle>Income & Expense</CardTitle>
-                                    <CardDescription>
-                                        Showing total Income & Expenses based on the search
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <ChartContainer config={incomeExpenseConfig}>
-                                        <AreaChart
-                                            accessibilityLayer
-                                            data={MonthlyIncExp.length > 1 ? MonthlyIncExp : Default_MM_Inc_Exp_Data}
-                                            margin={{
-                                                left: 12,
-                                                right: 12,
-                                            }}
-                                        >
-                                            <CartesianGrid
-                                                vertical
-                                                strokeDasharray="5 5" // Optional: Customize dash pattern
-                                            />
-                                            <XAxis
-                                                dataKey="month"
-                                                tickLine={false}
-                                                axisLine={false}
-                                                tickMargin={8}
-                                                tickFormatter={(value: string) => value.slice(0, 3)}
-                                            />
-                                            <ChartTooltip
-                                                cursor={false}
-                                                content={<ChartTooltipContent indicator="dot" />}
-                                            />
-                                            <Area
-                                                dataKey="Expenses"
-                                                type="natural"
-                                                fill="var(--color-mobile)"
-                                                fillOpacity={0.4}
-                                                stroke="var(--color-mobile)"
-                                                stackId="a"
-                                            />
-                                            <Area
-                                                dataKey="Income"
-                                                type="natural"
-                                                fill="var(--color-desktop)"
-                                                fillOpacity={0.4}
-                                                stroke="var(--color-desktop)"
-                                                stackId="a"
-                                            />
-                                        </AreaChart>
-                                    </ChartContainer>
-                                    {MonthlyIncExp.length < 1 && <p className='text-red-600 italic'>No data found</p>}
-                                </CardContent>
-                                <CardFooter className='space-x-2 pb-5'>
-                                    <p className='text-sm text-gray-500'>Income & Expenses For All Modules</p>
-                                </CardFooter>
-                            </Card>
-                        </div>
+                                <CardTitle>Income & Expense</CardTitle>
+                                <CardDescription>
+                                    Showing total Income & Expenses based on the search
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className='flex-1'>
+                                <ChartContainer config={incomeExpenseConfig}>
+                                    <AreaChart
+                                        accessibilityLayer
+                                        data={MonthlyIncExp.length > 1 ? MonthlyIncExp : Default_MM_Inc_Exp_Data}
+                                        margin={{
+                                            left: 12,
+                                            right: 12,
+                                        }}
+                                    >
+                                        <CartesianGrid
+                                            vertical
+                                            strokeDasharray="5 5" // Optional: Customize dash pattern
+                                        />
+                                        <XAxis
+                                            dataKey="month"
+                                            tickLine={false}
+                                            axisLine={false}
+                                            tickMargin={8}
+                                            tickFormatter={(value: string) => value.slice(0, 3)}
+                                        />
+                                        <ChartTooltip
+                                            cursor={false}
+                                            content={<ChartTooltipContent indicator="dot" />}
+                                        />
+                                        <Area
+                                            dataKey="Expenses"
+                                            type="natural"
+                                            fill="var(--color-mobile)"
+                                            fillOpacity={0.4}
+                                            stroke="var(--color-mobile)"
+                                            stackId="a"
+                                        />
+                                        <Area
+                                            dataKey="Income"
+                                            type="natural"
+                                            fill="var(--color-desktop)"
+                                            fillOpacity={0.4}
+                                            stroke="var(--color-desktop)"
+                                            stackId="a"
+                                        />
+                                    </AreaChart>
+                                </ChartContainer>
+                                {MonthlyIncExp.length < 1 && <p className='text-red-600 italic'>No data found</p>}
+                            </CardContent>
+                        </Card>
                     </PermissionProtectedAction>
 
 
                     {/* pie chart 1 */}
 
                     <PermissionProtectedAction action='Appointments' module='dashboard'>
-                        <div >
-                            <Card className="flex flex-col mx-auto h-[400px]">
-                                <CardHeader>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <p className='text-gray-500'>Search</p>
-                                        <div className="flex w-56 gap-2">
-                                            {/* dropdown menu */}
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger>
-                                                    <CustomTooltip message="Search by">
-                                                        <div className='p-2 bg-rose-100 dark:bg-rose-500/10 rounded-full'>
-                                                            <ListFilter className='w-5 h-5 text-rose-600' />
-                                                        </div>
-                                                    </CustomTooltip>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align='end'>
-                                                    <DropdownMenuItem onSelect={() => setSearchAPNTby('date')}>Date</DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => setSearchAPNTby('year')}>Year</DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => setSearchAPNTby('month')}>Month</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                        <Card className="flex flex-col w-full h-[400px] lg:h-[450px]">
+                            <CardHeader>
+                                <div className="flex justify-between items-center mb-2">
+                                    <p className='text-gray-500'>Search</p>
+                                    <div className="flex w-56 gap-2">
+                                        {/* dropdown menu */}
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger>
+                                                <CustomTooltip message="Search by">
+                                                    <div className='p-2 bg-rose-100 dark:bg-rose-500/10 rounded-full'>
+                                                        <ListFilter className='w-5 h-5 text-rose-600' />
+                                                    </div>
+                                                </CustomTooltip>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align='end'>
+                                                <DropdownMenuItem onSelect={() => setSearchAPNTby('date')}>Date</DropdownMenuItem>
+                                                <DropdownMenuItem onSelect={() => setSearchAPNTby('year')}>Year</DropdownMenuItem>
+                                                <DropdownMenuItem onSelect={() => setSearchAPNTby('month')}>Month</DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
 
-                                            {/* search types input */}
-                                            {searchAPNTby === 'year' &&
-                                                <Select onValueChange={(v) => onAppointmentSearch({ year: Number(v) })}>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select Year" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        <SelectItem value={String(new Date().getFullYear())}>{new Date().getFullYear()}</SelectItem>
-                                                        <SelectItem value={String(new Date().getFullYear() - 1)}>{new Date().getFullYear() - 1}</SelectItem>
-                                                        <SelectItem value={String(new Date().getFullYear() - 2)}>{new Date().getFullYear() - 2}</SelectItem>
-                                                        <SelectItem value={String(new Date().getFullYear() - 3)}>{new Date().getFullYear() - 3}</SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                            }
+                                        {/* search types input */}
+                                        {searchAPNTby === 'year' &&
+                                            <Select onValueChange={(v) => onAppointmentSearch({ year: Number(v) })}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select Year" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value={String(new Date().getFullYear())}>{new Date().getFullYear()}</SelectItem>
+                                                    <SelectItem value={String(new Date().getFullYear() - 1)}>{new Date().getFullYear() - 1}</SelectItem>
+                                                    <SelectItem value={String(new Date().getFullYear() - 2)}>{new Date().getFullYear() - 2}</SelectItem>
+                                                    <SelectItem value={String(new Date().getFullYear() - 3)}>{new Date().getFullYear() - 3}</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        }
 
-                                            {searchAPNTby === 'month' &&
-                                                <Input type='month' onChange={(e) => onAppointmentSearch({ month: e.target.value })} />
-                                            }
+                                        {searchAPNTby === 'month' &&
+                                            <Input type='month' onChange={(e) => onAppointmentSearch({ month: e.target.value })} />
+                                        }
 
-                                            {searchAPNTby === 'date' &&
-                                                <Input type='date' onChange={(e) => onAppointmentSearch({ date: e.target.value })} />
-                                            }
+                                        {searchAPNTby === 'date' &&
+                                            <Input type='date' onChange={(e) => onAppointmentSearch({ date: e.target.value })} />
+                                        }
 
-                                        </div>
                                     </div>
+                                </div>
 
-                                    <CardTitle>Appointments Status</CardTitle>
-                                    <CardDescription>Showing total Appointments based on the search</CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex-1 pb-0">
-                                    <ChartContainer
-                                        config={chartConfig}
-                                        className="mx-auto aspect-square max-h-[250px]"
-                                    >
-                                        <PieChart>
-                                            <ChartTooltip
-                                                cursor={false}
-                                                content={<ChartTooltipContent hideLabel />}
-                                            />
-                                            <Pie
-                                                data={appmtReport?.status}
-                                                dataKey="count"
-                                                nameKey="status"
-                                                innerRadius={60}
-                                                strokeWidth={5}
-                                            >
-                                                <Label
-                                                    content={({ viewBox }) => {
-                                                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                                                            return (
-                                                                <text
+                                <CardTitle>Appointments Status</CardTitle>
+                                <CardDescription>Showing total Appointments based on the search</CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex-1 pb-0">
+                                <ChartContainer
+                                    config={chartConfig}
+                                    className="mx-auto aspect-square max-h-[250px]"
+                                >
+                                    <PieChart>
+                                        <ChartTooltip
+                                            cursor={false}
+                                            content={<ChartTooltipContent hideLabel />}
+                                        />
+                                        <Pie
+                                            data={appmtReport?.status}
+                                            dataKey="count"
+                                            nameKey="status"
+                                            innerRadius={60}
+                                            strokeWidth={5}
+                                        >
+                                            <Label
+                                                content={({ viewBox }) => {
+                                                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                                        return (
+                                                            <text
+                                                                x={viewBox.cx}
+                                                                y={viewBox.cy}
+                                                                textAnchor="middle"
+                                                                dominantBaseline="middle"
+                                                            >
+                                                                <tspan
                                                                     x={viewBox.cx}
                                                                     y={viewBox.cy}
-                                                                    textAnchor="middle"
-                                                                    dominantBaseline="middle"
+                                                                    className="fill-foreground text-3xl font-bold"
                                                                 >
-                                                                    <tspan
-                                                                        x={viewBox.cx}
-                                                                        y={viewBox.cy}
-                                                                        className="fill-foreground text-3xl font-bold"
-                                                                    >
-                                                                        {appmtReport?.totalAppmts?.toLocaleString()}
-                                                                    </tspan>
-                                                                    <tspan
-                                                                        x={viewBox.cx}
-                                                                        y={(viewBox.cy || 0) + 24}
-                                                                        className="fill-muted-foreground"
-                                                                    >
-                                                                        Appointments
-                                                                    </tspan>
-                                                                </text>
-                                                            )
-                                                        }
-                                                    }}
-                                                />
-                                            </Pie>
-                                        </PieChart>
-                                    </ChartContainer>
-                                </CardContent>
-                                <CardFooter>
-                                    <div className="flex gap-2 font-medium leading-none">
-                                        {appmtReport?.status.length! < 1 && <div className="flex items-center space-x-2 leading-none text-red-600">
-                                            <p>No data found</p> <Search className='h-4 w-4' />
-                                        </div>}
-                                    </div>
-                                </CardFooter>
-                            </Card>
-                        </div>
+                                                                    {appmtReport?.totalAppmts?.toLocaleString()}
+                                                                </tspan>
+                                                                <tspan
+                                                                    x={viewBox.cx}
+                                                                    y={(viewBox.cy || 0) + 24}
+                                                                    className="fill-muted-foreground"
+                                                                >
+                                                                    Appointments
+                                                                </tspan>
+                                                            </text>
+                                                        )
+                                                    }
+                                                }}
+                                            />
+                                        </Pie>
+                                    </PieChart>
+                                </ChartContainer>
+                            </CardContent>
+                            <CardFooter>
+                                <div className="flex gap-2 font-medium leading-none">
+                                    {appmtReport?.status.length! < 1 && <div className="flex items-center space-x-2 leading-none text-red-600">
+                                        <p>No data found</p> <Search className='h-4 w-4' />
+                                    </div>}
+                                </div>
+                            </CardFooter>
+                        </Card>
                     </PermissionProtectedAction>
 
 
@@ -335,8 +328,7 @@ const AdminDashboard = () => {
                     {/* numbers of services */}
 
                     <PermissionProtectedAction action='Visitors' module='dashboard'>
-                        <div className="lg:col-span-1">
-                            <Card className="flex flex-col h-[400px]">
+                            <Card className="flex flex-col h-[400px] lg:h-[450px]">
                                 <CardHeader>
                                     <div className="flex justify-between items-center mb-2">
                                         <p className='text-gray-500'>Search</p>
@@ -399,8 +391,6 @@ const AdminDashboard = () => {
                                 </CardContent>
 
                             </Card>
-
-                        </div>
                     </PermissionProtectedAction>
                 </div>
             </div>

@@ -8,6 +8,7 @@ import TableActions from '@/components/table-actions'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import UserImage from '@/components/user-image'
 import { page_limit } from '@/globalData'
 import { currencySymbol } from '@/helpers/currencySymbol'
 import { currencyFormat } from '@/lib/utils'
@@ -19,8 +20,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import IssueBloodComponent from './form'
 import useBloodComponentIssue from './handlers'
 import IssueBloodComponentModal from './info-modal'
-import PrintIssueBloodComponnetInvoice from './print/print-invoice'
-import UserImage from '@/components/user-image'
+import GenerateBloodComponentInvoice from './pdf-template/invoice'
 
 
 
@@ -190,9 +190,9 @@ const BloodComponentIssues = () => {
 
 
       {print && (
-        <PrintIssueBloodComponnetInvoice
+        <GenerateBloodComponentInvoice
           info={current!}
-          afterPrint={() => { setPrint(false); setCurrent(undefined) }}
+          afterGenerate={() => { setPrint(false); setCurrent(undefined) }}
         />
       )}
 

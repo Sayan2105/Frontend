@@ -1,3 +1,4 @@
+import AlertModel from "@/components/alertModel"
 import CardBox from "@/components/card-box"
 import CustomTooltip from "@/components/customTooltip"
 import Dialog from "@/components/Dialog"
@@ -12,11 +13,10 @@ import { CalendarDays, Eye, Plus, Printer, UserRoundPlus } from "lucide-react"
 import { HTMLAttributes, useEffect, useRef, useState } from "react"
 import usePathology from "./handlers"
 import PathologyReportForm from "./pathology-report-from"
-import PrintPathologyInvoice from "./print/print-invoice"
-import PrintPathTestReport from "./print/print-path-test-report"
-import PathSampleCollectionInfo from "./sample-collection-info"
-import AlertModel from "@/components/alertModel"
+import GeneratePathologyInvoice from "./pdf template/invoice"
+import GenaratePathologyReport from "./pdf template/report"
 import PathReportInfo from "./report-info"
+import PathSampleCollectionInfo from "./sample-collection-info"
 
 
 
@@ -174,7 +174,7 @@ const PathologyBillDetailsModal = ({ ID, ...props }: PharmacyDetailsProps) => {
                                         <TableCell>{item.tax} %</TableCell>
                                         <TableCell>{currencyFormat(item.amount)}</TableCell>
                                         <TableCell>
-                                            <PrintPathTestReport details={current!} itemId={item.id} onPending={setLoading} />
+                                            <GenaratePathologyReport details={current!} itemId={item.id} onPending={setLoading} />
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -234,7 +234,7 @@ const PathologyBillDetailsModal = ({ ID, ...props }: PharmacyDetailsProps) => {
             {isLodaing && <LoaderModel />}
 
             {/* printing invoice */}
-            {print && <PrintPathologyInvoice Info={current!} afterPrint={() => setPrint(false)} />}
+            {print && <GeneratePathologyInvoice Info={current!} afterGenerate={() => setPrint(false)} />}
 
         </>
     )

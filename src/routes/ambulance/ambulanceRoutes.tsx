@@ -1,4 +1,3 @@
-import PrintAmbulanceInvoice from '@/pages/ambulance/assign-ambulance/print/print-bill';
 import { lazy } from 'react';
 import { Route } from 'react-router-dom';
 
@@ -14,7 +13,6 @@ const AmbulanceRoutes = () => {
                 <Route path="" element={<AssignedAmbulances />} />
                 <Route element={<ProtectRoutes restrictedTo="patient" />}>
                     <Route path="create" element={<Ambulances />} />
-                    <Route path="print/:invoiceId" element={<PrintAmbulanceInvoice />} />
                 </Route>
             </Route>
         </Route>

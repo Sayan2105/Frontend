@@ -8,6 +8,12 @@ html {
   @apply transition-colors;
 }
 
+@layer base {
+  img {
+    @apply inline-block;
+  }
+}
+
 /* calndor style */
 .sx-react-calendar-wrapper {
   width: 1200px;
@@ -123,4 +129,3 @@ html {
   border-color: #5d3bf6;
   color: white;
 }
-

@@ -11,7 +11,7 @@ interface headerProps {
 
 export const PdfHeader = ({ id, title, date }: headerProps) => {
     return (
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-5 mb-4 sm:items-center border-b-2 border-dashed p-5">
+        <div className="flex flex-row justify-between gap-5 mb-4 items-center border-b-2 border-gray-200 border-dashed p-5">
             <div >
                 <div className="flex items-center gap-2">
                     <img src="/logo.png" alt="Logo" className="w-16 h-16 object-cover" />
@@ -21,7 +21,7 @@ export const PdfHeader = ({ id, title, date }: headerProps) => {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className="text-end">
                 <h1 className="text-xl font-bold text-gray-800">{title}</h1>
                 <p className="text-xs text-gray-600 font-mono">#{id}</p>
                 <p className="text-xs text-gray-600">Date: {date}</p>
@@ -34,7 +34,7 @@ export const PdfHeader = ({ id, title, date }: headerProps) => {
 
 export const From = () => {
     return (
-        <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
+        <div className="bg-gray-50 p-6 rounded-lg">
             <h3 className="text-sm font-semibold text-gray-600 uppercase mb-4">Service Provider</h3>
             <p className="whitespace-pre-line text-gray-600">{hospital_name}</p>
             <p className="whitespace-pre-line text-xs text-gray-600">{address.street}</p>
@@ -71,8 +71,8 @@ export const To = ({ id, name, address, phone, email }: ToProps) => {
             <h3 className="text-sm font-semibold text-blue-600 uppercase mb-4">Bill To</h3>
             <p className="whitespace-pre-line text-gray-600">{name} ({id})</p>
             <p className="whitespace-pre-line text-xs text-gray-600">{address}</p>
-            <p className="text-muted text-xs">{email}</p>
-            <p className="text-muted text-xs">{phone}</p>
+            <p className="text-gray-600 text-xs">{email}</p>
+            <p className="text-gray-600 text-xs">{phone}</p>
         </div>
     )
 }
@@ -107,8 +107,8 @@ export const Totals = ({ subtotal, discount, discount_amount, tax, tax_amount, t
                     <span className="text-gray-900 font-mono">{currencyFormat(discount_amount || (discount / 100) * subtotal)}</span>
                 </div>
                 <div className="flex justify-between border-t pt-2">
-                    <span className="font-semibold text-gray-800">Total:</span>
-                    <span className="font-semibold text-gray-800 font-mono">{currencyFormat(total)}</span>
+                    <span className="font-bold text-lg text-gray-800">Grand Total:</span>
+                    <span className="font-bold text-lg text-gray-800 font-mono">{currencyFormat(total)}</span>
                 </div>
             </div>
         </div>
@@ -128,11 +128,11 @@ export const PdfFooter = ({ paymentInfo, notes }: footerProps) => {
         <div className="grid grid-cols-2 gap-8">
             <div>
                 <h3 className="text-sm font-semibold text-gray-800 mb-2">Payment Information</h3>
-                <p className="whitespace-pre-line text-muted dark:text-gray-400 text-sm">{paymentInfo}</p>
+                <p className="whitespace-pre-line text-muted-foreground text-sm">{paymentInfo}</p>
             </div>
             <div>
                 <h3 className="text-sm font-semibold text-gray-800 mb-2">Notes</h3>
-                <p className="whitespace-pre-line text-muted dark:text-gray-400 text-sm">{`Thanks for your business. \n ${notes}`}</p>
+                <p className="whitespace-pre-line text-muted-foreground text-sm">{`Thanks for your business. \n ${notes}`}</p>
             </div>
         </div>
     )

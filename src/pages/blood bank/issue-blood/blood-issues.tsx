@@ -19,8 +19,8 @@ import CustomPagination from '@/components/customPagination'
 import AlertModel from '@/components/alertModel'
 import LoaderModel from '@/components/loader'
 import IssueBloodInfoModal from './info-modal'
-import PrintIssueBloodInvoice from './print/print-invoice'
 import UserImage from '@/components/user-image'
+import GenerateBloodIssueInvoice from './pdf-template/invoice'
 
 
 
@@ -204,9 +204,9 @@ const BloodIssues = () => {
 
             {/* Print Modal */}
             {print && (
-                <PrintIssueBloodInvoice
+                <GenerateBloodIssueInvoice
                     info={current!}
-                    afterPrint={() => { setPrint(false), setCurrent(null) }}
+                    afterGenerate={() => { setPrint(false), setCurrent(null) }}
                 />
             )}
 

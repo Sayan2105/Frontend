@@ -16,7 +16,7 @@ import { parseAsInteger, useQueryState } from 'nuqs'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useDebouncedCallback } from 'use-debounce'
-import PrintIpdInvoice from '../invoice/print-invoice'
+import GenerateIpdChargesInvoice from '../invoice/chargesPdf'
 import CreateIpdModal from './create-ipd-form-modal'
 import useIpdHandlers from './ipd-handlers'
 
@@ -178,7 +178,7 @@ const Ipds = () => {
 
             {isPending && <LoaderModel />}
 
-            {invoice && <PrintIpdInvoice afterPrint={() => setInvoice(null)} info={invoice} />}
+            {invoice && <GenerateIpdChargesInvoice afterGenerate={() => setInvoice(null)} info={invoice} />}
 
         </div >
     )
