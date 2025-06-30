@@ -57,7 +57,7 @@ export default function GenerateAmbulanceInvoice({ ambulanceInfo, afterGenerate 
           <PdfHeader id={ambulanceInfo.id!} title="Ambulance Invoice" date={new Date().toLocaleDateString()} />
 
           {/* Company & Client */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-8">
             <From />
             <To
               id={ambulanceInfo?.patientId!}
