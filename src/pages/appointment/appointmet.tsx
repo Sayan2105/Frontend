@@ -128,7 +128,7 @@ const AdminAppointment = () => {
     return (
 
         <>
-            <div className='flex flex-col px-2.5 gap-2 h-full w-full flex-1'>
+            <div className='flex flex-col px-2.5 gap-2 flex-1'>
 
                 {/* top bar */}
                 <div className='flex py-3 flex-col md:flex-row gap-y-2 md:items-center md:justify-between border-b border-gray-200 dark:border-gray-800'>
@@ -173,7 +173,7 @@ const AdminAppointment = () => {
                     isError ?
                         <ErrorFallback error={error!} />
                         :
-                        <div className="flex flex-col gap-y-5 min-h-[75vh] mb-16 mt-5">
+                        <div className="flex flex-col gap-y-5 h-full pb-20 mt-5 ">
                             <div className="flex-1">
                                 <ProtectedTable module='Appointment' renderTable={(show, canUpdate, canDelete) => (
                                     <Table>

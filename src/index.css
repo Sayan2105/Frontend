@@ -129,3 +129,11 @@ html {
   border-color: #5d3bf6;
   color: white;
 }
+
+
+
+/* Track (the background) */
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}

@@ -45,9 +45,8 @@ const Aside = () => {
             )}
 
             {/* sidebar */}
-            <div className={cn('fixed sm:z-0 z-[120] -left-[100%] sm:sticky w-52 p-2.5 transition-all duration-200 border-r border-dashed bg-background border-zinc-200 dark:border-zinc-800 h-[calc(100vh-64px)] top-16', { 'left-0': isSidebarOpen })}>
-                <ScrollArea className='h-full '>
-
+            <div className={cn('fixed sm:z-0 z-[120] h-full -left-[100%] sm:sticky w-56 p-2.5 transition-all duration-200 border-r border-dashed bg-background border-zinc-200 dark:border-zinc-800', { 'left-0': isSidebarOpen })}>
+                <ScrollArea className='h-full'>
                     <ul className='flex flex-col gap-y-2 pb-20'>
 
                         <li><Link to={{ pathname: `/${Routes}/dashboard` }} onClick={onNavigate} className={
@@ -321,6 +320,7 @@ const Aside = () => {
                     </ul>
                     <div className="h-24 bg-gradient-to-t from-background z-30 w-full absolute bottom-0" />
                 </ScrollArea>
+
                 {/* logout button */}
                 <div className='absolute bottom-2 z-50 sm:flex gap-2 items-center transition-all flex w-44'>
                     <img src="/user.png" alt="" className="w-9 border-2 border-gray-300 rounded-full" />
