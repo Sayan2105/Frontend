@@ -17,7 +17,7 @@ const LayoutWrapper = ({ children }: SidebarProviderProps) => {
     return (
         <>
             {isHomepage ? <HomepageNavbar /> : <Navbar />}
-            <div className="flex h-[calc(100vh-64px)] w-full overflow-hidden">
+            <div className="relative flex h-[calc(100vh-64px)] w-full overflow-hidden">
                 {!hideSidebar && <Aside />}
                 <main className="flex-1 flex flex-col w-full overflow-auto">
                     {children}
