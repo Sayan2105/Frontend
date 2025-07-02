@@ -184,7 +184,6 @@ const AdminAppointment = () => {
                                                 <TableHead>Appointment Date</TableHead>
                                                 <TableHead>Shift</TableHead>
                                                 <TableHead>Phone</TableHead>
-                                                <TableHead>Gender</TableHead>
                                                 <TableHead>Doctor</TableHead>
                                                 <TableHead>Fees {currencySymbol()}</TableHead>
                                                 <TableHead>Discount%</TableHead>
@@ -209,7 +208,6 @@ const AdminAppointment = () => {
                                                     <TableCell>{appointment.appointment_date}</TableCell>
                                                     <TableCell>{appointment.shift}</TableCell>
                                                     <TableCell>{appointment.patient.phone}</TableCell>
-                                                    <TableCell>{appointment.patient.gender}</TableCell>
                                                     <TableCell>
                                                         <UserImage url={appointment.doctor.image} name={appointment.doctor.name} gender={appointment.doctor.gender} />
                                                     </TableCell>
