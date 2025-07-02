@@ -331,7 +331,7 @@ const Aside = () => {
                         <div className="flex items-center gap-3 px-4 py-2">
                             <div className="relative">
                                 <img
-                                    src={authUser ? `${import.meta.env.VITE_APP_API_URL}/images/${authUser.image}` : '/user.png'}
+                                    src={authUser?.image ? `${import.meta.env.VITE_APP_API_URL}/images/${authUser.image}` : '/user.png'}
                                     alt="User avatar"
                                     className="w-10 h-10 rounded-full border-2 border-zinc-300 dark:border-zinc-600 shadow-sm object-cover"
                                 />
