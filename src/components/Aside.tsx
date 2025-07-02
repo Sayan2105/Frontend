@@ -45,7 +45,7 @@ const Aside = () => {
             )}
 
             {/* sidebar */}
-            <aside className={cn('fixed h-[calc(100vh-63px)] top-[64px]   sm:sticky w-56 p-2.5 transition-all duration-300 z-50 sm:z-auto border-r border-dashed bg-background border-zinc-200 dark:border-zinc-800', isSidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0')}
+            <aside className={cn('fixed h-[calc(100vh-64px)] top-[64px]   sm:sticky w-56 p-2.5 transition-all duration-300 z-50 sm:z-auto border-r border-dashed bg-background border-zinc-200 dark:border-zinc-800', isSidebarOpen ? 'translate-x-0' : '-translate-x-full sm:translate-x-0')}
             >
 
                 <div className="flex flex-col h-full relative">
