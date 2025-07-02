@@ -25,7 +25,7 @@ function App() {
   }
 
   return (
-    <div className=" dark:bg-background dark:text-white">
+    <div className="dark:bg-background dark:text-white">
       <Toaster toastOptions={{ duration: 2000 }} />
       <LayoutWrapper>
         <ScrollToTop />

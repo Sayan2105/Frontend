@@ -35,7 +35,7 @@ const Doctors = () => {
 
 
     return (
-        <div className="bg-gradient-to-br from-blue-50 dark:from-blue-500/10 dark:to-green-500/10 dark:bg-neutral-900 text-gray-800 dark:text-gray-100">
+        <div className="bg-gradient-to-br from-blue-50 dark:from-blue-950/10 dark:to-green-500/10 text-gray-800 dark:text-gray-100">
             <MaxWidthWrapper className="flex flex-col gap-12 pt-12 pb-24 lg:px-10">
                 {/* header */}
                 <div className="flex gap-2 items-center justify-center">
@@ -67,7 +67,7 @@ const Doctors = () => {
                         </div>
                     </div>
 
-                    <p className="text-center text-xs text-gray-600 dark:text-neutral-400">DOCTOR NAME , QUALIFICATION , SPECIALIZATION</p>
+                    <p className="text-center text-xs text-muted-foreground">DOCTOR NAME , QUALIFICATION , SPECIALIZATION</p>
                 </div>
 
 

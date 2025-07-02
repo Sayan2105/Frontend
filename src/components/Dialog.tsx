@@ -32,7 +32,7 @@ const Dialog = ({ children, pageTitle, className, ...props }: DialogProps) => {
                             'shadow-2xl shadow-black/5 dark:shadow-black/20'
                         )}>
                             {/* Enhanced header */}
-                            <div className='relative overflow-hidden bg-gradient-to-r from-violet-500/10 via-rose-400/10 to-amber-400/10 dark:from-violet-600/20 dark:via-rose-500/20 dark:to-amber-500/20'>
+                            <div className='relative overflow-hidden bg-gradient-to-r from-blue-500/10 to-amber-400/10 dark:from-blue-600/20  dark:to-amber-500/20'>
                                 {/* Subtle background overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent dark:from-white/5 dark:to-transparent" />
 
@@ -40,7 +40,7 @@ const Dialog = ({ children, pageTitle, className, ...props }: DialogProps) => {
                                     {/* Decorative element */}
                                     <div className="absolute -bottom-3 left-4 h-8 w-8 bg-gradient-to-br from-violet-400/20 to-rose-400/20 dark:from-violet-600/30 dark:to-rose-600/30 rounded-full" />
 
-                                    <h1 className='relative z-10 text-sm sm:text-lg font-semibold text-gray-800 dark:text-gray-100 py-1 px-4 rounded-xl'>
+                                    <h1 className='relative z-10 text-sm sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 py-1 px-4 rounded-xl'>
                                         {pageTitle}
                                     </h1>
 

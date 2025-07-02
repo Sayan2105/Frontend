@@ -121,7 +121,7 @@ const DoctorAppointment = () => {
 
 
     return (
-        <div className="bg-gradient-to-br from-blue-50 dark:from-blue-500/10 dark:to-green-500/10 dark:bg-neutral-900 text-gray-800 dark:text-gray-100">
+        <div className="bg-gradient-to-br from-blue-50 dark:from-blue-950/10 dark:to-green-500/10 text-gray-800 dark:text-gray-100">
             <form onSubmit={handleSubmit(onAppointmentSubmit)}>
                 <MaxWidthWrapper className="flex flex-col gap-12 pt-12 pb-24 lg:px-10">
                     {/* Header */}
@@ -185,7 +185,7 @@ const DoctorAppointment = () => {
                                 </p>
                             </div>)
                             :
-                            (<p className="text-center text-gray-700  dark:text-neutral-300 text-sm">Please select a date</p>)
+                            (<p className="text-center text-muted-foreground font-semibold text-lg animate-pulse">Please select a date</p>)
                     )}
 
 
