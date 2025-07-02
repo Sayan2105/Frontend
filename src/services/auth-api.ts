@@ -16,4 +16,12 @@ export const AuthApi = {
         const res = await AxiosClient.get('/api/auth/check-auth')
         return res.data
     },
+    async resetPassword(token: string, password: string) {
+        const res = await AxiosClient.post('/api/auth/reset-password', { token, password })
+        return res.data
+    },
+    async forgotPassword(email: string) {
+        const res = await AxiosClient.post('/api/auth/forgot-password', { email })
+        return res.data
+    },
 }

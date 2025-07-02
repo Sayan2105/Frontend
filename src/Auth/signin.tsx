@@ -1,5 +1,5 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PasswordField from "@/components/ui/password-input"
@@ -8,16 +8,13 @@ import { signInformSchema } from '@/formSchemas/signinFormSchema'
 import usePatient from "@/patient/profile/handlers"
 import RegisterPatient from "@/patient/register/patient-signup"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader } from "lucide-react"
+import { Loader, Shield, Users } from "lucide-react"
 import { useContext, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
 import { z } from "zod"
 
-
-
 const SignIn = () => {
-
   const router = useNavigate()
   const { handlePatient, isPending: isPatientPending, form, setForm } = usePatient()
   const { authUser, isLoggingIn, signin } = useContext(AuthContext)
@@ -32,63 +29,159 @@ const SignIn = () => {
     }
   }, [])
 
-
   return (
-    <div className="bg-zinc-50 dark:bg-background">
-      <MaxWidthWrapper className="min-h-[calc(100vh-56px-1px)] flex flex-col justify-center items-center">
-        <div className="sm:w-[500px] w-full">
-          <form className=" p-4 w-full flex flex-col gap-y-4  dark:ring-border ring-1 ring-gray-200 rounded-lg" onSubmit={handleSubmit(signin)}>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900/10 dark:to-blue-900/10 relative overflow-hidden">
 
-            <div className="text-center my-4">
-              <h1 className="text-gray-900 dark:text-neutral-100 font-bold text-2xl tracking-tight">Vertica Healthcare</h1>
-              <p className="mt-2 text-gray-500">Sign In to your account</p>
-            </div>
+      <MaxWidthWrapper className="min-h-screen flex flex-col justify-center items-center relative z-10 py-12">
+        <div className="w-full max-w-md">
 
-            <div className="flex flex-col gap-2">
-              <Label>Email</Label>
-              <Input type="email" placeholder="example@gmail.com" {...register('email')} />
-              {errors.email && <p className="text-sm text-red-500">{errors.email?.message}</p>}
-            </div>
+          {/* Main form card */}
+          <div className="bg-white/80 dark:bg-gray-800/10 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-2xl shadow-2xl shadow-blue-500/10 p-8 transform hover:shadow-3xl transition-all duration-500 animate-slide-up">
+            <form onSubmit={handleSubmit(signin)} className="space-y-6">
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2">
+                  Vertica Healthcare
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  Sign in to access your healthcare dashboard
+                </p>
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <Label>Password</Label>
-              <PasswordField placeholder="password" {...register('password')} />
-              {errors.password && <p className="text-sm text-red-500">{errors.password?.message}</p>}
-            </div>
+              {/* Email field */}
+              <div className="space-y-2 group">
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                  <Users className="w-4 h-4" />
+                  Email Address
+                </Label>
+                <div className="relative">
+                  <Input
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="pl-4 pr-4 py-3 bg-white/50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-md"
+                    {...register('email')}
+                  />
+                </div>
+                {errors.email && (
+                  <p className="text-sm text-red-500 flex items-center gap-1 animate-fade-in">
+                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                    {errors.email?.message}
+                  </p>
+                )}
+              </div>
 
-            <div className="my-2">
-              <Button type="submit" size={'sm'} className="w-full active:scale-95 transition-all" disabled={isLoggingIn}>{isLoggingIn ? <Loader className="animate-spin" /> : 'Sign In'}</Button>
-            </div>
-          </form>
+              {/* Password field */}
+              <div className="space-y-2 group">
+                <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                  <Shield className="w-4 h-4" />
+                  Password
+                </Label>
+                <div className="relative">
+                  <PasswordField
+                    placeholder="Enter your password"
+                    className="pl-4 pr-12 py-3 bg-white/50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 group-hover:shadow-md"
+                    {...register('password')}
+                  />
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-red-500 flex items-center gap-1 animate-fade-in">
+                    <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+                    {errors.password?.message}
+                  </p>
+                )}
+              </div>
 
-
-          {/* form footer */}
-
-          <div className="flex text-sm my-1 justify-center items-center">
-            <p className="text-gray-500">Not a existing patient?</p>
-            <Link to={''} className={buttonVariants({ variant: 'link' })} onClick={() => { setForm(true) }}>
-              Register Patient
-            </Link>
+              {/* Submit button */}
+              <div className="pt-2">
+                <Button
+                  type="submit"
+                  className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium rounded-xl shadow-lg shadow-blue-500/25 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  disabled={isLoggingIn}
+                >
+                  {isLoggingIn ? (
+                    <div className="flex items-center gap-2">
+                      <Loader className="animate-spin w-4 h-4" />
+                      <span>Signing In...</span>
+                    </div>
+                  ) : (
+                    'Sign In to Dashboard'
+                  )}
+                </Button>
+              </div>
+            </form>
           </div>
 
+          {/* Footer links */}
+          <div className="mt-8 space-y-4 animate-fade-in-delayed">
+            <div className="flex items-center justify-center text-sm">
+              <span className="text-gray-500 dark:text-gray-400">New to Vertica Healthcare?</span>
+              <Link
+                to=""
+                className="ml-2 font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200 hover:underline underline-offset-4"
+                onClick={() => setForm(true)}
+              >
+                Create Patient Account
+              </Link>
+            </div>
+
+            <div className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <div className="h-px bg-gray-300 dark:bg-gray-600 flex-1"></div>
+                <span className="px-4 text-sm text-gray-500 dark:text-gray-400">or</span>
+                <div className="h-px bg-gray-300 dark:bg-gray-600 flex-1"></div>
+              </div>
+              <Link
+                to="/forgot-password"
+                className="text-sm font-medium text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors duration-200 hover:underline underline-offset-4"
+              >
+                Reset your password
+              </Link>
+            </div>
+          </div>
+
+          {/* Trust indicators */}
+          <div className="mt-8 flex items-center justify-center gap-6 text-xs text-gray-500 dark:text-gray-400 animate-fade-in-delayed">
+            <div className="flex items-center gap-1">
+              <Shield className="w-3 h-3" />
+              <span>Secure Login</span>
+            </div>
+          </div>
         </div>
       </MaxWidthWrapper>
 
-
-      {/* patient form */}
-
+      {/* Patient registration modal */}
       {form && (
-        <RegisterPatient
-          isPending={isPatientPending}
-          Submit={(v) => { handlePatient(v) }}
-          onClick={() => { setForm(false) }}
-        />
+          <RegisterPatient
+            isPending={isPatientPending}
+            Submit={(v) => handlePatient(v)}
+            onClick={() => setForm(false)}
+          />
       )}
 
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
 
+        @keyframes slide-up {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+          animation: fade-in 0.6s ease-out;
+        }
+
+        .animate-slide-up {
+          animation: slide-up 0.8s ease-out;
+        }
+
+        .animate-fade-in-delayed {
+          animation: fade-in 0.8s ease-out 0.2s both;
+        }
+      `}</style>
     </div>
   )
 }
 
 export default SignIn
-

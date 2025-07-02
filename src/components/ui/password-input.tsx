@@ -21,14 +21,14 @@ const PasswordField = React.forwardRef<HTMLInputElement, React.ComponentProps<"i
                 (
                     <Eye
                         onClick={() => setView(true)}
-                        className="text-gray-700 w-5 dark:text-gray-400 cursor-pointer active:scale-95 transition-all"
+                        className="text-muted-foreground w-4 cursor-pointer active:scale-95 transition-all"
                     />
                 )
                 :
                 (
                     <EyeClosed
                         onClick={() => setView(false)}
-                        className="text-gray-700 w-5 dark:text-gray-400 cursor-pointer active:scale-95 transition-all"
+                        className="text-muted-foreground w-4 cursor-pointer active:scale-95 transition-all"
                     />
                 )
             }
