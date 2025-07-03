@@ -10,7 +10,6 @@ import UserImage from '@/components/user-image'
 import { page_limit } from '@/globalData'
 import { AppointmentApi } from '@/services/appointment-api'
 import { Appointment } from '@/types/appointment/appointment'
-import { Loader } from 'lucide-react'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -29,7 +28,6 @@ const QueueAppointment = () => {
 
     // api states
     const [appointments, setAppointments] = useState<Appointment>({ data: [], total_pages: 1 })
-    const [isPending, setPending] = useState<boolean>(false)
     const router = useNavigate()
 
     // onchange it updates the appointment
@@ -37,15 +35,12 @@ const QueueAppointment = () => {
     const onUpdateStatus = async (id: string, status: string) => {
         try {
 
-            setPending(true)
             const data = await AppointmentApi.updateStatus(id, status)
             toast.success(data.message)
             return router('..')
 
         } catch ({ message }: any) {
             toast.error(message)
-        } finally {
-            setPending(false)
         }
     }
 
@@ -122,7 +117,7 @@ const QueueAppointment = () => {
                                                         size: 'sm',
                                                         className: 'bg-yellow-500 '
                                                     })}>
-                                                        <SelectValue placeholder={appointment.status} /> {isPending && <Loader className='animate-spin' />}
+                                                        <SelectValue placeholder={appointment.status} />
                                                     </SelectTrigger>
 
                                                     <SelectContent className='z-[200]'>
