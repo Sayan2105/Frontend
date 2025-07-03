@@ -86,7 +86,7 @@ const Permission = () => {
                 <div className="space-y-2 px-5">
                     <div className="rounded-full shadow-xl border dark:border-white/10 bg-white/10 backdrop-blur-sm w-full lg:w-[600px] mx-auto hover:scale-105 transition-all duration-300">
                         <div className="flex items-center p-3 h-16">
-                            <Select defaultValue={roleId ? String(roleId) : ''} onValueChange={(val) => { setRoleId(+val) }}>
+                            <Select defaultValue={roleId ? String(roleId) : ''} onValueChange={(val) => { setRoleId(+val), setNavigate('core') }}>
                                 <SelectTrigger className="border-none focus:ring-0 shadow-none">
                                     <SelectValue placeholder='Select Role' />
                                 </SelectTrigger>
@@ -140,6 +140,7 @@ const Permission = () => {
                                 </Button>
 
                                 <Button
+                                    disabled={roles.find(item => item?.id === roleId)?.name === 'patient'}
                                     onClick={() => setNavigate('dashboard')}
                                     variant={navigate === 'dashboard' ? 'default' : 'ghost'}
                                     className="flex items-center gap-2"
