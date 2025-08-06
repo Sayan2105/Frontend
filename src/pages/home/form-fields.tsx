@@ -6,4 +6,5 @@ export const registerPatientFormFields: FormField[] = [
     { label: 'Date of Birth', name: 'dob', type: 'date', placeholder: 'Enter your date of birth' },
     { label: 'Email', name: 'email', type: 'email', placeholder: 'Enter your email' },
     { label: 'Password', name: 'password', type: 'password', placeholder: 'Enter your password' },
+    { label: 'Confirm Password', name: 'confirm_password', type: 'password', placeholder: 'Enter your password' },
 ]

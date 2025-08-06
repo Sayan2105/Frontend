@@ -1,5 +1,5 @@
 import AxiosClient from "@/api/apiClient"
-import { Rosters } from "@/types/dutyRoster/DutyRoster"
+import { AvailableOpdRosterDoctors, RosterInfoForAppointment, Rosters } from "@/types/dutyRoster/DutyRoster"
 import { z, ZodType } from "zod"
 
 
@@ -8,67 +8,41 @@ export type RosterParams = { page?: number, limit?: number, credentials?: string
 
 const DutyRosterApi = {
 
-    createRoster: async <T extends ZodType<T>>(formData: z.infer<T>) => {
-        try {
-            const res = await AxiosClient.post(`/api/roster`, formData)
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data?.message || "Error in creating roster"
-            throw new Error(err)
-        }
+    createOpdRoster: async <T extends ZodType<T>>(formData: z.infer<T>) => {
+        const res = await AxiosClient.post(`/api/roster`, formData)
+        return res.data
+    },
+
+    getOpdRosters: async (params: RosterParams): Promise<Rosters> => {
+        const res = await AxiosClient.get(`/api/roster`, { params })
+        return res.data
+    },
+
+    deleteOpdRoster: async (id: number) => {
+        const res = await AxiosClient.delete(`/api/roster/${id}`)
+        return res.data
     },
 
     updateRoster: async <T extends ZodType<T>>(formData: z.infer<T>, ID: number) => {
-        try {
-            const res = await AxiosClient.put(`/api/roster/${ID}`, formData)
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data?.message || "Error in updating roster"
-            throw new Error(err)
-        }
+        const res = await AxiosClient.put(`/api/roster/${ID}`, formData)
+        return res.data
     },
 
-    getRosterDetails: async (ID: number): Promise<Rosters['data'][0]> => {
-        try {
-            const res = await AxiosClient.get(`/api/roster/${ID}`)
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data?.message || "Error in fetching roster"
-            throw new Error(err)
-        }
+    getAllOpdRosterDoctors: async (params: { search: string, page: number, limit: number }): Promise<AvailableOpdRosterDoctors> => {
+        const res = await AxiosClient.get(`/api/roster/opdDoctors`, { params })
+        return res.data
     },
 
-
-    getRosters: async (params: RosterParams): Promise<Rosters> => {
-        try {
-            const res = await AxiosClient.get(`/api/roster`, { params })
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data?.message || "Error in fetching roster"
-            throw new Error(err)
-        }
+    getDoctorRosterForAppointment: async (rosterId: number): Promise<RosterInfoForAppointment> => {
+        const res = await AxiosClient.get(`/api/roster/opdRosterForAppointmentById/${rosterId}`)
+        return res.data
     },
 
-    deleteRoster: async (id: number) => {
-        try {
-            const res = await AxiosClient.delete(`/api/roster/${id}`)
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data?.message || "Error in deleting roster"
-            throw new Error(err)
-        }
+    getTimeSlots: async (id: number) => {
+        const res = await AxiosClient.get(`/api/roster/opdRosterTimeSlots/${id}`)
+        return res.data
     },
 
-    // fetching doctors according to appointment date coming from roster model
-    async getDoctors(params: { appointmentDate: string, specialistId: number }) {
-        try {
-            const res = await AxiosClient.get(`/api/roster/doctors`, { params })
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data?.message || "Error in fetching doctors"
-            throw new Error(err)
-        }
-    },
 }
 
 

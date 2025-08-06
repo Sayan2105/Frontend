@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const AssignRosterSchema = z.object({
-        
+
     staffId: z.number()
         .min(1, { message: 'Staff is required' }).default(0),
 
@@ -17,8 +17,15 @@ export const AssignRosterSchema = z.object({
     shiftEndDate: z.string()
         .min(1, { message: 'Shift end date is required' }),
 
-    shift: z.string()
-        .min(1, { message: 'Shift is required' }).default(''),
+    dutyAt: z.string().min(1, { message: 'Duty at is required' }).default(''),
+
+    intervalMinutes: z.coerce.number()
+        .optional()
+        .refine((val) => !val || (val >= 15 && val <= 60), {
+            message: 'Interval minutes must be between 15 and 60',
+        }),
+
+    willTakeAppointment: z.boolean().optional(),
 
     note: z.string().optional(),
 

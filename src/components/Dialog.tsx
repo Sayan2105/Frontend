@@ -40,7 +40,7 @@ const Dialog = ({ children, pageTitle, className, ...props }: DialogProps) => {
                                     {/* Decorative element */}
                                     <div className="absolute -bottom-3 left-4 h-8 w-8 bg-gradient-to-br from-violet-400/20 to-rose-400/20 dark:from-violet-600/30 dark:to-rose-600/30 rounded-full" />
 
-                                    <h1 className='relative z-10 text-sm sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 py-1 px-4 rounded-xl'>
+                                    <h1 className='relative z-10 text-sm sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 py-1 rounded-xl'>
                                         {pageTitle}
                                     </h1>
 

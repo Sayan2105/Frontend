@@ -76,7 +76,9 @@ export const setupPermissions = [
 
     { name: 'Setup Bed', create: true, view: true, update: true, delete: true },
     { name: 'Bed Group', create: true, view: true, update: true, delete: true },
-    { name: 'Bed Floor', create: true, view: true, update: false, delete: true }
+    { name: 'Bed Floor', create: true, view: true, update: false, delete: true },
+
+    { name: 'Setup Homepage', create: true, view: true, update: true, delete: true }
 ];
 
 

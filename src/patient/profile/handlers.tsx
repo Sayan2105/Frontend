@@ -23,7 +23,10 @@ const usePatient = () => {
     const handlePatient = async (patientData: z.infer<typeof patientRegistrationSchema>, afterSubmit?: (id: number) => void) => {
         try {
             const formData = new FormData()
-            for (const [key, value] of Object.entries(patientData)) {
+
+            const {confirm_password , ...restData} = patientData
+
+            for (const [key, value] of Object.entries(restData)) {
                 if (!value) continue
                 if (key === 'image') {
                     formData.append('image', value as any)

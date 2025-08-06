@@ -1,15 +1,16 @@
 export interface AppointmentData {
     id: string,
+    rosterId: number,
     doctorId: number,
     patientId: number,
-    shift: string,
-    appointment_date: string,
     status: string,
     fees: number,
     discount: number,
     net_amount: number,
     payment_mode: string,
     appointment_priority: string,
+    date: string,
+    time: string,
     doctor: {
         name: string
         gender: string
@@ -35,11 +36,11 @@ export interface Appointment {
 
 export interface AppointmentDetails {
     id: string,
+    rosterId: number,
     doctorId: number,
     patientId: number,
+    dateSlotId: number,
     specialistId: number,
-    shift: string,
-    appointment_date: string,
     specialist: { name: string },
     appointment_priority: string,
     symptom_description: string,
@@ -51,6 +52,8 @@ export interface AppointmentDetails {
     fees: number,
     discount: number,
     net_amount: number,
+    date: string,
+    time: string,
     patient: {
         name: string,
         phone: string,

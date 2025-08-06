@@ -75,7 +75,13 @@ const TreatmentsList = () => {
                   <TableCell>
                     <Link className="text-blue-500 hover:text-blue-400 font-semibold" to={{ pathname: `../../${opd.id}` }}>{opd.id}</Link>
                   </TableCell>
-                  <TableCell>{opd.appointment.appointment_date}</TableCell>
+                  <TableCell>
+                    <div className="dark:bg-yellow-900/20 bg-yellow-100 dark:text-yellow-600 text-yellow-600 py-1 px-2 rounded w-fit">
+                      {new Date(opd.appointment.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                      {new Date(opd.appointment.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                      {new Date(opd.appointment.date).toLocaleDateString('en-US', { month: 'short' })}
+                    </div>
+                  </TableCell>
                   <TableCell>{opd.doctor.name}</TableCell>
                   <TableCell>{opd.appointment.specialist.name}</TableCell>
                   <TableCell>{opd.appointment.reference}</TableCell>

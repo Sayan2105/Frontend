@@ -2,7 +2,7 @@ import { Card } from "./ui/card"
 import { AlertTriangle, RefreshCw, Home } from "lucide-react"
 
 type Props = {
-    error: { message: string, name: string }
+    error: any
     resetError?: () => void
     onGoHome?: () => void
 }
@@ -29,7 +29,7 @@ const ErrorFallback = ({ error, resetError, onGoHome }: Props) => {
                         {error.name}
                     </p>
                     <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
-                        {error.message}
+                        {error?.response?.data?.message || error.message}
                     </p>
                 </div>
 
@@ -64,7 +64,6 @@ const ErrorFallback = ({ error, resetError, onGoHome }: Props) => {
             {/* Decorative Elements */}
             <div className="absolute top-4 right-4 w-2 h-2 bg-red-300 rounded-full animate-ping"></div>
             <div className="absolute bottom-4 left-4 w-1 h-1 bg-orange-400 rounded-full animate-pulse"></div>
-            <div className="absolute top-1/3 left-8 w-1.5 h-1.5 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }}></div>
         </Card>
     )
 }

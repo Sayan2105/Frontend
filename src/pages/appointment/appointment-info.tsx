@@ -1,6 +1,7 @@
 import CardBox from '@/components/card-box'
 import Dialog from '@/components/Dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { formatTime } from '@/helpers/formatTime'
 import { cn, currencyFormat } from '@/lib/utils'
 import { AppointmentDetails } from '@/types/appointment/appointment'
 import { CalendarDays, Cross, PersonStanding } from 'lucide-react'
@@ -33,7 +34,7 @@ const AppointmentDetailsModel = ({ appointmentDetails, ...props }: AppointmentDe
                                 <CalendarDays className='w-10 h-10 text-white' />
                             </div>
                             <div className=''>
-                                <p className='font-semibold text-lg text-gray-900 dark:text-white'>{appointmentDetails?.appointment_date}</p>
+                                <p className='font-semibold text-lg text-gray-900 dark:text-white'>{new Date(appointmentDetails?.date).toISOString().split('T')[0]}</p>
                                 <p className='text-sm text-gray-500'>Appointment Date</p>
                             </div>
                         </div>
@@ -50,7 +51,7 @@ const AppointmentDetailsModel = ({ appointmentDetails, ...props }: AppointmentDe
 
 
                         <div className="col-span-full grid sm:grid-cols-3 gap-2">
-                            <CardBox borderType='solid' title="Shift" value={appointmentDetails?.shift} />
+                            <CardBox borderType='solid' title="Timing" value={formatTime(appointmentDetails?.time)} />
                             <CardBox borderType='solid' title="Priority" value={appointmentDetails?.appointment_priority} />
                             <CardBox borderType='solid' title="Description" value={appointmentDetails?.symptom_description} />
                             <CardBox borderType='solid' title="Reference" value={appointmentDetails?.reference} />

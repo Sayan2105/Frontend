@@ -1,9 +1,10 @@
 import AboutUs from '@/pages/home/about'
 import AnnualCalendar from '@/pages/home/annual-calendar'
-import BookAppointment from '@/pages/home/book-appointment'
+import HomepageAvailableDoctors from '@/pages/home/book-appointment/available-doctors'
+import DoctorAppointment from '@/pages/home/book-appointment/book-appointment'
+import HomepageAppointmentLayout from '@/pages/home/book-appointment/layout'
+import HomepagePrintAppointment from '@/pages/home/book-appointment/print-appointment'
 import Contact from '@/pages/home/contact'
-import DoctorAppointment from '@/pages/home/doctor-appointment'
-import Doctors from '@/pages/home/doctors'
 import HomePageEvents from '@/pages/home/events'
 import HomePage from '@/pages/home/HomePage'
 import HomeLayout from '@/pages/home/layout'
@@ -17,9 +18,11 @@ const HomepageRoutes = () => {
             <Route path="home/event" element={<HomePageEvents />} />
             <Route path="home/about" element={<AboutUs />} />
             <Route path="home/contact" element={<Contact />} />
-            <Route path="home/doctors" element={<Doctors />} />
-            <Route path="home/book-appointment" element={<BookAppointment />} />
-            <Route path="home/doctor-appointment" element={<DoctorAppointment />} />
+            <Route path='home/available-doctors' element={<HomepageAppointmentLayout />}>
+                <Route index element={<HomepageAvailableDoctors />} />
+                <Route path="book-appointment/:rosterId" element={<DoctorAppointment />} />
+                <Route path="print-appointment" element={<HomepagePrintAppointment />} />
+            </Route>
         </Route>
     )
 }

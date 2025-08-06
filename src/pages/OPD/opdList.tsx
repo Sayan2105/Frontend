@@ -136,9 +136,8 @@ const OPDLIST = () => {
                                 <TableHead>Patient Name</TableHead>
                                 <TableHead>Appointment Date</TableHead>
                                 <TableHead>Consultant</TableHead>
-                                <TableHead>Specialist</TableHead>
+                                <TableHead>Specialization</TableHead>
                                 <TableHead>Reference</TableHead>
-                                <TableHead>Previous medical Issue</TableHead>
                                 <TableHead className='print:hidden'>Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -157,13 +156,18 @@ const OPDLIST = () => {
                                     <TableCell className='whitespace-nowrap'>
                                         <UserImage url={opd.patient.image} name={opd.patient.name} gender={opd.patient.gender} />
                                     </TableCell>
-                                    <TableCell>{opd.appointment.appointment_date}</TableCell>
+                                    <TableCell>
+                                        <div className="dark:bg-yellow-900/20 bg-yellow-100 dark:text-yellow-600 text-yellow-600 py-1 px-2 rounded">
+                                            {new Date(opd.appointment.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                            {new Date(opd.appointment.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                            {new Date(opd.appointment.date).toLocaleDateString('en-US', { month: 'short' })}
+                                        </div>
+                                    </TableCell>
                                     <TableCell>
                                         <UserImage url={opd.doctor.image} name={opd.doctor.name} gender={opd.doctor.gender} />
                                     </TableCell>
                                     <TableCell>{opd.appointment.specialist.name}</TableCell>
                                     <TableCell>{opd.appointment.reference}</TableCell>
-                                    <TableCell className='text-center'>{opd.appointment.previous_medical_issue}</TableCell>
 
                                     <TableCell className='flex gap-x-2 items-center print:hidden'>
 

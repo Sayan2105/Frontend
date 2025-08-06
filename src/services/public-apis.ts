@@ -30,25 +30,6 @@ const pulicApi = {
             throw new Error(err)
         }
     },
-    async getDoctors(params: Params & { role?: string }) {
-        try {
-            params.role = 'doctor'
-            const res = await AxiosClient.get('/api/public/doctors', { params })
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data.message || 'Something went wrong'
-            throw new Error(err)
-        }
-    },
-    async getRosterDoctors(params: { appointmentDate: string, specialistId: number }) {
-        try {
-            const res = await AxiosClient.get('/api/public/roster-doctors', { params })
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data.message || 'Something went wrong'
-            throw new Error(err)
-        }
-    },
     async getSpecialisations() {
         try {
             const res = await AxiosClient.get('/api/public/specializations')
@@ -58,23 +39,10 @@ const pulicApi = {
             throw new Error(err)
         }
     },
+
     async createAppointment<f extends z.ZodAny>(formData: z.infer<f>) {
-        try {
-            const res = await AxiosClient.post('/api/public/create-appointment', formData)
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data.message || 'Something went wrong'
-            throw new Error(err)
-        }
-    },
-    async checkDoctorAvailability(params: { doctorId: number, appointmentDate: string }) {
-        try {
-            const res = await AxiosClient.get('/api/public/check-availability', { params })
-            return res.data
-        } catch (error: any) {
-            const err = error.response?.data.message || 'Something went wrong'
-            throw new Error(err)
-        }
+        const res = await AxiosClient.post('/api/public/create-appointment', formData)
+        return res.data
     },
 
     async createAdmin<T extends z.ZodTypeAny>(formData: z.infer<T>) {

@@ -1,5 +1,6 @@
 import Backdrop from "@/components/backdrop";
 import { From, PdfFooter, PdfHeader, To, Totals } from "@/components/pdf";
+import { formatTime } from "@/helpers/formatTime";
 import { currencyFormat } from "@/lib/utils";
 import { AppointmentData } from "@/types/appointment/appointment";
 import html2pdf from "html2pdf.js";
@@ -44,7 +45,7 @@ const GenerateAppointmentPdf = ({ afterGenerate, Info }: InvoiceProps) => {
             <div className="scale-50 lg:scale-100" onClick={(e) => e.stopPropagation()}>
                 <div className="max-w-4xl mx-auto p-6 bg-white flex flex-col gap-y-5 border-b-2 border-dashed" ref={contentRef}>
                     {/* Header */}
-                    <PdfHeader title="Appointment" id={Info.id} date={Info.appointment_date} />
+                    <PdfHeader title="Appointment" id={Info.id} date={new Date(Info.date).toISOString().split('T')[0]} />
 
                     {/* Company and Client Info */}
                     <div className="grid grid-cols-2 gap-8">
@@ -64,7 +65,7 @@ const GenerateAppointmentPdf = ({ afterGenerate, Info }: InvoiceProps) => {
                         <table className="min-w-full text-sm">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    {['Consultant', 'Shift', 'Priority', 'Status', 'Fees'].map((item, i) => (
+                                    {['Consultant', 'Time', 'Priority', 'Status', 'Fees'].map((item, i) => (
                                         <th key={i} className="py-4 px-6 text-left font-semibold text-gray-700 uppercase">{item}</th>
                                     ))}
                                 </tr>
@@ -72,7 +73,7 @@ const GenerateAppointmentPdf = ({ afterGenerate, Info }: InvoiceProps) => {
                             <tbody>
                                 <tr className=" hover:bg-gray-50">
                                     <td className="p-6 text-gray-700"><span className='text-red-500'>● </span>{Info.doctor.name}</td>
-                                    <td className="p-6 text-gray-700">{Info.shift}</td>
+                                    <td className="p-6 text-gray-700">{formatTime(Info.time)}</td>
                                     <td className="p-6 font-mono text-gray-900 min-w-[100px]">
                                         <span className="px-2 inline-block text-red-500 text-sm font-medium bg-red-100 rounded">
                                             {Info.appointment_priority}

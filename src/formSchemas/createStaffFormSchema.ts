@@ -17,7 +17,14 @@ export const createStaffFormSchema = z.object({
     blood_group: z.string().default('').optional(),
     dob: z.string().min(1, { message: "DOB is required" }),
     date_of_joining: z.string().optional(),
-    phone: z.string().optional(),
+    phone: z.string()
+        .optional()
+        .refine((val) => {
+            if (val === undefined || val.trim() === '') return true;
+            return val.length === 10;
+        }, {
+            message: 'Phone number should be exactly 10 digits',
+        }),
     emergency_contact: z.string().optional(),
     email: z.string().min(1, { message: "Email is required" }).email({ message: 'Invalid Email' }),
     image: z.instanceof(File)
@@ -32,7 +39,14 @@ export const createStaffFormSchema = z.object({
     permanent_address: z.string().optional(),
     qualification: z.string().optional(),
     work_experience: z.string().optional(),
-    PAN: z.string().optional(),
+    PAN: z.string()
+    .optional()
+        .refine((val) => {
+            if (val === undefined || val.trim() === '') return true;
+            return val.length === 10;
+        }, {
+            message: 'Pan number should be exactly 10 digits',
+        }),
     national_identification_number: z.string().optional(),
     local_identification_number: z.string().optional(),
     license_number: z.string().optional(),

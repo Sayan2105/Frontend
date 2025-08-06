@@ -57,7 +57,7 @@ const LatestNews = () => {
             {/* Action */}
             <div className="flex justify-between">
                 <h1 className="text-lg font-semibold">Latest News</h1>
-                <PermissionProtectedAction action='create' module='News'>
+                <PermissionProtectedAction action='create' module='Setup Homepage'>
                     <Button size='sm' onClick={() => { setForm(true) }}>
                         <Plus /> Add News
                     </Button>
@@ -77,7 +77,7 @@ const LatestNews = () => {
             {/* Paginated Table */}
             <div className="flex flex-col pb-16 min-h-[65vh] space-y-10">
                 <div className="flex-1">
-                    <ProtectedTable module="News" renderTable={(show, canUpdate, canDelete) => (
+                    <ProtectedTable module="Setup Homepage" renderTable={(show, canUpdate, canDelete) => (
                         <Table>
                             <TableHeader>
                                 <TableRow>

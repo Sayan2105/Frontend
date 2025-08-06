@@ -7,16 +7,16 @@ interface SidebarProviderProps {
     children: React.ReactNode
 }
 
-const hideFor = ['/signin', '/', '/create-admin', '/forgot-password', '/reset-password']
+const HIDE_SIDEBAR_FOR = ['/signin', '/', '/create-admin', '/forgot-password', '/reset-password']
 
 const LayoutWrapper = ({ children }: SidebarProviderProps) => {
     const path = useLocation().pathname
-    const hideSidebar = hideFor.includes(path) || path.startsWith('/home')
-    const isHomepage = path === '/' || path.startsWith('/home')
+    const hideSidebar = HIDE_SIDEBAR_FOR.includes(path) || path.startsWith('/home')
+    const isHomepageNav = path === '/' || path.startsWith('/home') || path === '/signin'
 
     return (
         <>
-            {isHomepage ? <HomepageNavbar /> : <Navbar />}
+            {isHomepageNav ? <HomepageNavbar /> : <Navbar />}
             <div className="flex min-h-[calc(100vh-64px)] w-full">
                 {!hideSidebar && <Aside />}
                 <main className="flex-1 flex flex-col w-full overflow-hidden">

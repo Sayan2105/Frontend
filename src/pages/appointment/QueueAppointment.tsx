@@ -3,11 +3,12 @@ import EmptyList from '@/components/emptyList'
 import ProtectedTable from '@/components/protected-table'
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import UserImage from '@/components/user-image'
 import { page_limit } from '@/globalData'
+import { formatTime } from '@/helpers/formatTime'
 import { AppointmentApi } from '@/services/appointment-api'
 import { Appointment } from '@/types/appointment/appointment'
 import { parseAsInteger, useQueryState } from 'nuqs'
@@ -83,12 +84,11 @@ const QueueAppointment = () => {
                                 <TableRow>
                                     <TableHead>Appointment No</TableHead>
                                     <TableHead>Patient Name</TableHead>
-                                    <TableHead>Appointment Date</TableHead>
-                                    <TableHead>Shift</TableHead>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>Time</TableHead>
                                     <TableHead>Phone</TableHead>
                                     <TableHead>Gender</TableHead>
                                     <TableHead>Doctor</TableHead>
-                                    <TableHead>Source</TableHead>
                                     <TableHead>Status</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -101,28 +101,47 @@ const QueueAppointment = () => {
                                         <TableCell >
                                             <UserImage url={appointment.patient.image} name={appointment.patient.name} gender={appointment.patient.gender} />
                                         </TableCell>
-                                        <TableCell>{appointment.appointment_date}</TableCell>
-                                        <TableCell>{appointment.shift}</TableCell>
+                                        <TableCell>
+                                            <div className="dark:bg-yellow-900/20 bg-yellow-100 dark:text-yellow-600 text-yellow-600 py-1 px-2 rounded">
+                                                {new Date(appointment.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                {new Date(appointment.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                {new Date(appointment.date).toLocaleDateString('en-US', { month: 'short' })}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="bg-green-100 dark:bg-green-900/20 dark:text-green-600 text-green-600 py-1 px-2 rounded">
+                                                {formatTime(appointment.time)}
+                                            </div>
+                                        </TableCell>
                                         <TableCell>{appointment.patient.phone}</TableCell>
                                         <TableCell>{appointment.patient.gender}</TableCell>
                                         <TableCell>
                                             <UserImage url={appointment.doctor.image} name={appointment.doctor.name} gender={appointment.doctor.gender} />
                                         </TableCell>
-                                        <TableCell>Online</TableCell>
                                         <TableCell>
                                             {canUpdate ? (
                                                 <Select onValueChange={(value) => { onUpdateStatus(appointment.id, value) }}>
                                                     <SelectTrigger className={buttonVariants({
                                                         variant: 'outline',
-                                                        size: 'sm',
-                                                        className: 'bg-yellow-500 '
                                                     })}>
                                                         <SelectValue placeholder={appointment.status} />
                                                     </SelectTrigger>
 
                                                     <SelectContent className='z-[200]'>
-                                                        <SelectItem value="Approved">Approved</SelectItem>
-                                                        <SelectItem value="Cancelled">Cancel</SelectItem>
+                                                        <SelectGroup>
+                                                            <SelectItem value="Approved" >
+                                                                <div className='flex items-center gap-2'>
+                                                                    <div className='w-2.5 h-2.5 rounded-full bg-green-500' />
+                                                                    <p>Approve</p>
+                                                                </div>
+                                                            </SelectItem>
+                                                            <SelectItem value="Cancelled">
+                                                                <div className='flex items-center gap-2'>
+                                                                    <div className='w-2.5 h-2.5 rounded-full bg-red-500' />
+                                                                    <p>Cancel</p>
+                                                                </div>
+                                                            </SelectItem>
+                                                        </SelectGroup>
                                                     </SelectContent>
                                                 </Select>
                                             ) : (

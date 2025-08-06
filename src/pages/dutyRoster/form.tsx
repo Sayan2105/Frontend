@@ -1,10 +1,13 @@
 import Dialog from '@/components/Dialog'
+import RequiredLabel from '@/components/required-label'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Combobox } from '@/components/ui/combobox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 import { AssignRosterSchema } from '@/formSchemas/assignRosterFormSchema'
 import StaffApi from '@/services/staff-api'
 import { RosterDataType } from '@/types/dutyRoster/DutyRoster'
@@ -28,12 +31,10 @@ interface AssignRosterFormProps extends HTMLAttributes<HTMLDivElement> {
 
 const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: AssignRosterFormProps) => {
 
-
   // API state
   const [staffs, setStaff] = useState<staffs>({ data: [], total_pages: 0 })
 
-
-  const { handleSubmit, control, register, formState: { errors }, reset } = useForm<z.infer<typeof AssignRosterSchema>>({
+  const { handleSubmit, control, watch, register, formState: { errors }, reset } = useForm<z.infer<typeof AssignRosterSchema>>({
     resolver: zodResolver(AssignRosterSchema),
     defaultValues: rosterDetails
   })
@@ -50,7 +51,6 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
   }
 
 
-
   useEffect(() => {
     fetchStaffs()
   }, [])
@@ -58,7 +58,7 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
 
 
   return (
-    <Dialog pageTitle='Assign Roster' className='sm:w-[550px] mx-auto' {...props}>
+    <Dialog pageTitle='Roster Details' className='sm:w-[550px] mx-auto' {...props}>
       <form onSubmit={handleSubmit(Submit)}>
         <ScrollArea className='h-[60vh] sm:h-[55vh]'>
           <div className="grid sm:grid-cols-2 gap-5 pb-5 px-2.5">
@@ -101,7 +101,13 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
 
             <div className="w-full flex flex-col gap-y-2">
               <Label>Shift Start Date</Label>
-              <Input type='date' {...register('shiftStartDate')} />
+              <Controller control={control} name='shiftStartDate' render={({ field }) => (
+                <Input
+                  type='date'
+                  defaultValue={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                  onChange={(e) => { field.onChange(e.target.value) }}
+                />
+              )} />
               {errors.shiftStartDate && <p className='text-sm text-red-500'>{errors.shiftStartDate.message}</p>}
             </div>
 
@@ -110,45 +116,81 @@ const AssignRosterForm = ({ Submit, rosterDetails, isPending, ...props }: Assign
 
             <div className="w-full flex flex-col gap-y-2">
               <Label>Shift End Date</Label>
-              <Input type='date' {...register('shiftEndDate')} />
+              <Controller control={control} name='shiftEndDate' render={({ field }) => (
+                <Input
+                  type='date'
+                  defaultValue={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                  onChange={(e) => { field.onChange(e.target.value) }}
+                />
+              )} />
               {errors.shiftEndDate && <p className='text-sm text-red-500'>{errors.shiftEndDate.message}</p>}
             </div>
 
 
-            {/* Shift */}
-
+            {/* Duty AT */}
             <div className="w-full flex flex-col gap-y-2">
-              <Controller control={control} name='shift' render={({ field }) => {
+              <Controller control={control} name='dutyAt' render={({ field }) => {
                 return <>
-                  <Label>Shift</Label>
+                  <RequiredLabel label='Duty At' />
                   <Select value={field.value || ''} onValueChange={(value) => { field.onChange(value) }}>
                     <SelectTrigger >
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
 
                     <SelectContent className='z-[200]'>
-                      <SelectItem value='Morning'>Morning</SelectItem>
-                      <SelectItem value='Evening'>Evening</SelectItem>
-                      <SelectItem value='Night'>Night</SelectItem>
+                      {[
+                        "Outpatient Department (OPD)",
+                        "Inpatient Department (IPD)",
+                        "Radiology",
+                        "Pathology",
+                        "Billing and Insurance Department",
+                        "Emergency",
+                        "ICU",
+                        "management"
+                      ]?.map((department, index) => {
+                        return <SelectItem key={index} value={department}>{department}</SelectItem>
+                      })}
                     </SelectContent>
                   </Select>
                 </>
               }} />
-              {errors.shift && <p className='text-sm text-red-500'>{errors.shift.message}</p>}
+              {errors.dutyAt && <p className='text-sm text-red-500'>{errors.dutyAt.message}</p>}
             </div>
 
+            <div className="space-x-2 flex items-center col-span-full">
+              <Controller control={control} name='willTakeAppointment' render={({ field }) => (
+                <Checkbox
+                  id='willTakeAppointment'
+                  checked={field.value}
+                  onCheckedChange={(value) => { field.onChange(value) }}
+                />
+              )}
+              />
+              <Label htmlFor='willTakeAppointment'>Will take appointment</Label>
+            </div>
+
+            {/* interval minutes */}
+            {
+              watch('willTakeAppointment') && (
+                <div className="w-full flex flex-col gap-y-2">
+                  <Label>Interval Minutes</Label>
+                  <Input type='number' max={60} placeholder='eg: 15' {...register('intervalMinutes')} />
+                  {errors.intervalMinutes && <p className='text-sm text-red-500'>{errors.intervalMinutes.message}</p>}
+                </div>
+              )
+            }
 
             {/* note */}
 
-            <div className="w-full flex flex-col gap-y-2">
+            <div className="w-full flex flex-col gap-y-2 col-span-full">
               <Label>Note</Label>
-              <Input type='text' {...register('note')} />
+              <Textarea placeholder='eg: This is a note' {...register('note')} />
             </div>
 
           </div>
         </ScrollArea>
 
-        <div className="flex mt-5 mb-2 gap-x-2 px-2.5">
+        <div className="flex mt-5 mb-2 gap-x-2 px-2.5 border-t border-border pt-4">
           <Button type='submit' variant='outline' onClick={() => reset()}>Reset</Button>
           <Button type='submit' className='flex-1'>{rosterDetails ? 'Update Roster' : 'Save Roster'} {isPending && <Loader className='h-4 w-4 animate-spin' />}</Button>
         </div>

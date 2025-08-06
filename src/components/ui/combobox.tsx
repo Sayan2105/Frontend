@@ -42,8 +42,12 @@ export function Combobox({ placeholder, options, onValueChange, defaultValue, wi
         setOpen(false)
     }
 
-    // if (value) onValueChange(value)
-    if (defaultValue) onValueChange(defaultValue)
+    React.useEffect(() => {
+        if (defaultValue) {
+            setValue(defaultValue)
+        }
+    }, [defaultValue])
+
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

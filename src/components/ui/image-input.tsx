@@ -1,5 +1,5 @@
 import { CloudUpload, X } from 'lucide-react'
-import { ReactNode, useState, useId } from 'react'
+import { ReactNode, useState, useId, useEffect } from 'react'
 
 interface Props {
     onChange: (e: File) => void
@@ -9,21 +9,32 @@ interface Props {
 }
 
 const ImageInput = ({ onChange, title, message, required }: Props) => {
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedImage, setSelectedImage] = useState<File | undefined>(undefined);  // dont assign null here
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
     const uniqueId = useId(); // This generates a unique ID
 
     const handleImageChange = (image: File) => {
         const imageUrl = URL.createObjectURL(image); // No need for new Blob here
-        setSelectedImage(imageUrl);
+        setPreviewImage(imageUrl);
+        setSelectedImage(image)
     }
+
+    const handleCancel = () => {
+        setSelectedImage(undefined)
+        setPreviewImage(null)
+    }
+
+    useEffect(() => {
+        onChange(selectedImage!)
+    }, [selectedImage])
 
     return (
         <div className='flex gap-3 items-center ring-1 ring-border p-2.5 rounded-lg'>
             {/* Image preview */}
-            {selectedImage ? (
+            {previewImage ? (
                 <div className='relative h-[40px] w-[40px] flex items-center'>
                     <img
-                        src={selectedImage}
+                        src={previewImage}
                         alt="profile"
                         className='object-cover rounded-md'
                     />
@@ -51,7 +62,6 @@ const ImageInput = ({ onChange, title, message, required }: Props) => {
                     onChange={(e) => {
                         const file = e.target.files?.[0]
                         if (file) {
-                            onChange(file)
                             handleImageChange(file)
                         }
                     }}
@@ -59,7 +69,7 @@ const ImageInput = ({ onChange, title, message, required }: Props) => {
                 />
 
                 {selectedImage ?
-                    <div className='p-2 rounded-full cursor-pointer' onClick={() => setSelectedImage(null)}>
+                    <div className='p-2 rounded-full cursor-pointer' onClick={handleCancel}>
                         <X className='h-5 w-5' />
                     </div>
                     :

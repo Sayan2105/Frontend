@@ -29,7 +29,7 @@ const SetupAnnualCalenders = () => {
             {/* Action */}
             <div className="flex justify-between">
                 <h1 className="text-lg font-semibold">Calenders</h1>
-                <PermissionProtectedAction action='create' module='Annual Calendar'>
+                <PermissionProtectedAction action='create' module='Setup Homepage'>
                     <Button size='sm' onClick={() => { setForm(true) }}>
                         <Plus /> Add Calendar
                     </Button>
@@ -38,7 +38,7 @@ const SetupAnnualCalenders = () => {
 
             <Separator />
 
-            <ProtectedTable module="Annual Calendar" renderTable={(show, canUpdate, canDelete) => (
+            <ProtectedTable module='Setup Homepage' renderTable={(show, canUpdate, canDelete) => (
                 <Table>
                     <TableHeader>
                         <TableRow>

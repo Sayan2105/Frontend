@@ -8,7 +8,7 @@ import { signInformSchema } from '@/formSchemas/signinFormSchema'
 import usePatient from "@/patient/profile/handlers"
 import RegisterPatient from "@/patient/register/patient-signup"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader, Shield, Users } from "lucide-react"
+import { Loader, Users } from "lucide-react"
 import { useContext, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router-dom"
@@ -72,7 +72,13 @@ const SignIn = () => {
               {/* Password field */}
               <div className="space-y-2 group">
                 <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                  <Shield className="w-4 h-4" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-shield-lock-icon">
+                    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+
+                    <rect x="9" y="11" width="6" height="5" rx="1" ry="1" />
+                    <path d="M10 11V9a2 2 0 1 1 4 0v2" />
+                  </svg>
+
                   Password
                 </Label>
                 <div className="relative">
@@ -141,7 +147,12 @@ const SignIn = () => {
           {/* Trust indicators */}
           <div className="mt-8 flex items-center justify-center gap-6 text-xs text-gray-500 dark:text-gray-400 animate-fade-in-delayed">
             <div className="flex items-center gap-1">
-              <Shield className="w-3 h-3" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-shield-lock-icon">
+                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+
+                <rect x="9" y="11" width="6" height="5" rx="1" ry="1" />
+                <path d="M10 11V9a2 2 0 1 1 4 0v2" />
+              </svg>
               <span>Secure Login</span>
             </div>
           </div>

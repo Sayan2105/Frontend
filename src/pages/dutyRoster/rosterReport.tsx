@@ -1,26 +1,26 @@
 import AlertModel from '@/components/alertModel'
 import CustomPagination from '@/components/customPagination'
+import CustomTooltip from '@/components/customTooltip'
 import EmptyList from '@/components/emptyList'
-import LoaderModel from '@/components/loader'
 import PermissionProtectedAction from '@/components/permission-protected-actions'
 import ProtectedTable from '@/components/protected-table'
-import Radio from '@/components/radio'
 import TableActions from '@/components/table-actions'
 import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { page_limit } from '@/globalData'
-import useDutyRoster from './handlers'
-import { Plus } from 'lucide-react'
-import { parseAsInteger, useQueryState } from 'nuqs'
-import { useEffect, useState } from 'react'
+import UserImage from '@/components/user-image'
+import { AssignRosterSchema } from '@/formSchemas/assignRosterFormSchema'
+import useOpdRoster from '@/hooks/useRoster'
+import { RosterDataType } from '@/types/dutyRoster/DutyRoster'
+import { ListFilter, Plus } from 'lucide-react'
+import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
 import { useDebouncedCallback } from 'use-debounce'
+import { z } from 'zod'
 import AssignRosterForm from './form'
-import UserImage from '@/components/user-image'
 
 
 
@@ -31,15 +31,11 @@ const RosterReport = () => {
 
 
     // Query params
-    const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
-    const [credential, setCredential] = useQueryState('credential')
-    const [date, setDate] = useQueryState('date')
-    const [period, setPeriod] = useState({ startDate: '', endDate: '' })
     const [searchBy, setSearchBy] = useState<'date' | 'period' | 'credentials'>('credentials')
+    const [form, setForm] = useState(false)
+    const [current, setCurrent] = useState<RosterDataType | null>(null)
 
-
-    const { rosters, getRosters, current, setCurrent, form, setForm, handleSubmit, onDelete, confirmationProps, isPending } = useDutyRoster({ page, limit: page_limit, date: date!, period, credentials: credential! })
-
+    const { createRoster, isPendingCreateRoster, updateRoster, isPendingUpdateRoster, rosters, credential, setCredential, date, setDate, page, setPage, period, setPeriod, onDelete, confirmationProps } = useOpdRoster({ isRostersPage: true, afterSuccess: setForm })
 
 
     // search functionality
@@ -59,13 +55,13 @@ const RosterReport = () => {
     }, 400)
 
 
-
-
-
-
-    useEffect(() => {
-        getRosters()
-    }, [page, period, date, credential])
+    const onSubmit = (formData: z.infer<typeof AssignRosterSchema>) => {
+        if (current) {
+            updateRoster({ id: current.id, formData })
+        } else {
+            createRoster(formData)
+        }
+    }
 
 
     return (
@@ -88,14 +84,25 @@ const RosterReport = () => {
 
             <Separator />
 
-
             {/* search section */}
 
-            <div className='pt-2 pb-5 space-y-2'>
+            <div className='py-5 flex items-center gap-2 overflow-x-auto'>
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <CustomTooltip message="Search by">
+                            <div className='p-2 bg-rose-100 dark:bg-rose-500/10 rounded-full'>
+                                <ListFilter className='w-5 h-5 text-rose-600' />
+                            </div>
+                        </CustomTooltip>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align='end'>
+                        <DropdownMenuItem onSelect={() => setSearchBy('credentials')}>Credentials</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setSearchBy('date')}>Date</DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setSearchBy('period')}>Period</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
 
-                <Label>Search by keyword</Label>
-
-                <div className='flex items-center gap-2 w-72 sm:w-96'>
+                <div className='flex items-center gap-2 w-72 sm:w-64'>
                     {searchBy === 'date' && <Input type='date' onChange={(e) => { onSearch({ date: e.target.value }) }} defaultValue={date!} />}
                     {searchBy === 'period' &&
                         <form className='flex flex-row space-x-2'>
@@ -110,26 +117,6 @@ const RosterReport = () => {
                     }
                     {searchBy === 'credentials' && <Input type='text' placeholder='staff id , name' onChange={(e) => onSearch({ credential: e.target.value })} defaultValue={credential!} />}
                 </div>
-
-
-                {/* search by options */}
-
-                <div className='flex gap-x-6 pt-2'>
-
-                    <Radio text='Credentials' id='id' name='search' className={searchBy === 'credentials' ? 'bg-gray-600' : ''}
-                        onClick={() => { setSearchBy('credentials') }}
-                    />
-
-                    <Radio text='Date' id='Date' name='search' className={searchBy === 'date' ? 'bg-gray-600' : ''}
-                        onClick={() => { setSearchBy('date') }}
-                    />
-
-                    <Radio text='Period' id='period' name='search' className={searchBy === 'period' ? 'bg-gray-600' : ''}
-                        onClick={() => { setSearchBy('period') }}
-                    />
-
-                </div>
-
             </div>
 
 
@@ -147,8 +134,7 @@ const RosterReport = () => {
                                     <TableRow>
                                         <TableHead>Staff ID</TableHead>
                                         <TableHead>Staff</TableHead>
-                                        <TableHead>Shift</TableHead>
-                                        <TableHead>Department</TableHead>
+                                        <TableHead>Duty At</TableHead>
                                         <TableHead>Start Time</TableHead>
                                         <TableHead>End Time</TableHead>
                                         <TableHead>Start Date</TableHead>
@@ -159,7 +145,7 @@ const RosterReport = () => {
                                 </TableHeader>
 
                                 <TableBody>
-                                    {rosters.data.map((item, i) => (
+                                    {rosters?.data.map((item, i) => (
                                         <TableRow key={i}>
                                             <TableCell>
                                                 <Link className='text-blue-500 hover:underline font-semibold' to={`/staff/${item.staffId}`}>{item.staffId}</Link>
@@ -167,12 +153,23 @@ const RosterReport = () => {
                                             <TableCell>
                                                 <UserImage url={item.staff.image} name={item.staff.name} gender={item.staff.gender} />
                                             </TableCell>
-                                            <TableCell>{item.shift}</TableCell>
-                                            <TableCell>{item.staff.department}</TableCell>
+                                            <TableCell>{item.dutyAt}</TableCell>
                                             <TableCell>{item.shiftStartTime}</TableCell>
                                             <TableCell>{item.shiftEndTime}</TableCell>
-                                            <TableCell>{item.shiftStartDate}</TableCell>
-                                            <TableCell>{item.shiftEndDate}</TableCell>
+                                            <TableCell>
+                                                <div className="dark:bg-yellow-900/20 bg-violet-100 dark:text-violet-600 text-violet-600 py-1 px-2 rounded">
+                                                    {new Date(item.shiftStartDate).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                    {new Date(item.shiftStartDate).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                    {new Date(item.shiftStartDate).toLocaleDateString('en-US', { month: 'short' })}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="dark:bg-violet-900/20 bg-violet-100 dark:text-violet-600 text-violet-600 py-1 px-2 rounded">
+                                                    {new Date(item.shiftEndDate).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                    {new Date(item.shiftEndDate).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                    {new Date(item.shiftEndDate).toLocaleDateString('en-US', { month: 'short' })}
+                                                </div>
+                                            </TableCell>
                                             <TableCell>{item.note}</TableCell>
                                             <TableActions
                                                 show={show}
@@ -189,13 +186,13 @@ const RosterReport = () => {
                     />
 
                     {/* error on emply list */}
-                    <EmptyList length={rosters.data.length} message="No Roster Found" />
+                    <EmptyList length={rosters?.data?.length!} message="No Roster Found" />
                 </div>
 
                 {/* pagination */}
                 <section>
                     <CustomPagination
-                        total_pages={rosters?.total_pages}
+                        total_pages={rosters?.total_pages!}
                         currentPage={page}
                         previous={setPage}
                         goTo={setPage}
@@ -205,14 +202,13 @@ const RosterReport = () => {
             </div>
 
 
-
             {/* roster form model */}
 
             {
                 (form) && <AssignRosterForm
-                    Submit={handleSubmit}
+                    Submit={onSubmit}
                     rosterDetails={current!}
-                    isPending={isPending}
+                    isPending={isPendingCreateRoster || isPendingUpdateRoster}
                     onClick={() => {
                         setForm(false)
                         setCurrent(null)
@@ -229,8 +225,6 @@ const RosterReport = () => {
                     continue={() => confirmationProps.onConfirm()}
                 />
             }
-
-            {isPending && <LoaderModel />}
 
 
         </div >

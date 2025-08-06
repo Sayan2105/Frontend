@@ -14,7 +14,7 @@ interface opdData {  // it will be Array of objects
     appointmentId: string,
 
     appointment: {
-        appointment_date: string,
+        date: string
         previous_medical_issue: string,
         reference: string,
         specialist: { name: string },

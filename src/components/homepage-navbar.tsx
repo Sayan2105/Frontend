@@ -1,12 +1,12 @@
 import { AuthContext } from "@/contexts/authContext"
+import useNavigation from "@/hooks/useNavigation"
 import { cn } from "@/lib/utils"
-import { Calendar, CalendarCheck2, ChevronDownIcon, Home, Hospital, LinkIcon, Menu, Send, Stethoscope, User } from "lucide-react"
+import { ChevronDownIcon, LinkIcon, Menu, User } from "lucide-react"
 import { useContext, useState } from "react"
 import { Link } from "react-router-dom"
 import { ModeToggle } from "./mode-toggle"
 import { Button, buttonVariants } from "./ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Separator } from "./ui/separator"
 
 
 
@@ -14,6 +14,7 @@ const HomepageNavbar = () => {
 
     const [isOpen, setIsOpen] = useState(false)
     const { authUser } = useContext(AuthContext)
+    const { HomepageNavigations } = useNavigation()
     // making routes static
     const Routes = (authUser?.role === 'patient') ? authUser?.role : 'admin'
 
@@ -43,58 +44,45 @@ const HomepageNavbar = () => {
 
                     <div className="pt-14 md:hidden" />
 
-                    <Link to={{ pathname: '/' }} onClick={closeMenu} className={buttonVariants({
-                        variant: "ghost",
-                    })}>
-                        <Home /> Home
-                    </Link>
+                    {HomepageNavigations.map((item) => (
+                        item.children ? (
+                            <div key={item.name}> {/* Or item.id if available */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant={item.active ? "default" : "ghost"} className="flex space-x-2">
+                                            <LinkIcon /> {item.name} <ChevronDownIcon />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="space-y-1" align="end">
+                                        {item.children.map((child) => (
+                                            <DropdownMenuItem asChild key={child.name}> {/* Or child.href / child.id */}
+                                                <Link
+                                                    to={{ pathname: `${child.href}` }}
+                                                    onClick={closeMenu}
+                                                    className={cn("flex space-x-2 p-1 cursor-pointer", child.active && "bg-blue-500 text-white")}
+                                                >
+                                                    <child.icon className="w-5 h-5" />
+                                                    <p className="text-sm">{child.name}</p>
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        ) : (
+                            <Link
+                                key={item.name} // Or item.href or item.id
+                                to={{ pathname: `${item.href}` }}
+                                onClick={closeMenu}
+                                className={buttonVariants({
+                                    variant: item.active ? "default" : "ghost",
+                                })}
+                            >
+                                <item.icon /> {item.name}
+                            </Link>
+                        )
+                    ))}
 
-                    <Link to={{ pathname: '/home/book-appointment' }} onClick={closeMenu} className={buttonVariants({
-                        variant: "ghost",
-                    })}>
-                        <CalendarCheck2 /> Book Appointment
-                    </Link>
-
-                    <Link to={{ pathname: '/home/doctors' }} onClick={closeMenu} className={buttonVariants({
-                        variant: "ghost",
-                    })}>
-                        <Stethoscope className="w-5 h-5" /> Find A Doctor
-                    </Link>
-
-                    <Link to={{ pathname: '/home/contact' }} onClick={closeMenu} className={buttonVariants({
-                        variant: "ghost",
-                    })}>
-                        < Send /> Contact
-                    </Link>
-
-                    <div>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="flex space-x-2">
-                                    <LinkIcon /> Quick Links <ChevronDownIcon />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="space-y-1" align="end">
-                                <DropdownMenuItem asChild>
-                                    <Link to={{ pathname: '/home/about' }} onClick={closeMenu} className="flex space-x-2 p-1 cursor-pointer">
-                                        <Hospital className="w-5 h-5" /> <p className="text-sm">About Hospital</p>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <Separator />
-                                <DropdownMenuItem asChild>
-                                    <Link to={{ pathname: '/home/annual-calendar' }} onClick={closeMenu} className="flex space-x-2 p-1 cursor-pointer">
-                                        <Calendar className="w-5 h-5" /> <p className="text-sm">Annual Calendar</p>
-                                    </Link>
-                                </DropdownMenuItem>
-                                <Separator />
-                                <DropdownMenuItem asChild>
-                                    <Link to={{ pathname: '/home/event' }} onClick={closeMenu} className="flex space-x-2 p-1 cursor-pointer">
-                                        <CalendarCheck2 className="w-5 h-5" /> <p className="text-sm">Event</p>
-                                    </Link>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
 
                     {authUser ?
                         <Link to={{ pathname: `/${Routes}/dashboard` }} onClick={closeMenu} className={buttonVariants({
@@ -108,7 +96,7 @@ const HomepageNavbar = () => {
                             variant: "default",
                             className: "mt-5 md:mt-0"
                         })}>
-                            < User /> Log In
+                            Log In < User />
                         </Link>
                     }
 
@@ -123,7 +111,7 @@ const HomepageNavbar = () => {
                     </div>
                 </div>
 
-            </div>
+            </div >
         </>
     )
 }

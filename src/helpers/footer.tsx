@@ -44,28 +44,28 @@ export const footerSocilalMedia = [
     {
         icon: Facebook,
         name: 'Facebook',
-        url: 'https://www.facebook.com',
+        url: 'https://www.facebook.com/people/TVS-Solutions/61575018474085/',
         hoverColor: 'group-hover:bg-blue-600 group-hover:text-white',
         bgColor: 'bg-blue-50 dark:bg-blue-500/30'
     },
     {
         icon: Instagram,
         name: 'Instagram',
-        url: 'https://www.instagram.com',
+        url: 'https://www.instagram.com/tvs.solutions/',
         hoverColor: 'group-hover:bg-gradient-to-br group-hover:from-purple-600 group-hover:to-pink-600 group-hover:text-white',
         bgColor: 'bg-pink-50 dark:bg-pink-500/30'
     },
     {
         icon: Twitter,
         name: 'X (Twitter)',
-        url: 'https://www.x.com',
+        url: 'https://x.com/TVSSOLUTIONS',
         hoverColor: 'group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black',
         bgColor: 'bg-gray-50 dark:bg-gray-500'
     },
     {
         icon: Youtube,
         name: 'YouTube',
-        url: 'https://www.youtube.com',
+        url: 'https://www.youtube.com/@tvs.solutions',
         hoverColor: 'group-hover:bg-red-600 group-hover:text-white',
         bgColor: 'bg-red-50 dark:bg-red-500/30'
     }

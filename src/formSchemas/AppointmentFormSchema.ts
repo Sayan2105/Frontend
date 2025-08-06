@@ -1,20 +1,13 @@
 import { z } from 'zod'
 
 
-export const appointmentFormSchema = z.object({
+export const appointmentBaseSchema = z.object({
+    rosterId: z.coerce.number().min(1, { message: 'Please select a roster' }).default(0),
     patientId: z.coerce.number().min(1, { message: 'Please select a patient' }).default(0),
     doctorId: z.coerce.number().min(1, { message: 'Please select a doctor' }).default(0),
     fees: z.coerce.number().min(1, { message: 'Fees cannot be 0' }).default(0),
-    shift: z.string().min(1, { message: 'Please select shift' }).default(''),
-
-    appointment_date: z.string().min(1, { message: 'Please enetr valid date' })
-        .refine(date => {
-            const inputDate = new Date(date);
-            const currentDate = new Date();
-            currentDate.setHours(0, 0, 0, 0);
-            return inputDate >= currentDate;  // if input date is equal or greater than should not happen annything
-        }, { message: 'Appointment date cannot be in the past' }),
-
+    date: z.string().min(1, { message: 'Please select a date' }).default(''),
+    time: z.string().min(1, { message: 'Please select a time slot' }).default(''),
     specialistId: z.coerce.number().min(1, { message: 'Please select specialist' }).default(0),
     payment_mode: z.string().min(1, { message: 'Please select payment mode' }).default(''),
     status: z.string().min(1, { message: 'Please select status' }).default(''),
@@ -28,9 +21,16 @@ export const appointmentFormSchema = z.object({
 })
 
 
+export const appointmentFormSchema = appointmentBaseSchema.refine(
+    (data) => new Date(data.date).toISOString().split('T')[0] === new Date(data.time).toISOString().split('T')[0],
+    {
+        message: 'Please select a time slot',
+        path: ['time'],
+    },
+)
 
 
-export const patientAppointmentSchema = appointmentFormSchema.extend({
+export const patientAppointmentSchema = appointmentBaseSchema.extend({
     patientId: z.coerce.number().optional(),
     payment_mode: z.string().optional(),
     status: z.string().optional(),
