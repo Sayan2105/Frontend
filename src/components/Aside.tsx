@@ -66,6 +66,7 @@ const Aside = () => {
                                                         variant: item.active ? "default" : "ghost",
                                                         className: "flex !justify-start space-x-2 p-1 cursor-pointer",
                                                     })}
+                                                    onClick={onNavigate}
                                                 >
                                                     <item.icon className="w-5 h-5" /> {item.name}
                                                 </Link>
@@ -78,6 +79,7 @@ const Aside = () => {
                                                     className:
                                                         "flex space-x-2 !justify-start p-1 cursor-pointer w-full",
                                                 })}
+                                                onClick={onNavigate}
                                             >
                                                 <item.icon className="w-5 h-5" /> {item.name}
                                             </Link>
@@ -116,8 +118,8 @@ const Aside = () => {
                                                                         to={child.href}
                                                                         onClick={onNavigate}
                                                                         className={`flex ${!child.active
-                                                                                ? "hover:text-gray-600 dark:hover:text-gray-300"
-                                                                                : "bg-blue-600 text-white"
+                                                                            ? "hover:text-gray-600 dark:hover:text-gray-300"
+                                                                            : "bg-blue-600 text-white"
                                                                             } rounded-md py-1 items-center gap-x-1 justify-start text-[13px]`}
                                                                     >
                                                                         <child.icon className="h-4 w-4" /> {child.name}
@@ -134,8 +136,8 @@ const Aside = () => {
                                                                     to={child.href}
                                                                     onClick={onNavigate}
                                                                     className={`flex ${!child.active
-                                                                            ? "hover:text-gray-600 dark:hover:text-gray-300"
-                                                                            : "bg-blue-600 text-white"
+                                                                        ? "hover:text-gray-600 dark:hover:text-gray-300"
+                                                                        : "bg-blue-600 text-white"
                                                                         } rounded-md py-1 items-center gap-x-1 justify-start text-[13px]`}
                                                                 >
                                                                     <child.icon className="h-4 w-4" /> {child.name}
