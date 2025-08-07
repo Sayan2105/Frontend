@@ -2,10 +2,10 @@ import { AuthContext } from "@/contexts/authContext";
 import useNavigation from "@/hooks/useNavigation";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon, LinkIcon, Menu, User } from "lucide-react";
-import { Fragment, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { ModeToggle } from "./mode-toggle";
-import { Button, buttonVariants } from "./ui/button";
+import { buttonVariants } from "./ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -50,7 +50,7 @@ const HomepageNavbar = () => {
                 {/* Navigation */}
                 <div
                     className={cn(
-                        "fixed md:static w-56 md:w-auto !top-0 left-0 h-screen p-5 gap-1 items-start flex flex-col md:flex-row md:h-full md:items-center gap-x-2 bg-white dark:bg-background md:bg-transparent md:dark:bg-transparent border-r border-border border-dashed md:border-none transition-all duration-200",
+                        "fixed md:static w-64 md:w-auto !top-0 left-0 h-screen p-5 gap-2 items-start flex flex-col md:flex-row md:h-full md:items-center gap-x-2 bg-white dark:bg-background md:bg-transparent md:dark:bg-transparent border-r border-border border-dashed md:border-none transition-all duration-200",
                         isOpen ? "left-0" : "-left-[100%]"
                     )}
                 >
@@ -58,17 +58,17 @@ const HomepageNavbar = () => {
 
                     {HomepageNavigations.map((item) =>
                         item.children ? (
-                            <div key={item.name}>
+                            <div key={item.name} className="w-full">
                                 <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button
-                                            variant={item.active ? "default" : "ghost"}
-                                            className="flex items-center space-x-2"
-                                        >
+                                    <DropdownMenuTrigger className={buttonVariants({
+                                        variant: item.active ? "default" : "ghost",
+                                        className: "flex !w-full !justify-between"
+                                    })}>
+                                       <div className="flex space-x-2">
                                             <LinkIcon className="w-4 h-4" />
                                             <span>{item.name}</span>
-                                            <ChevronDownIcon className="w-4 h-4" />
-                                        </Button>
+                                       </div>
+                                        <ChevronDownIcon className="w-4 h-4" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent className="space-y-1" align="end">
                                         {item.children.map((child) => (
@@ -96,6 +96,7 @@ const HomepageNavbar = () => {
                                 onClick={closeMenu}
                                 className={buttonVariants({
                                     variant: item.active ? "default" : "ghost",
+                                    className: "w-full !justify-start"
                                 })}
                             >
                                 <item.icon className="w-4 h-4" />
@@ -110,7 +111,7 @@ const HomepageNavbar = () => {
                             onClick={closeMenu}
                             className={buttonVariants({
                                 variant: "outline",
-                                className: "mt-5 md:mt-0",
+                                className: "mt-5 md:mt-0 w-full !justify-start",
                             })}
                         >
                             Dashboard ✨
@@ -121,7 +122,7 @@ const HomepageNavbar = () => {
                             onClick={closeMenu}
                             className={buttonVariants({
                                 variant: "default",
-                                className: "mt-5 md:mt-0",
+                                className: "mt-5 md:mt-0 w-full !justify-start",
                             })}
                         >
                             Log In <User className="ml-2 w-4 h-4" />
