@@ -74,9 +74,9 @@ export const patientBasedSchema = z.object({
         .optional()
         .refine((val) => {
             if (val === undefined || val.trim() === '') return true;
-            return val.length === 16;
+            return val.length === 12;
         }, {
-            message: 'Aadhar number should be exactly 16 digits',
+            message: 'Aadhar number should be exactly 12 digits',
         }),
 
 
