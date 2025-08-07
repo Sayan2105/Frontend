@@ -143,7 +143,7 @@ const Staffprofile = () => {
                         iconBg='bg-teal-100 dark:bg-teal-500/10'
                         icon={<Circle className='text-teal-500' />}
                         title='Gender'
-                        value={profile?.email!}
+                        value={profile?.gender!}
                     />
                     <IconMenu
                         iconBg='bg-red-100 dark:bg-red-600/10'
