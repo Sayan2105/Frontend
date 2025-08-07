@@ -91,7 +91,6 @@ const BloodComponentIssues = () => {
                   <TableRow>
                     <TableHead>Invoice No</TableHead>
                     <TableHead>Patient Name</TableHead>
-                    <TableHead>Gender</TableHead>
                     <TableHead>Issued Date</TableHead>
                     <TableHead>Blood Group</TableHead>
                     <TableHead>component</TableHead>
@@ -117,8 +116,13 @@ const BloodComponentIssues = () => {
                       <TableCell>
                         <UserImage url={item.patient.image} name={item.patient.name} gender={item.patient.gender} />
                       </TableCell>
-                      <TableCell className='whitespace-nowrap'>{item.patient.gender}</TableCell>
-                      <TableCell>{item.date}</TableCell>
+                      <TableCell>
+                        <div className="dark:bg-rose-900/20 bg-rose-100 dark:text-rose-600 text-rose-600 py-1 px-2 rounded">
+                          {new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                          {new Date(item.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                          {new Date(item.date).toLocaleDateString('en-US', { month: 'short' })}
+                        </div>
+                      </TableCell>
                       <TableCell>{item.blood_group}</TableCell>
                       <TableCell>{item.component}</TableCell>
                       <TableCell>{item.bag}</TableCell>

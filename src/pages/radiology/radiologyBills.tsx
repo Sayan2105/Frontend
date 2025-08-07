@@ -112,7 +112,13 @@ const RadiologyBills = () => {
                         onClick={() => { setID(bill.id) }}
                       >{bill.id}
                       </TableCell>
-                      <TableCell>{bill.date}</TableCell>
+                      <TableCell>
+                        <div className="dark:bg-yellow-900/20 bg-yellow-100 dark:text-yellow-600 text-yellow-600 py-1 px-2 rounded">
+                          {new Date(bill.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                          {new Date(bill.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                          {new Date(bill.date).toLocaleDateString('en-US', { month: 'short' })}
+                        </div>
+                      </TableCell>
                       <TableCell>{bill.moduleId}</TableCell>
                       <TableCell>
                         <UserImage url={bill.patient.image} name={bill.patient.name} gender={bill.patient.gender} />

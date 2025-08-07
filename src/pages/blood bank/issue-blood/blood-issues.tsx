@@ -126,7 +126,13 @@ const BloodIssues = () => {
                                                 <UserImage url={IB.patient.image} name={IB.patient.name} gender={IB.patient.gender} />
                                             </TableCell>
                                             <TableCell>{IB.patient.gender}</TableCell>
-                                            <TableCell>{IB.date}</TableCell>
+                                            <TableCell>
+                                                <div className="dark:bg-amber-900/20 bg-amber-100 dark:text-amber-600 text-amber-600 py-1 px-2 rounded">
+                                                    {new Date(IB.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                    {new Date(IB.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                    {new Date(IB.date).toLocaleDateString('en-US', { month: 'short' })}
+                                                </div>
+                                            </TableCell>
                                             <TableCell>{IB.blood_group}</TableCell>
                                             <TableCell>{IB.bag}</TableCell>
                                             <TableCell>{currencyFormat(IB.standard_charge)}</TableCell>

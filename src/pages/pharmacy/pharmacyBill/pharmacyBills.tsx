@@ -189,7 +189,13 @@ const Bill = () => {
                                                 }}
                                             >{bill.id}
                                             </TableCell>
-                                            <TableCell>{bill.date}</TableCell>
+                                            <TableCell>
+                                                <div className="dark:bg-green-900/20 bg-green-100 dark:text-green-600 text-green-600 py-1 px-2 rounded">
+                                                    {new Date(bill.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                    {new Date(bill.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                    {new Date(bill.date).toLocaleDateString('en-US', { month: 'short' })}
+                                                </div>
+                                            </TableCell>
                                             <TableCell>{bill.opdId}</TableCell>
                                             <TableCell>
                                                 <UserImage url={bill.patient.image} name={bill.patient.name} gender={bill.patient.gender} />

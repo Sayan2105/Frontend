@@ -190,8 +190,22 @@ const Purchase = () => {
                         {purchase.id}
                       </TableCell>
                       <TableCell>{purchase.medicine.name}</TableCell>
-                      <TableCell>{purchase.date}</TableCell>
-                      <TableCell>{purchase.expiry_date}</TableCell>
+                      <TableCell>
+                        <div className="dark:bg-rose-900/20 bg-rose-100 dark:text-rose-600 text-rose-600 py-1 px-2 rounded">
+                          {new Date(purchase.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                          {new Date(purchase.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                          {new Date(purchase.date).toLocaleDateString('en-US', { month: 'short' })}{", "}
+                          {new Date(purchase.date).toLocaleDateString('en-US', { year: 'numeric' })}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="dark:bg-amber-900/20 bg-amber-100 dark:text-amber-600 text-amber-600 py-1 px-2 rounded">
+                          {new Date(purchase.expiry_date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                          {new Date(purchase.expiry_date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                          {new Date(purchase.expiry_date).toLocaleDateString('en-US', { month: 'short' })}{", "}
+                          {new Date(purchase.expiry_date).toLocaleDateString('en-US', { year: 'numeric' })}
+                        </div>
+                      </TableCell>
                       <TableCell>
                         {purchase.supplier_name}
                       </TableCell>

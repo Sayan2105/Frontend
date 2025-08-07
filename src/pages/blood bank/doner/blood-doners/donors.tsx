@@ -95,7 +95,13 @@ const BloodDonors = () => {
                                     {donors.data.map((donor) => {
                                         return <TableRow key={donor.id}>
                                             <TableCell>{donor.name}</TableCell>
-                                            <TableCell>{donor.dob}</TableCell>
+                                            <TableCell>
+                                                <div className="dark:bg-rose-900/20 w-fit bg-rose-100 dark:text-rose-600 text-rose-600 py-1 px-2 rounded">
+                                                    {new Date(donor.dob).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                    {new Date(donor.dob).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                    {new Date(donor.dob).toLocaleDateString('en-US', { month: 'short' })}
+                                                </div>
+                                            </TableCell>
                                             <TableCell>{donor.blood_group}</TableCell>
                                             <TableCell>{donor.gender}</TableCell>
                                             <TableCell>{donor.contact}</TableCell>

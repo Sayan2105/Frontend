@@ -102,7 +102,13 @@ const BloodDonations = () => {
                                             <TableCell>{donation.bag}</TableCell>
                                             <TableCell>{donation.status}</TableCell>
                                             <TableCell>{donation.blood_group}</TableCell>
-                                            <TableCell>{donation.expiry}</TableCell>
+                                            <TableCell>
+                                                <div className="dark:bg-blue-900/20 bg-blue-100 dark:text-blue-600 text-blue-600 w-fit py-1 px-2 rounded">
+                                                    {new Date(donation.expiry).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                    {new Date(donation.expiry).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                    {new Date(donation.expiry).toLocaleDateString('en-US', { month: 'short' })}
+                                                </div>
+                                            </TableCell>
                                             {show && <TableActions
                                                 show={show}
                                                 canUpdate={canUpdate}

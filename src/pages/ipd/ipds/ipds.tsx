@@ -104,7 +104,13 @@ const Ipds = () => {
                                             <TableCell>
                                                 <Link className='text-blue-500 font-semibold hover:underline' to={`/ipd/${item.id}`}>{item.id}</Link>
                                             </TableCell>
-                                            <TableCell>{item.date}</TableCell>
+                                            <TableCell>
+                                                <div className="dark:bg-rose-900/20 bg-rose-100 dark:text-rose-600 text-rose-600 py-1 px-2 rounded">
+                                                    {new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' })}{", "}
+                                                    {new Date(item.date).toLocaleDateString('en-US', { day: 'numeric' })}{", "}
+                                                    {new Date(item.date).toLocaleDateString('en-US', { month: 'short' })}
+                                                </div>
+                                            </TableCell>
                                             <TableCell>
                                                 <UserImage url={item.patient.image} name={item.patient.name} gender={item.patient.gender} />
                                             </TableCell>
