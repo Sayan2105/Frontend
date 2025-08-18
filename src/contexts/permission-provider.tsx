@@ -1,87 +1,58 @@
 import AuthzApi from "@/admin/setup/services/authorization";
-import {
-    createContext,
-    ReactNode,
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
-import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { createContext, ReactNode, useContext, useMemo } from "react";
 import { AuthContext } from "./authContext";
 
 export type PermissionContextValue = {
     hasPermission: (action: string, module: string) => boolean;
-    removePermissions: () => Promise<void>;
+    removePermissions: () => void;
     isLoading: boolean;
 };
 
 export const PermissionContext = createContext<PermissionContextValue>({
     hasPermission: () => false,
-    removePermissions: async () => { },
+    removePermissions: () => { },
     isLoading: true,
 });
 
 export const PermissionProvider = ({ children }: { children: ReactNode }) => {
-    // const { user } = useAppSelector(authSelector);
-    const { authUser } = useContext(AuthContext)
-    const [permission, setPermission] = useState<string[] | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true); // initially loading thats why not updating while api call
+    const { authUser } = useContext(AuthContext);
 
-    const loadPermissions = async () => {
-        if (!authUser?.role) {
-            // If there is no logged‐in user, we consider permissions loaded (nothing to fetch)
-            setPermission([]);
-            setIsLoading(false);
-            return;
-        }
+    const { data: permissions = [], isLoading, refetch } = useQuery<string[]>({
+        queryKey: ["permissions", authUser?.role],
+        queryFn: async () => {
+            if (!authUser?.role) return [];
 
-        const storedPermissions = sessionStorage.getItem("permissions");
-        if (storedPermissions) {
-            setPermission(JSON.parse(storedPermissions));
-            setIsLoading(false);
-            return;
-        }
+            const storedPermissions = sessionStorage.getItem("permissions");
+            if (storedPermissions) return JSON.parse(storedPermissions);
 
-        try {
             const data = await AuthzApi.getPermissions({ role: authUser.role });
             const names = data.map((p) => p.name);
             sessionStorage.setItem("permissions", JSON.stringify(names));
-            setPermission(names);
-        } catch {
-            toast.error("Failed to load permissions");
-            // If fetch fails, treat as “no permissions”
-            setPermission([]);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+            return names;
+        },
+        enabled: !!authUser?.role,
+        staleTime: Infinity,
+        refetchOnWindowFocus: false,
+    });
 
-    useEffect(() => {
-        setIsLoading(true);
-        loadPermissions();
-    }, [authUser?.role]);
-
-    const removePermissions = async () => {
+    const removePermissions = () => {
         sessionStorage.removeItem("permissions");
-        await loadPermissions();
+        refetch();
     };
 
     const hasPermission = (action: string, module: string) => {
-        // If authUser is admin, automatically true
-        if (authUser?.role === "admin") {
-            return true;
-        }
-        if (!permission) {
-            // If permissions not yet loaded, default to false. The guard will wait on isLoading anyway.
-            return false;
-        }
-        return permission.includes(`${action}:${module}`);
+        if (authUser?.role === "admin") return true;
+        return permissions.includes(`${action}:${module}`);
     };
 
     const value = useMemo(
-        () => ({ hasPermission, removePermissions, isLoading }),
-        [permission, authUser?.role, isLoading]
+        () => ({
+            hasPermission,
+            removePermissions,
+            isLoading,
+        }),
+        [permissions, authUser?.role, isLoading]
     );
 
     return (

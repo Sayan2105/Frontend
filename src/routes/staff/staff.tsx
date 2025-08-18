@@ -11,15 +11,15 @@ const ResetPassword = lazy(() => import('@/pages/staff/profile/resetpassword'));
 
 const StaffRoutes = () => {
     return (
-        <Route element={<ProtectRoutes action="view" module="Human Resource" />}>
-            <Route path="staff" element={<StaffLayout />}>
+        <Route path="staff" element={<StaffLayout />}>
+            <Route element={<ProtectRoutes action="view" module="Human Resource" />}>
                 <Route path="" element={<Staff />} />
-                <Route path="create" element={<CreateStaff />} />
-                <Route path=":id" element={<StaffProfileLayout />}>
-                    <Route path="" element={<Staffprofile />} />
-                    <Route path="edit" element={<CreateStaff />} />
-                    <Route path="resetpassword" element={<ResetPassword />} />
-                </Route>
+            </Route>
+            <Route path="create" element={<CreateStaff />} />
+            <Route path=":id" element={<StaffProfileLayout />}>
+                <Route path="" element={<Staffprofile />} />
+                <Route path="edit" element={<CreateStaff />} />
+                <Route path="resetpassword" element={<ResetPassword />} />
             </Route>
         </Route>
     );

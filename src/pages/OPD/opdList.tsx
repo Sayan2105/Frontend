@@ -102,13 +102,6 @@ const OPDLIST = () => {
 
             <div className='flex py-3 flex-col md:flex-row gap-y-2 md:items-center md:justify-between'>
                 <h1 className='font-semibold tracking-tight'>OPD - out patient list</h1>
-                <div className='flex gap-x-2 overflow-x-auto'>
-
-                    {/* <Button size="sm"
-            onClick={() => setModel(prev => ({ ...prev, appointmentForm: true }))}
-          ><Plus />Add Patient</Button> */}
-
-                </div>
             </div>
 
             <Separator />

@@ -13,19 +13,35 @@ const BloodBankLayout = lazy(() => import("@/pages/blood bank/layout"));
 
 const BloodBankRoutes = () => {
     return (
-        <Route element={<ProtectRoutes action="view" module="Issue Blood" />}>
-            <Route path="blood-bank" element={<BloodBankLayout />}>
+        <Route path="blood-bank" element={<BloodBankLayout />}>
+
+            {/* Issue Blood */}
+            <Route element={<ProtectRoutes action="view" module="Issue Blood" />}>
                 <Route path="issue-blood" element={<BloodIssues />} />
-                <Route path="doner" element={<DonorLayouts />}>
+            </Route>
+
+            {/* Donor Section */}
+            <Route path="doner" element={<DonorLayouts />}>
+                <Route element={<ProtectRoutes action="view" module="Blood Donation" />}>
                     <Route path="blood-donations" element={<BloodDonations />} />
+                </Route>
+                <Route element={<ProtectRoutes action="view" module="Blood Donors" />}>
                     <Route path="blood-donors" element={<BloodDonors />} />
                 </Route>
-                <Route path="components" element={<BloodBankLayout />}>
+            </Route>
+
+            {/* Components Section */}
+            <Route path="components" element={<BloodBankLayout />}>
+                <Route element={<ProtectRoutes action="view" module="Blood Component" />}>
                     <Route path="blood-components" element={<BloodComponents />} />
+                </Route>
+                <Route element={<ProtectRoutes action="view" module="Issue Blood Component" />}>
                     <Route path="issue-components" element={<BloodComponentIssues />} />
                 </Route>
             </Route>
+
         </Route>
+
     );
 };
 

@@ -31,6 +31,7 @@ export const Module = [
     { name: 'Issue Blood Component', create: true, view: true, update: false, delete: true },
     { name: 'Blood Donors', create: true, view: true, update: true, delete: true },
     { name: 'Blood Donation', create: true, view: true, update: true, delete: true },
+    { name: 'Issue Blood Component', create: true, view: true, update: false, delete: true },
     { name: 'Blood Component', create: true, view: true, update: false, delete: true },
 ];
 

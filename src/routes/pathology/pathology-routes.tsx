@@ -6,7 +6,7 @@ const PathologyBills = lazy(() => import("@/pages/pathology/pathology-bills"));
 
 const PathologyRoutes = () => {
     return (
-        <Route element={<ProtectRoutes action="view" module="Radiology Bill" />}>
+        <Route element={<ProtectRoutes action="view" module="Pathology Bill" />}>
             <Route path="pathology" element={<PathologyBills />} />
         </Route>
     );

@@ -11,10 +11,10 @@ interface ProtectRoutesProps {
 }
 
 const ProtectRoutes = ({ restrictedTo, action, module }: ProtectRoutesProps) => {
-    const { authUser } = useContext(AuthContext)
-    const { hasPermission, isLoading } = useContext(PermissionContext);
+    const { authUser , isCheckingAuth } = useContext(AuthContext)
+    const { hasPermission, isLoading  } = useContext(PermissionContext);
 
-    if (isLoading) {
+    if (isLoading || isCheckingAuth) {
         return <LoaderModel />;
     }
 
@@ -22,7 +22,11 @@ const ProtectRoutes = ({ restrictedTo, action, module }: ProtectRoutesProps) => 
         return <Navigate to="/signin" replace />;
     }
 
+    console.log(action && module && !hasPermission(action, module))
+
+    // move console AFTER isLoading is done
     if (action && module && !hasPermission(action, module)) {
+        console.log("Denied:", action, module);
         return <Navigate to="/unauthorized" replace />;
     }
 

@@ -20,25 +20,75 @@ const IpdPrescription = lazy(() => import('@/pages/ipd/sections/prescription/pre
 
 const IpdRoutes = () => {
     return (
-        <Route element={<ProtectRoutes action="view" module="Ipd" />}>
-            <Route path="ipd" element={<IpdLayout />}>
+        <Route path="ipd" element={<IpdLayout />}>
+
+            {/* List of IPDs */}
+            <Route element={<ProtectRoutes action="view" module="Ipd" />}>
                 <Route path="" element={<Ipds />} />
-                <Route path=":ipdId" element={<IpdSectionsLayout />}>
+            </Route>
+
+            {/* Individual IPD details */}
+            <Route path=":ipdId" element={<IpdSectionsLayout />}>
+
+                {/* Overview */}
+                <Route element={<ProtectRoutes action="view" module="Ipd" />}>
                     <Route path="" element={<IpdOverview />} />
+                </Route>
+
+                {/* Medication */}
+                <Route element={<ProtectRoutes action="view" module="Medication" />}>
                     <Route path="medication" element={<IpdMedications />} />
+                </Route>
+
+                {/* Operation */}
+                <Route element={<ProtectRoutes action="view" module="Operation" />}>
                     <Route path="operation" element={<IpdOperations />} />
+                </Route>
+
+                {/* Vital */}
+                <Route element={<ProtectRoutes action="view" module="Vitals" />}>
                     <Route path="vital" element={<IpdVitals />} />
+                </Route>
+
+                {/* Timeline */}
+                <Route element={<ProtectRoutes action="view" module="Timeline" />}>
                     <Route path="timeline" element={<IpdTimelines />} />
+                </Route>
+
+                {/* Payment */}
+                <Route element={<ProtectRoutes action="view" module="Payments" />}>
                     <Route path="payment" element={<IpdPayments />} />
+                </Route>
+
+                {/* Charges */}
+                <Route element={<ProtectRoutes action="view" module="Charges" />}>
                     <Route path="charges" element={<IpdCharges />} />
+                </Route>
+
+                {/* Treatment History */}
+                <Route element={<ProtectRoutes action="view" module="Treatment History" />}>
                     <Route path="treatmenthistory" element={<IpdTreatmentHistories />} />
+                </Route>
+
+                {/* Consultant Register */}
+                <Route element={<ProtectRoutes action="view" module="Consultant Reg" />}>
                     <Route path="consultant-register" element={<IpdCounsultantRegisters />} />
+                </Route>
+
+                {/* Lab */}
+                <Route element={<ProtectRoutes action="view" module="Lab Investigation" />}>
                     <Route path="lab" element={<IpdLabInvestigations />} />
+                </Route>
+
+                {/* Prescription */}
+                <Route element={<ProtectRoutes action="view" module="Prescription" />}>
                     <Route path="prescription" element={<IpdPrescription />} />
                 </Route>
+
             </Route>
         </Route>
     );
 };
+
 
 export default IpdRoutes;

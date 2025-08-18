@@ -13,14 +13,14 @@ import LoaderModel from "./components/loader";
 function App() {
 
   // const dispatch = useAppDispatch()
-  const { removePermissions } = useContext(PermissionContext)
+  const { removePermissions, isLoading } = useContext(PermissionContext)
   const { authUser, isCheckingAuth } = useContext(AuthContext)
 
   useEffect(() => {
     removePermissions()
   }, [authUser])
 
-  if (isCheckingAuth && !authUser) {
+  if ((isCheckingAuth && !authUser) || isLoading) {
     return <LoaderModel />
   }
 
